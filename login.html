@@ -21,8 +21,9 @@
 
             <div style="margin: 30px 0; text-align: center;">
                 <p style="margin-bottom: 15px; color: #666;">Accede de forma rápida y segura para gestionar tus impresiones</p>
-                <button id="btn-google" class="btn-cura btn-full" style="background-color: #4285F4; color: white; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: none; font-size: 16px;">
-                    <i class="fab fa-google" style="font-size: 18px;"></i> Iniciar Sesión con Google
+                <button id="btn-google" style="background-color: #ffffff; color: #1f1f1f; display: inline-flex; align-items: center; justify-content: center; gap: 12px; border: 1px solid #747775; padding: 12px 24px; font-size: 16px; font-weight: 500; border-radius: 4px; width: 100%; cursor: pointer; transition: background-color .218s;">
+                    <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/web-24dp/logo_googleg_color_24dp.png" alt="Google Logo" style="width: 20px; height: 20px;">
+                    Iniciar Sesión con Google
                 </button>
             </div>
 
@@ -35,20 +36,23 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // 2. REEMPLAZA ESTOS DATOS con los que copiaste en el Paso 1 de tu panel de Supabase
+        // REEMPLAZA ESTOS DATOS con tu URL y Anon Key reales de Supabase
         const SUPABASE_URL = "https://TU_PROYECTO_AQUÍ.supabase.co"; 
         const SUPABASE_ANON_KEY = "TU_LLAVE_ANON_AQUÍ";
 
-        // Inicializamos el cliente de Supabase
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // 3. Programamos la acción del botón de Google
         document.getElementById('btn-google').addEventListener('click', async () => {
+            // VALIDACIÓN DEL ERROR: Comprobamos si estás abriendo el archivo como 'file://'
+            if (window.location.protocol === 'file:') {
+                mostrarError("¡Atención! Google no permite iniciar sesión abriendo el archivo HTML directamente con doble clic. Necesitas ejecutar un servidor local (usa la extensión 'Live Server' de VS Code o súbelo a Vercel).");
+                return;
+            }
+
             try {
                 const { data, error } = await supabase.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        // Vercel o tu entorno local. Al terminar el login, Google mandará al usuario aquí:
                         redirectTo: window.location.origin + '/dashboard.html' 
                     }
                 });
@@ -59,11 +63,10 @@
             }
         });
 
-        // Función auxiliar para pintar alertas bonitas en pantalla si algo falla
         function mostrarError(mensaje) {
             const container = document.getElementById('alert-container');
             container.innerHTML = `
-                <div class="alert alert-error" style="background-color: #f8d7da; color: #721c24; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-weight: bold; font-size: 14px;">
+                <div class="alert alert-error" style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 6px; margin-bottom: 15px; font-size: 14px; text-align: left; border: 1px solid #f5c6cb;">
                     <i class="fas fa-exclamation-circle"></i> ${mensaje}
                 </div>
             `;
