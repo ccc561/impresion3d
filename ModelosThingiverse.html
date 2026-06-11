@@ -17,32 +17,27 @@
         .model-card img { width: 100%; height: 180px; object-fit: cover; }
         .model-card-info { padding: 12px; text-align: center; }
 
-        /* --- MODAL Y VISOR 3D --- */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 10000; }
-        .modal-content { background: white; width: 95%; max-width: 1000px; height: 85vh; border-radius: 12px; display: grid; grid-template-columns: 1.5fr 1fr; overflow: hidden; position: relative; }
+        /* --- MODAL DE DETALLES Y GALERÍA DE IMÁGENES --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 10000; }
+        .modal-content { background: white; width: 95%; max-width: 1000px; height: 80vh; border-radius: 12px; display: grid; grid-template-columns: 1.4fr 1fr; overflow: hidden; position: relative; }
         
-        #viewer-container { background: #1a1a1a; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        /* Contenedor escaneable para múltiples ángulos de imagen */
+        #images-container { background: #f1f3f5; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; align-items: center; height: 100%; }
+        #images-container img { width: 100%; max-height: 450px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); object-fit: contain; background: white; }
         
-        /* Imagen de previsualización (se muestra primero) */
-        #modal-img-preview { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+        .modal-sidebar { padding: 35px; display: flex; flex-direction: column; gap: 20px; border-left: 1px solid #e9ecef; overflow-y: auto; background: white; justify-content: center; }
+        .btn-action { padding: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; font-size: 15px; }
         
-        /* Contenedor del Canvas 3D (oculto al inicio) */
-        #3d-canvas-container { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
-        #canvas-3d { width: 100%; height: 100%; cursor: grab; display: block; }
-        #loader-3d { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; text-align: center; font-size: 16px; background: rgba(0,0,0,0.7); padding: 15px 25px; border-radius: 8px; z-index: 10; display: none; }
-        
-        .modal-sidebar { padding: 30px; display: flex; flex-direction: column; gap: 20px; border-left: 1px solid #eee; overflow-y: auto; background: white; }
-        .btn-action { padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-decoration: none; text-align: center; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; font-size: 15px; }
-        
-        .btn-3d-native { background: #0055ff; color: white; }
-        .btn-3d-native:hover { background: #0044cc; }
-        .btn-thingiverse { background: #f0f4f8; color: #333; border: 1px solid #ccc; }
+        .btn-thingiverse { background: #f8f9fa; color: #333; border: 1px solid #ced4da; }
+        .btn-thingiverse:hover { background: #e9ecef; }
         .btn-save-panel { background: #FFB000; color: #333; }
+        .btn-save-panel:hover { background: #e69e00; }
         
         .pagination-container { text-align: center; padding: 40px; }
         #btn-cargar-mas { background: var(--cura-blue); color: white; border: none; padding: 12px 35px; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; }
         
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; z-index: 10001; color: #333; background: #eee; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; z-index: 10001; color: #333; background: #e9ecef; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .close-modal:hover { background: #dee2e6; }
         #toast-notificacion { position: fixed; bottom: 30px; right: 30px; background-color: #28a745; color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; display: none; z-index: 11000; }
     </style>
 </head>
@@ -52,15 +47,15 @@
         <a href="index.html" class="btn-header" style="background: #003DF5; color: white; display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 6px; font-weight: bold; text-decoration: none;">
             <i class="fas fa-arrow-left"></i> Volver al Inicio
         </a>
-        <div class="logo">Galería Thingiverse</div>
+        <div class="logo">Explorador de Diseños</div>
         <a href="login.html" id="btn-auth" class="btn-header">Iniciar Sesión</a>
     </header>
 
     <div class="gallery-header">
         <h1>Biblioteca Digital 3D</h1>
-        <p>Busca diseños y descúbrelos en 3D antes de imprimir.</p>
+        <p>Busca diseños del catálogo mundial, examina sus ángulos y guárdalos en tu panel.</p>
         <div class="gallery-search-bar">
-            <input type="text" id="busqueda-galeria" placeholder="Ej: Batman, Maceta, Organizador..." onkeypress="if(event.key === 'Enter') ejecutarBusqueda()">
+            <input type="text" id="busqueda-galeria" placeholder="Ej: Batman, Maceta, Soporte..." onkeypress="if(event.key === 'Enter') ejecutarBusqueda()">
             <button class="btn-cura" onclick="ejecutarBusqueda()">Buscar</button>
         </div>
     </div>
@@ -71,41 +66,34 @@
         <button id="btn-cargar-mas" onclick="cargarSiguientePagina()">Ver más diseños</button>
     </div>
 
-    <div class="modal-overlay" id="modal-container">
-        <span class="close-modal" onclick="cerrarModal()">&times;</span>
+    <div class="modal-overlay" id="modal-container" onclick="if(event.target === this) cerrarModal()">
         <div class="modal-content">
+            <span class="close-modal" onclick="cerrarModal()">&times;</span>
             
-            <div id="viewer-container">
-                <img id="modal-img-preview" src="" alt="Vista previa">
-                
-                <div id="3d-canvas-container">
-                    <div id="loader-3d"></div>
-                    <canvas id="canvas-3d"></canvas>
-                </div>
-            </div>
+            <div id="images-container"></div>
 
             <div class="modal-sidebar">
-                <h2 id="modal-titulo" style="margin:0; color:var(--cura-blue);">Nombre del Modelo</h2>
-                <p><strong>Autor:</strong> <span id="modal-autor">Cargando...</span></p>
-                <hr>
+                <h2 id="modal-titulo" style="margin:0; color:var(--cura-blue); font-size: 24px; line-height: 1.3;">Nombre del Modelo</h2>
+                <p style="margin: 0; font-size: 16px;"><strong>Autor:</strong> <span id="modal-autor">Cargando...</span></p>
+                <hr style="border: 0; border-top: 1px solid #eee; width: 100%; margin: 10px 0;">
                 
-                <button class="btn-action btn-3d-native" id="btn-activar-3d"><i class="fas fa-cube"></i> Ver en 3D (Nativo)</button>
-                <a href="#" id="link-thingiverse" target="_blank" class="btn-action btn-thingiverse"><i class="fas fa-external-link-alt"></i> Ver completo en Thingiverse</a>
-                <button class="btn-action btn-save-panel" id="btn-guardar-panel"><i class="fas fa-bookmark"></i> Guardar en mi Panel</button>
+                <a href="#" id="link-thingiverse" target="_blank" class="btn-action btn-thingiverse">
+                    <i class="fas fa-external-link-alt"></i> Ver Completo en Thingiverse
+                </a>
+                <button class="btn-action btn-save-panel" id="btn-guardar-panel">
+                    <i class="fas fa-bookmark"></i> Guardar en mi Panel
+                </button>
             </div>
         </div>
     </div>
 
-    <div id="toast-notificacion"><i class="fas fa-check-circle"></i> ¡Guardado correctamente!</div>
+    <div id="toast-notificacion"><i class="fas fa-check-circle"></i> ¡Modelo guardado correctamente!</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
         // ==========================================
-        // TUS CREDENCIALES
+        // CONFIGURACIÓN DE CREDENCIALES
         // ==========================================
         const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
@@ -115,11 +103,6 @@
         let usuarioActual = null;
         let pagina = 1;
         let busqueda = "";
-        let modeloActualId = null;
-
-        // Variables del motor 3D
-        let scene, camera, renderer, controls, mesh;
-        let motorIniciado = false;
 
         window.onload = async function() {
             if (window.supabase) {
@@ -128,7 +111,7 @@
                 usuarioActual = session?.user;
                 if (usuarioActual) {
                     const btn = document.getElementById('btn-auth');
-                    btn.href = 'dashboard.html'; btn.innerHTML = 'Mi Panel';
+                    btn.href = 'dashboard.html'; btn.innerHTML = '<i class="fas fa-user-circle"></i> Mi Panel';
                 }
             }
             ejecutarBusqueda(true);
@@ -140,11 +123,11 @@
             pagina = 1; busqueda = input;
             
             const contenedor = document.getElementById('contenedor-resultados');
-            if(pagina === 1) contenedor.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin fa-2x"></i><br>Cargando diseños...</div>';
+            if(pagina === 1) contenedor.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px;"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Explorando repositorio...</div>';
 
             const url = busqueda 
-                ? `https://api.thingiverse.com/search/${encodeURIComponent(busqueda)}?page=${pagina}&access_token=${THINGIVERSE_TOKEN}`
-                : `https://api.thingiverse.com/newest?page=${pagina}&access_token=${THINGIVERSE_TOKEN}`;
+                ? `https://api.thingiverse.com/search/${encodeURIComponent(busqueda)}?page=${pagina}&per_page=20&access_token=${THINGIVERSE_TOKEN}`
+                : `https://api.thingiverse.com/newest?page=${pagina}&per_page=20&access_token=${THINGIVERSE_TOKEN}`;
             
             fetchModelos(url);
         }
@@ -158,8 +141,8 @@
                 
                 if(pagina === 1) grid.innerHTML = "";
                 
-                if (hits.length === 0) {
-                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px;">No encontramos resultados. Intenta buscar en inglés.</div>';
+                if (!hits || hits.length === 0) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#666;">No encontramos resultados. Prueba buscando en inglés (ej: "Box", "Stand").</div>';
                     return;
                 }
 
@@ -167,161 +150,85 @@
                     const div = document.createElement('div');
                     div.className = 'model-card';
                     div.onclick = () => abrirDetalle(item);
-                    div.innerHTML = `<img src="${item.thumbnail || item.preview_image}" alt="Modelo"> <div class="model-card-info"><h4>${item.name}</h4><p>${item.creator ? item.creator.name : 'Desconocido'}</p></div>`;
+                    div.innerHTML = `<img src="${item.thumbnail || item.preview_image || 'https://via.placeholder.com/300x180?text=Sin+Vista+Previa'}" alt="Modelo"> <div class="model-card-info"><h4>${item.name}</h4><p>Por: ${item.creator ? item.creator.name : 'Maker'}</p></div>`;
                     grid.appendChild(div);
                 });
                 document.getElementById('btn-cargar-mas').style.display = hits.length >= 20 ? "inline-block" : "none";
             } catch (error) {
-                console.error("Error al cargar Thingiverse:", error);
-                document.getElementById('contenedor-resultados').innerHTML = '<div style="grid-column: 1/-1; color: red; text-align: center;">Error de conexión. Revisa tu App Token.</div>';
+                console.error("Error al cargar datos:", error);
+                document.getElementById('contenedor-resultados').innerHTML = '<div style="grid-column: 1/-1; color: red; text-align: center; padding: 20px;">Error de red. Verifica tus credenciales de API.</div>';
             }
         }
 
         function cargarSiguientePagina() {
             pagina++;
             const url = busqueda 
-                ? `https://api.thingiverse.com/search/${encodeURIComponent(busqueda)}?page=${pagina}&access_token=${THINGIVERSE_TOKEN}`
-                : `https://api.thingiverse.com/newest?page=${pagina}&access_token=${THINGIVERSE_TOKEN}`;
+                ? `https://api.thingiverse.com/search/${encodeURIComponent(busqueda)}?page=${pagina}&per_page=20&access_token=${THINGIVERSE_TOKEN}`
+                : `https://api.thingiverse.com/newest?page=${pagina}&per_page=20&access_token=${THINGIVERSE_TOKEN}`;
             fetchModelos(url);
         }
 
-        function abrirDetalle(item) {
-            modeloActualId = item.id;
-            
-            // Textos y enlaces
+        async function abrirDetalle(item) {
+            // Configurar textos inmediatos del Sidebar
             document.getElementById('modal-titulo').innerText = item.name;
-            document.getElementById('modal-autor').innerText = item.creator ? item.creator.name : 'Desconocido';
+            document.getElementById('modal-autor').innerText = item.creator ? item.creator.name : 'Maker';
             document.getElementById('link-thingiverse').href = item.public_url;
-            
-            // Manejo de la vista: Mostrar siempre la imagen primero, ocultar el 3D
-            document.getElementById('modal-img-preview').src = item.thumbnail || item.preview_image;
-            document.getElementById('modal-img-preview').style.display = 'block';
-            document.getElementById('3d-canvas-container').style.display = 'none';
-            document.getElementById('loader-3d').style.display = 'none';
-            
-            // Botones de acción
-            document.getElementById('btn-activar-3d').onclick = () => iniciarVisor3D(modeloActualId);
             document.getElementById('btn-guardar-panel').onclick = () => guardar(item);
             
+            const imgContainer = document.getElementById('images-container');
+            imgContainer.innerHTML = '<div style="text-align:center; color:#666; margin:auto;"><i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>Obteniendo galería de imágenes...</div>';
+            
             document.getElementById('modal-container').style.display = 'flex';
+            
+            // Consultar la API para traer todas las imágenes disponibles de este objeto
+            try {
+                const respuesta = await fetch(`https://api.thingiverse.com/things/${item.id}/images?access_token=${THINGIVERSE_TOKEN}`);
+                const imagenesObj = await respuesta.json();
+                
+                imgContainer.innerHTML = ""; // Limpiar spinner
+                
+                if(imagenesObj && imagenesObj.length > 0) {
+                    imagenesObj.forEach(img => {
+                        // Extraer la resolución óptima disponible (large)
+                        let targetUrl = "";
+                        if(img.sizes && img.sizes.length > 0) {
+                            const sizeLarge = img.sizes.find(s => s.type === 'large' || s.size === 'large');
+                            targetUrl = sizeLarge ? sizeLarge.url : img.sizes[0].url;
+                        } else {
+                            targetUrl = img.url || img.thumbnail;
+                        }
+                        
+                        if(targetUrl) {
+                            const imgDom = document.createElement('img');
+                            imgDom.src = targetUrl;
+                            imgDom.alt = "Ángulo del diseño";
+                            imgContainer.appendChild(imgDom);
+                        }
+                    });
+                } else {
+                    // Fallback si no tiene galería extendida
+                    imgContainer.innerHTML = `<img src="${item.thumbnail || item.preview_image}" alt="Imagen base">`;
+                }
+            } catch (err) {
+                console.error("Error procesando imágenes secundarias:", err);
+                imgContainer.innerHTML = `<img src="${item.thumbnail || item.preview_image}" alt="Imagen base">`;
+            }
         }
 
         function cerrarModal() { 
             document.getElementById('modal-container').style.display = 'none'; 
         }
 
-        // ==========================================
-        // LÓGICA DEL VISOR 3D (Three.js)
-        // ==========================================
-        async function iniciarVisor3D(idModelo) {
-            const imgPreview = document.getElementById('modal-img-preview');
-            const canvasContainer = document.getElementById('3d-canvas-container');
-            const loaderDiv = document.getElementById('loader-3d');
-
-            // Intercambiar vista
-            imgPreview.style.display = 'none';
-            canvasContainer.style.display = 'block';
-            loaderDiv.style.display = 'block';
-            loaderDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando archivo STL en la API...';
-
-            // Configurar Three.js solo la primera vez que se presiona el botón en la sesión
-            if (!motorIniciado) {
-                const canvas = document.getElementById('canvas-3d');
-                scene = new THREE.Scene();
-                scene.background = new THREE.Color(0x1a1a1a);
-                
-                camera = new THREE.PerspectiveCamera(45, canvasContainer.clientWidth / canvasContainer.clientHeight, 1, 1000);
-                camera.position.set(0, 0, 150);
-                
-                renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-                renderer.setSize(canvasContainer.clientWidth, canvasContainer.clientHeight);
-                
-                controls = new THREE.OrbitControls(camera, renderer.domElement);
-                controls.enableDamping = true;
-                
-                // Luces
-                scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 1.0));
-                const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-                dirLight.position.set(0, 100, 100);
-                scene.add(dirLight);
-
-                motorIniciado = true;
-                
-                function animate() { 
-                    requestAnimationFrame(animate); 
-                    controls.update(); 
-                    renderer.render(scene, camera); 
-                }
-                animate();
-            }
-
-            // Limpiar modelo anterior si existe
-            if (mesh) {
-                scene.remove(mesh);
-                mesh.geometry.dispose();
-                mesh.material.dispose();
-                mesh = null;
-            }
-
-            // Descargar el STL desde Thingiverse
-            try {
-                // 1. Obtener la lista de archivos del modelo
-                const res = await fetch(`https://api.thingiverse.com/things/${idModelo}/files?access_token=${THINGIVERSE_TOKEN}`);
-                const archivos = await res.json();
-                
-                // 2. Buscar el primer archivo que sea un .stl
-                const archivoSTL = archivos.find(f => f.name.toLowerCase().endsWith('.stl'));
-
-                if (!archivoSTL) {
-                    loaderDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Este diseño no tiene un archivo STL disponible para previsualizar.';
-                    return;
-                }
-
-                loaderDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Descargando geometría 3D...';
-
-                // 3. Cargar el archivo en Three.js
-                const loader = new THREE.STLLoader();
-                // Adjuntamos el token a la URL de descarga directa
-                const urlDescarga = archivoSTL.default_url + '?access_token=' + THINGIVERSE_TOKEN;
-
-                loader.load(
-                    urlDescarga,
-                    function (geometry) {
-                        const material = new THREE.MeshPhongMaterial({ color: 0x0055ff, specular: 0x111111, shininess: 100 });
-                        mesh = new THREE.Mesh(geometry, material);
-                        
-                        // Centrar el modelo en la cámara
-                        geometry.center();
-                        scene.add(mesh);
-                        
-                        loaderDiv.style.display = 'none'; // Éxito, ocultar texto de carga
-                    },
-                    undefined,
-                    function (error) {
-                        console.error("Error al cargar STL:", error);
-                        loaderDiv.innerHTML = '<i class="fas fa-times-circle"></i> Error al descargar el modelo. Puede estar protegido por el autor.';
-                    }
-                );
-
-            } catch (error) {
-                console.error(error);
-                loaderDiv.innerHTML = '<i class="fas fa-wifi"></i> Falló la conexión con los archivos de Thingiverse.';
-            }
-        }
-
-        // ==========================================
-        // BASE DE DATOS
-        // ==========================================
         async function guardar(item) {
             if(!usuarioActual || !dbCliente) { 
-                alert("Inicia sesión para guardar este modelo en tu panel."); 
+                alert("Por favor, inicia sesión para poder guardar este diseño en tu panel personal."); 
                 return; 
             }
             try {
                 const { error } = await dbCliente.from('modelos_guardados').insert([{ 
                     user_id: usuarioActual.id, 
                     titulo: item.name, 
-                    autor: item.creator ? item.creator.name : 'Desconocido', 
+                    autor: item.creator ? item.creator.name : 'Maker', 
                     imagen_url: item.thumbnail || item.preview_image
                 }]);
                 if (error) throw error;
@@ -330,8 +237,8 @@
                 toast.style.display = 'block';
                 setTimeout(() => toast.style.display = 'none', 3000);
             } catch (e) {
-                console.error("Error al guardar:", e);
-                alert("Hubo un error al guardar el modelo.");
+                console.error("Error guardando:", e);
+                alert("Ocurrió un inconveniente al conectar con la base de datos de Supabase.");
             }
         }
     </script>
