@@ -207,7 +207,7 @@
         let dbCliente = null;
         let idUsuarioActual = null;
         let emailUsuarioActual = null;
-        let modeloSeleccionado = {}; // Guarda temporalmente los datos del modelo al que le damos click
+        let modeloSeleccionado = {};
 
         window.onload = async function() {
             if (window.supabase) {
@@ -225,7 +225,7 @@
 
             document.body.style.display = 'block';
             idUsuarioActual = session.user.id;
-            emailUsuarioActual = session.user.email; // Guardamos el email para el formulario
+            emailUsuarioActual = session.user.email;
             
             const nombreUsuario = session.user.user_metadata.full_name || session.user.email;
             document.getElementById('usuario-nombre').textContent = nombreUsuario.split(" ")[0];
@@ -233,28 +233,34 @@
             cargarModelosGuardados();
         }
 
+        // --- FUNCIÓN CORREGIDA ---
         async function cargarModelosGuardados() {
             const contenedor = document.getElementById('contenedor-guardados');
             
+            // Petición limpia sin .order() para evitar cualquier conflicto de columnas obsoletas
             const { data, error } = await dbCliente
                 .from('modelos_guardados')
                 .select('*')
-                .eq('user_id', idUsuarioActual)
-                .order('created_at', { ascending: false });
+                .eq('user_id', idUsuarioActual);
 
+            // Si hay un error, se pintará un recuadro detallado con el motivo exacto
             if (error) {
-                contenedor.innerHTML = `<p style="color:red; text-align:center;">Error cargando la biblioteca.</p>`;
+                console.error("Error cargando diseños desde Supabase:", error.message);
+                contenedor.innerHTML = `
+                    <div style="grid-column: 1/-1; padding: 20px; text-align: center; color: #dc2626; background: #fee2e2; border-radius: 12px; border: 1px solid #fca5a5;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 8px;"></i><br>
+                        <strong>Error al cargar tu biblioteca:</strong><br>
+                        <code style="font-size: 13px; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px;">${error.message}</code>
+                    </div>`;
                 return;
             }
 
             if (data && data.length > 0) {
                 contenedor.innerHTML = ''; 
                 data.forEach(modelo => {
-                    // Creamos la tarjeta y le añadimos un evento onclick para abrir el detalle
                     const div = document.createElement('div');
                     div.className = 'saved-card';
                     
-                    // Asegurar que el título no rompa el JS escapando comillas
                     const tituloSeguro = modelo.titulo.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     const autorSeguro = modelo.autor ? modelo.autor.replace(/'/g, "\\'") : 'Maker';
 
@@ -279,13 +285,12 @@
 
         // --- LÓGICA DE LOS MODALES ---
         function abrirModalDetalle(titulo, autor, imagen) {
-            modeloSeleccionado = { titulo, autor, imagen }; // Guardar en memoria
+            modeloSeleccionado = { titulo, autor, imagen };
             
             document.getElementById('detalle-titulo').innerText = titulo;
             document.getElementById('detalle-autor').innerText = autor;
             document.getElementById('detalle-img').src = imagen;
             
-            // Como no tenemos el link directo a Thingiverse en la BD, creamos un enlace de búsqueda directa por título
             document.getElementById('detalle-link-thingiverse').href = `https://www.thingiverse.com/search?q=${encodeURIComponent(titulo)}&type=things&sort=relevant`;
 
             document.getElementById('modal-detalle').style.display = 'flex';
@@ -297,6 +302,7 @@
             document.getElementById('modal-cotizacion').style.display = 'flex';
         }
 
+        /* Modificado para cerrar ambos modales */
         function cerrarModales() {
             document.getElementById('modal-detalle').style.display = 'none';
             document.getElementById('modal-cotizacion').style.display = 'none';
@@ -304,7 +310,7 @@
 
         // --- ENVIAR SOLICITUD A SUPABASE ---
         async function enviarSolicitud(event) {
-            event.preventDefault(); // Evita que recargue la página
+            event.preventDefault();
 
             const btnEnviar = document.getElementById('btn-enviar-solicitud');
             btnEnviar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
@@ -322,14 +328,12 @@
             };
 
             try {
-                // Insertamos en la nueva tabla "solicitudes_impresion"
                 const { error } = await dbCliente.from('solicitudes_impresion').insert([datosFormulario]);
                 
                 if (error) throw error;
 
-                // Éxito
                 cerrarModales();
-                document.getElementById('form-cotizacion').reset(); // Limpiar formulario
+                document.getElementById('form-cotizacion').reset();
                 
                 const toast = document.getElementById('toast-success');
                 toast.style.display = 'block';
@@ -337,7 +341,7 @@
 
             } catch (err) {
                 console.error("Error enviando solicitud:", err);
-                alert("Hubo un error al enviar tu solicitud. Intenta de nuevo.");
+                alert("Hubo un error al enviar tu solicitud: " + err.message);
             } finally {
                 btnEnviar.innerHTML = '<i class="fas fa-envelope"></i> Enviar Solicitud a Revisión';
                 btnEnviar.disabled = false;
