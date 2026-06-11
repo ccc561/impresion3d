@@ -7,161 +7,252 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* CAPA DE SEGURIDAD 1: Ocultar el body por defecto para evitar que usuarios no logueados vean el panel */
+        /* Variables de diseño profesional */
+        :root {
+            --cura-blue: #0055ff;
+            --cura-dark: #111827;
+            --text-muted: #4b5563;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        /* CAPA DE SEGURIDAD 1: Ocultar el body hasta verificar la sesión */
         body {
             display: none;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            background-color: var(--bg-light);
+            color: var(--cura-dark);
         }
-        /* Estilos específicos para la sección de guardados */
+
+        /* --- HEADER DEL PANEL --- */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo { font-size: 20px; font-weight: 700; color: var(--cura-blue); display: flex; align-items: center; gap: 8px; text-decoration: none;}
+        .user-controls { display: flex; align-items: center; gap: 20px; }
+        .user-greeting { font-weight: 600; color: var(--text-muted); }
+        .btn-logout { background-color: #ef4444; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-logout:hover { background-color: #dc2626; }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .dashboard-layout {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+        }
+
+        /* --- TARJETAS DEL PANEL --- */
+        .panel-card {
+            background: var(--bg-white);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+        }
+        .panel-card h3 { margin: 0 0 15px 0; font-size: 20px; display: flex; align-items: center; gap: 10px; }
+        .panel-card h3 i { color: var(--cura-blue); }
+        .panel-card p { color: var(--text-muted); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
+
+        /* --- FORMULARIO DE SUBIDA --- */
+        .file-upload-area {
+            border: 2px dashed #ccc;
+            padding: 30px;
+            text-align: center;
+            border-radius: 12px;
+            background: #fdfdfd;
+            margin-bottom: 20px;
+            transition: 0.2s;
+        }
+        .file-upload-area:hover { border-color: var(--cura-blue); background: #f0f4ff; }
+        .btn-action { background: var(--cura-dark); color: white; width: 100%; border: none; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+        .btn-action:hover { background: var(--cura-blue); }
+
+        /* --- GRID DE MODELOS GUARDADOS --- */
         .saved-models-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
         }
         .saved-card {
-            background: #f8f9fa;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            background: var(--bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             overflow: hidden;
             text-align: center;
-            padding-bottom: 10px;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
         }
-        .saved-card img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-        }
-        .saved-card h4 {
-            margin: 10px 5px 2px;
-            font-size: 14px;
-        }
-        .saved-card p {
-            font-size: 12px;
-            color: #666;
-            margin-bottom: 10px;
+        .saved-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        .saved-card img { width: 100%; height: 160px; object-fit: cover; border-bottom: 3px solid var(--border-color); }
+        .saved-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
+        .saved-info h4 { margin: 0 0 5px 0; font-size: 15px; color: var(--cura-dark); }
+        .saved-info p { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; }
+        .btn-cotizar-mini { background: var(--cura-blue); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; margin-top: auto; transition: 0.2s; }
+        .btn-cotizar-mini:hover { background: #0044cc; }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .dashboard-layout { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <header class="top-header">
-        <div class="logo">Mi Panel 3D</div>
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <span style="font-weight: 600;">Hola, <span id="usuario-nombre">Cargando...</span> 👋</span>
-            <button id="btn-logout" class="btn-header" style="background-color: #E63946; color: white; border: none; cursor: pointer; padding: 8px 15px; border-radius: 4px; font-weight: bold;">Cerrar Sesión</button>
+    <header class="dashboard-header">
+        <a href="index.html" class="logo"><i class="fas fa-cubes"></i> Mi Panel 3D</a>
+        <div class="user-controls">
+            <span class="user-greeting">Hola, <span id="usuario-nombre">...</span> 👋</span>
+            <button id="btn-logout" class="btn-logout"><i class="fas fa-sign-out-alt"></i> Salir</button>
         </div>
     </header>
 
-    <div class="page-layout">
-        <main class="main-content">
+    <div class="dashboard-layout">
+        
+        <div class="panel-card" style="height: fit-content;">
+            <h3><i class="fas fa-cloud-upload-alt"></i> Cotizar Archivo Propio</h3>
+            <p>¿Tienes tu propio diseño? Sube tu archivo <strong>.STL</strong> para que evaluemos el tiempo de impresión y peso en gramos.</p>
             
-            <div class="dashboard-grid">
-                
-                <div class="dashboard-card">
-                    <div class="card-icon" style="color: var(--cura-blue); font-size: 30px; margin-bottom: 10px;"><i class="fas fa-cloud-upload-alt"></i></div>
-                    <h3>Cotizar Modelo Propio</h3>
-                    <p>Sube tu archivo digital en formato <strong>.STL</strong> aquí para que nuestro sistema analice su peso y te dé un precio automático.</p>
-                    
-                    <form id="upload-form" class="upload-form" style="margin-top: 20px;">
-                        <input type="file" id="archivo_stl" accept=".stl" required class="file-input" style="margin-bottom: 15px; display: block; width: 100%;">
-                        <button type="submit" class="btn-cura btn-full">Subir y Cotizar</button>
-                    </form>
+            <form id="form-subida" onsubmit="procesarSubida(event)">
+                <div class="file-upload-area">
+                    <i class="fas fa-file-code" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i><br>
+                    <input type="file" id="archivo_stl" accept=".stl" required style="max-width: 100%; cursor: pointer;">
                 </div>
+                <button type="submit" class="btn-action"><i class="fas fa-calculator"></i> Solicitar Cotización</button>
+            </form>
+        </div>
 
-                <div class="dashboard-card" style="grid-column: span 2;">
-                    <div class="card-icon" style="color: #FFB000; font-size: 30px; margin-bottom: 10px;"><i class="fas fa-bookmark"></i></div>
-                    <h3>Mis Diseños Guardados</h3>
-                    <p>Modelos de Thingiverse que has marcado como favoritos para cotizar o imprimir más tarde.</p>
-                    
-                    <div class="saved-models-grid" id="contenedor-guardados">
-                        <p style="color: #888; font-style: italic; grid-column: 1/-1;">No tienes modelos guardados todavía.</p>
-                    </div>
-
-                    <div style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px; text-align: right;">
-                        <a href="ModelosThingiverse.html" class="btn-cura" style="background-color: #2b2b2b; text-decoration: none; display: inline-block;">
-                            <i class="fas fa-search"></i> Explorar Thingiverse
-                        </a>
-                    </div>
-                </div>
-
+        <div class="panel-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                <h3 style="margin: 0;"><i class="fas fa-bookmark"></i> Mi Biblioteca (Thingiverse)</h3>
+                <a href="ModelosThingiverse.html" class="btn-action" style="width: auto; padding: 10px 20px; font-size: 14px; text-decoration: none; background: var(--cura-blue);"><i class="fas fa-search"></i> Explorar más</a>
             </div>
+            
+            <p>Tus diseños favoritos guardados desde el catálogo mundial.</p>
+            
+            <div class="saved-models-grid" id="contenedor-guardados">
+                <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #888; background: #f9fafb; border-radius: 12px; border: 1px dashed #ccc;">
+                    <i class="fas fa-folder-open" style="font-size: 30px; margin-bottom: 10px;"></i><br>
+                    Cargando tus modelos guardados...
+                </div>
+            </div>
+        </div>
 
-        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // Configura tus credenciales reales de Supabase
-        const SUPABASE_URL = "https://TU_PROYECTO_AQUÍ.supabase.co"; 
-        const SUPABASE_ANON_KEY = "TU_LLAVE_ANON_AQUÍ";
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // ==========================================
+        // CONFIGURACIÓN DE SUPABASE
+        // ==========================================
+        const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
+        
+        let dbCliente = null;
+        let idUsuarioActual = null;
 
-        // FUNCIÓN PRINCIPAL DE CONTROL DE ACCESO (SEGURIDAD)
+        window.onload = async function() {
+            if (window.supabase) {
+                dbCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                verificarAcceso();
+            }
+        };
+
+        // --- SEGURIDAD: VERIFICAR SESIÓN ---
         async function verificarAcceso() {
-            const { data: { session }, error } = await supabase.auth.getSession();
+            const { data: { session }, error } = await dbCliente.auth.getSession();
 
             if (error || !session) {
-                // Si no hay sesión, rebota de inmediato al login
-                window.location.href = 'login.html';
+                window.location.href = 'login.html'; // Si no hay sesión, se expulsa al login
                 return;
             }
 
-            // Si pasa la seguridad, hacemos visible la página
+            // Si está logueado, mostramos el body y guardamos su ID
             document.body.style.display = 'block';
+            idUsuarioActual = session.user.id;
             
-            // Pintamos los datos de Google de manera segura (Anti-XSS)
+            // Mostrar nombre de Google
             const nombreUsuario = session.user.user_metadata.full_name || session.user.email;
-            document.getElementById('usuario-nombre').textContent = nombreUsuario;
+            document.getElementById('usuario-nombre').textContent = nombreUsuario.split(" ")[0]; // Solo el primer nombre
 
-            // Cargamos sus modelos guardados desde la BD
-            cargarModelosGuardados(session.user.id);
+            // Cargar sus modelos
+            cargarModelosGuardados();
         }
 
-        // CARGAR MODELOS DESDE LA BASE DE DATOS
-        async function cargarModelosGuardados(userId) {
+        // --- CARGAR DATOS DESDE BASE DE DATOS ---
+        async function cargarModelosGuardados() {
             const contenedor = document.getElementById('contenedor-guardados');
             
-            const { data, error } = await supabase
+            const { data, error } = await dbCliente
                 .from('modelos_guardados')
                 .select('*')
-                .eq('user_id', userId);
+                .eq('user_id', idUsuarioActual)
+                .order('created_at', { ascending: false }); // Los más recientes primero
 
             if (error) {
                 console.error("Error cargando diseños:", error.message);
+                contenedor.innerHTML = '<p style="color:red;">Error al cargar tu biblioteca.</p>';
                 return;
             }
 
             if (data && data.length > 0) {
-                contenedor.innerHTML = ''; // Limpiamos el mensaje por defecto
+                contenedor.innerHTML = ''; 
                 data.forEach(modelo => {
                     contenedor.innerHTML += `
                         <div class="saved-card">
                             <img src="${modelo.imagen_url || 'https://via.placeholder.com/200x120?text=Sin+Imagen'}" alt="Modelo">
-                            <h4>${modelo.titulo}</h4>
-                            <p>Por: ${modelo.autor}</p>
-                            <button class="btn-cura" style="padding: 5px 10px; font-size: 12px; background-color: var(--cura-dark-blue);">Cotizar</button>
+                            <div class="saved-info">
+                                <h4>${modelo.titulo}</h4>
+                                <p>De: ${modelo.autor}</p>
+                                <button class="btn-cotizar-mini" onclick="cotizarModelo('${modelo.titulo}')">Solicitar Impresión</button>
+                            </div>
                         </div>
                     `;
                 });
+            } else {
+                contenedor.innerHTML = `
+                    <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #888; background: #f9fafb; border-radius: 12px; border: 1px dashed #ccc;">
+                        No tienes diseños guardados aún.<br>Explora la galería y guarda los que te gusten.
+                    </div>`;
             }
         }
 
-        // BOTÓN CERRAR SESIÓN
+        // --- FUNCIONES DE ACCIÓN ---
+        function procesarSubida(e) {
+            e.preventDefault();
+            alert("¡Archivo recibido! En una próxima actualización conectaremos esto con tu sistema de cotización para calcular el peso en gramos del archivo .STL.");
+        }
+
+        function cotizarModelo(titulo) {
+            alert(`Has solicitado la cotización para: "${titulo}". Un administrador revisará las dimensiones y te contactará.`);
+        }
+
+        // --- CERRAR SESIÓN ---
         document.getElementById('btn-logout').addEventListener('click', async () => {
-            await supabase.auth.signOut();
+            await dbCliente.auth.signOut();
             window.location.href = 'index.html';
         });
 
-        // CAPA DE SEGURIDAD 3: Escuchar cambios de autenticación en tiempo real
-        supabase.auth.onAuthStateChange((event, session) => {
-            if (event === 'SIGNED_OUT') {
-                window.location.href = 'login.html';
-            }
-        });
-
-        // Ejecutar la comprobación de seguridad al cargar la página
-        verificarAcceso();
+        // Escuchar si la sesión expira
+        if(window.supabase) {
+            window.supabase.auth.onAuthStateChange((event, session) => {
+                if (event === 'SIGNED_OUT') window.location.href = 'login.html';
+            });
+        }
     </script>
 </body>
 </html>
