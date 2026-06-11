@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Panel - Centro de Impresión 3D</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* CAPA DE SEGURIDAD 1: Ocultar el body por defecto para evitar que usuarios no logueados vean el panel */
+        body {
+            display: none;
+        }
+        /* Estilos específicos para la sección de guardados */
+        .saved-models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .saved-card {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            overflow: hidden;
+            text-align: center;
+            padding-bottom: 10px;
+        }
+        .saved-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        .saved-card h4 {
+            margin: 10px 5px 2px;
+            font-size: 14px;
+        }
+        .saved-card p {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="logo">Mi Panel 3D</div>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <span style="font-weight: 600;">Hola, <span id="usuario-nombre">Cargando...</span> 👋</span>
+            <button id="btn-logout" class="btn-header" style="background-color: #E63946; color: white; border: none; cursor: pointer; padding: 8px 15px; border-radius: 4px; font-weight: bold;">Cerrar Sesión</button>
+        </div>
+    </header>
+
+    <div class="page-layout">
+        <main class="main-content">
+            
+            <div class="dashboard-grid">
+                
+                <div class="dashboard-card">
+                    <div class="card-icon" style="color: var(--cura-blue); font-size: 30px; margin-bottom: 10px;"><i class="fas fa-cloud-upload-alt"></i></div>
+                    <h3>Cotizar Modelo Propio</h3>
+                    <p>Sube tu archivo digital en formato <strong>.STL</strong> aquí para que nuestro sistema analice su peso y te dé un precio automático.</p>
+                    
+                    <form id="upload-form" class="upload-form" style="margin-top: 20px;">
+                        <input type="file" id="archivo_stl" accept=".stl" required class="file-input" style="margin-bottom: 15px; display: block; width: 100%;">
+                        <button type="submit" class="btn-cura btn-full">Subir y Cotizar</button>
+                    </form>
+                </div>
+
+                <div class="dashboard-card" style="grid-column: span 2;">
+                    <div class="card-icon" style="color: #FFB000; font-size: 30px; margin-bottom: 10px;"><i class="fas fa-bookmark"></i></div>
+                    <h3>Mis Diseños Guardados</h3>
+                    <p>Modelos de Thingiverse que has marcado como favoritos para cotizar o imprimir más tarde.</p>
+                    
+                    <div class="saved-models-grid" id="contenedor-guardados">
+                        <p style="color: #888; font-style: italic; grid-column: 1/-1;">No tienes modelos guardados todavía.</p>
+                    </div>
+
+                    <div style="margin-top: 25px; border-top: 1px solid #eee; padding-top: 15px; text-align: right;">
+                        <a href="ModelosThingiverse.html" class="btn-cura" style="background-color: #2b2b2b; text-decoration: none; display: inline-block;">
+                            <i class="fas fa-search"></i> Explorar Thingiverse
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        // Configura tus credenciales reales de Supabase
+        const SUPABASE_URL = "https://TU_PROYECTO_AQUÍ.supabase.co"; 
+        const SUPABASE_ANON_KEY = "TU_LLAVE_ANON_AQUÍ";
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // FUNCIÓN PRINCIPAL DE CONTROL DE ACCESO (SEGURIDAD)
+        async function verificarAcceso() {
+            const { data: { session }, error } = await supabase.auth.getSession();
+
+            if (error || !session) {
+                // Si no hay sesión, rebota de inmediato al login
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Si pasa la seguridad, hacemos visible la página
+            document.body.style.display = 'block';
+            
+            // Pintamos los datos de Google de manera segura (Anti-XSS)
+            const nombreUsuario = session.user.user_metadata.full_name || session.user.email;
+            document.getElementById('usuario-nombre').textContent = nombreUsuario;
+
+            // Cargamos sus modelos guardados desde la BD
+            cargarModelosGuardados(session.user.id);
+        }
+
+        // CARGAR MODELOS DESDE LA BASE DE DATOS
+        async function cargarModelosGuardados(userId) {
+            const contenedor = document.getElementById('contenedor-guardados');
+            
+            const { data, error } = await supabase
+                .from('modelos_guardados')
+                .select('*')
+                .eq('user_id', userId);
+
+            if (error) {
+                console.error("Error cargando diseños:", error.message);
+                return;
+            }
+
+            if (data && data.length > 0) {
+                contenedor.innerHTML = ''; // Limpiamos el mensaje por defecto
+                data.forEach(modelo => {
+                    contenedor.innerHTML += `
+                        <div class="saved-card">
+                            <img src="${modelo.imagen_url || 'https://via.placeholder.com/200x120?text=Sin+Imagen'}" alt="Modelo">
+                            <h4>${modelo.titulo}</h4>
+                            <p>Por: ${modelo.autor}</p>
+                            <button class="btn-cura" style="padding: 5px 10px; font-size: 12px; background-color: var(--cura-dark-blue);">Cotizar</button>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // BOTÓN CERRAR SESIÓN
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'index.html';
+        });
+
+        // CAPA DE SEGURIDAD 3: Escuchar cambios de autenticación en tiempo real
+        supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'SIGNED_OUT') {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Ejecutar la comprobación de seguridad al cargar la página
+        verificarAcceso();
+    </script>
+</body>
+</html>
