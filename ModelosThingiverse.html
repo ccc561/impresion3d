@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Estilos específicos para la galería */
         .gallery-header {
             text-align: center;
             padding: 40px 20px;
@@ -49,7 +48,9 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             transition: transform 0.2s;
             text-align: center;
-            padding-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .model-card:hover {
             transform: translateY(-5px);
@@ -77,6 +78,25 @@
             grid-column: 1 / -1;
             padding: 40px;
         }
+        /* Notificación flotante de éxito */
+        #toast-notificacion {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-weight: bold;
+            display: none;
+            z-index: 9999;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -87,12 +107,13 @@
         </a>
         
         <div class="logo">Galería Thingiverse</div>
-        <a href="login.html" class="btn-header">Iniciar Sesión</a>
+        
+        <a href="login.html" id="btn-auth" class="btn-header">Iniciar Sesión</a>
     </header>
 
     <div class="gallery-header">
         <h1>Explora millones de diseños 3D</h1>
-        <p>Busca lo que necesitas. Si te gusta, inicia sesión y pídenos que lo imprimamos para ti.</p>
+        <p>Busca lo que necesitas. Si te gusta, guárdalo en tu panel para que lo coticemos.</p>
         
         <div class="gallery-search-bar">
             <input type="text" id="busqueda-galeria" placeholder="¿Qué quieres imprimir hoy? Ej: Llavero, Maceta, Batman...">
@@ -107,8 +128,26 @@
         </div>
     </main>
 
+    <div id="toast-notificacion"><i class="fas fa-check-circle"></i> ¡Modelo guardado en tu panel!</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
-        window.onload = function() {
+        // CONFIGURACIÓN DE SUPABASE (Usa las mismas llaves que en dashboard.html)
+        const SUPABASE_URL = "https://TU_PROYECTO_AQUÍ.supabase.co"; 
+        const SUPABASE_ANON_KEY = "TU_LLAVE_ANON_AQUÍ";
+        
+        let supabase;
+        let usuarioActual = null; // Variable para saber quién está navegando
+
+        window.onload = async function() {
+            // Inicializar base de datos
+            if (!SUPABASE_URL.includes("TU_PROYECTO_AQUÍ")) {
+                supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                await verificarUsuario();
+            }
+
+            // Revisar si venimos de index.html con una búsqueda pendiente
             const parametrosURL = new URLSearchParams(window.location.search);
             const terminoDeBusqueda = parametrosURL.get('q');
 
@@ -120,6 +159,20 @@
             }
         };
 
+        // FUNCIÓN: Verifica si hay sesión y cambia el encabezado
+        async function verificarUsuario() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                usuarioActual = session.user;
+                const btnAuth = document.getElementById('btn-auth');
+                btnAuth.href = 'dashboard.html';
+                btnAuth.innerHTML = '<i class="fas fa-user-circle"></i> Mi Panel';
+                btnAuth.style.backgroundColor = '#FFB000'; // Color distintivo para el panel
+                btnAuth.style.color = '#333';
+            }
+        }
+
+        // FUNCIÓN: Muestra resultados (Simulando API por ahora)
         function ejecutarBusqueda() {
             const termino = document.getElementById('busqueda-galeria').value.trim();
             const contenedor = document.getElementById('contenedor-resultados');
@@ -129,55 +182,101 @@
                 return;
             }
 
-            contenedor.innerHTML = '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Buscando en Thingiverse...</div>';
+            contenedor.innerHTML = '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Buscando en la biblioteca...</div>';
 
+            // Simulación de resultados. Generamos los datos y los inyectamos en las tarjetas.
             setTimeout(() => {
-                contenedor.innerHTML = `
-                    <div class="model-card">
-                        <img src="https://via.placeholder.com/300x200/0055FF/FFFFFF?text=Modelo+1" alt="Modelo">
-                        <h4>${termino} Articulado</h4>
-                        <p>Por: UsuarioMaker_99</p>
-                    </div>
-                    <div class="model-card">
-                        <img src="https://via.placeholder.com/300x200/0055FF/FFFFFF?text=Modelo+2" alt="Modelo">
-                        <h4>Soporte para ${termino}</h4>
-                        <p>Por: 3D_Prints_Pro</p>
-                    </div>
-                    <div class="model-card">
-                        <img src="https://via.placeholder.com/300x200/0055FF/FFFFFF?text=Modelo+3" alt="Modelo">
-                        <h4>${termino} Geométrico</h4>
-                        <p>Por: ArtDesign3D</p>
-                    </div>
-                    <div class="model-card">
-                        <img src="https://via.placeholder.com/300x200/0055FF/FFFFFF?text=Modelo+4" alt="Modelo">
-                        <h4>Miniatura de ${termino}</h4>
-                        <p>Por: TabletopFan</p>
-                    </div>
-                `;
+                const modelos = [
+                    { titulo: `${termino} Articulado`, autor: 'UsuarioMaker_99', img: `https://via.placeholder.com/300x200/0055FF/FFFFFF?text=${termino}` },
+                    { titulo: `Soporte para ${termino}`, autor: '3D_Prints_Pro', img: `https://via.placeholder.com/300x200/003DF5/FFFFFF?text=Soporte` },
+                    { titulo: `${termino} Geométrico`, autor: 'ArtDesign3D', img: `https://via.placeholder.com/300x200/2b2b2b/FFFFFF?text=Diseño` },
+                    { titulo: `Miniatura de ${termino}`, autor: 'TabletopFan', img: `https://via.placeholder.com/300x200/FFB000/333333?text=Mini` }
+                ];
+                renderizarModelos(modelos);
             }, 800);
         }
 
         function cargarDestacados() {
+            const modelos = [
+                { titulo: 'Maceta Groot', autor: 'Diseño Popular', img: 'https://via.placeholder.com/300x200/555555/FFFFFF?text=Maceta' },
+                { titulo: 'Soporte Auriculares', autor: 'Diseño Útil', img: 'https://via.placeholder.com/300x200/555555/FFFFFF?text=Soporte' },
+                { titulo: 'Dragón Articulado', autor: 'Tendencia Maker', img: 'https://via.placeholder.com/300x200/555555/FFFFFF?text=Dragón' }
+            ];
+            renderizarModelos(modelos);
+        }
+
+        // FUNCIÓN: Dibuja las tarjetas y les añade el botón de Guardar
+        function renderizarModelos(modelos) {
             const contenedor = document.getElementById('contenedor-resultados');
-            contenedor.innerHTML = `
-                <div class="model-card">
-                    <img src="https://via.placeholder.com/300x200/555555/FFFFFF?text=Destacado+1" alt="Modelo">
-                    <h4>Maceta Groot</h4>
-                    <p>Diseño Popular</p>
-                </div>
-                <div class="model-card">
-                    <img src="https://via.placeholder.com/300x200/555555/FFFFFF?text=Destacado+2" alt="Modelo">
-                    <h4>Soporte Auriculares</h4>
-                    <p>Diseño Útil</p>
-                </div>
-                <div class="model-card">
-                    <img src="https://via.placeholder.com/300x200/555555/FFFFFF?text=Destacado+3" alt="Modelo">
-                    <h4>Dragón Articulado</h4>
-                    <p>Tendencia</p>
-                </div>
-            `;
+            contenedor.innerHTML = ''; // Limpiar
+
+            modelos.forEach(mod => {
+                // Preparamos los datos para que no se rompan al pasarlos por JavaScript
+                const tituloSafe = mod.titulo.replace(/'/g, "\\'");
+                const autorSafe = mod.autor.replace(/'/g, "\\'");
+                const imgSafe = mod.img;
+
+                contenedor.innerHTML += `
+                    <div class="model-card">
+                        <div>
+                            <img src="${imgSafe}" alt="${mod.titulo}">
+                            <h4>${mod.titulo}</h4>
+                            <p>Por: ${mod.autor}</p>
+                        </div>
+                        <div style="padding: 15px;">
+                            <button class="btn-cura btn-full" style="background-color: #2b2b2b; font-size: 14px;" 
+                                onclick="guardarEnPanel('${tituloSafe}', '${autorSafe}', '${imgSafe}')">
+                                <i class="fas fa-bookmark"></i> Guardar en mi panel
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // FUNCIÓN PRINCIPAL: Guardar el modelo en la base de datos
+        async function guardarEnPanel(titulo, autor, imagenUrl) {
+            // 1. Verificamos si el usuario ha iniciado sesión
+            if (!usuarioActual) {
+                alert("Debes iniciar sesión con Google para guardar modelos.");
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 2. Si está logueado, lo insertamos en la tabla 'modelos_guardados'
+            try {
+                const { error } = await supabase
+                    .from('modelos_guardados')
+                    .insert([
+                        { 
+                            user_id: usuarioActual.id, 
+                            titulo: titulo, 
+                            autor: autor, 
+                            imagen_url: imagenUrl 
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                // 3. Mostramos la notificación visual bonita
+                mostrarNotificacion();
+
+            } catch (err) {
+                console.error("Error guardando el modelo:", err);
+                alert("Hubo un error al guardar el modelo. Revisa tu conexión.");
+            }
+        }
+
+        // FUNCIÓN: Muestra el pequeño mensaje verde flotante
+        function mostrarNotificacion() {
+            const toast = document.getElementById('toast-notificacion');
+            toast.style.display = 'block';
+            
+            // Ocultar automáticamente después de 3 segundos
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
         }
     </script>
-
 </body>
 </html>
