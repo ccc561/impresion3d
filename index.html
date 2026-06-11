@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio de Impresión 3D Profesional</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="logo">Centro de Impresión 3D</div>
+        <nav class="top-nav">
+            <a href="#inicio">Inicio</a>
+            <a href="#proceso">¿Cómo es el proceso?</a>
+            <a href="#impresora">Nuestra Tecnología</a>
+            <a href="#materiales">Materiales y Calidad</a>
+        </nav>
+        <a href="login.html" class="btn-header">Iniciar Sesión</a>
+    </header>
+
+    <div class="page-layout">
+        <main class="main-content">
+            
+            <section id="inicio" class="content-section">
+                <div class="hero-text">
+                    <h1>Materializamos tus ideas con precisión</h1>
+                    <p>Bienvenido a nuestro servicio local de impresión 3D. Calidad profesional, tiempos de entrega rápidos y precios accesibles para tus proyectos, prototipos o figuras favoritas.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h4>Sube tus modelos</h4>
+                        <p>Aceptamos archivos .STL listos para procesar.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Búsqueda Integrada</h4>
+                        <p>Encuentra miles de diseños directamente desde Thingiverse.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4>Cotización Inmediata</h4>
+                        <p>Calculamos el precio exacto basado en peso y tiempo.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="proceso" class="content-section">
+                <h2>¿Cómo es el proceso de tu pedido?</h2>
+                
+                <div class="timeline">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <div>
+                            <h3>Elige o Sube tu Diseño</h3>
+                            <p>Inicia sesión y busca una figura en nuestra galería conectada a Thingiverse.com, o sube tu propio archivo 3D.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <div>
+                            <h3>Cotización Automática</h3>
+                            <p>Nuestro sistema calculará los gramos de filamento y tiempo de máquina para darte un precio justo y transparente al instante.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <div>
+                            <h3>Confirmación del Pedido</h3>
+                            <p>Si todo te parece correcto, confirmas tu pedido y al instante nuestro experto recibirá una notificación con los datos que necesita para poner nuestra Creality Ender-3 S1 Pro a Trabajar.</p>
+                        </div>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">4</div>
+                        <div>
+                            <h3>Entrega</h3>
+                            <p>Nuestro experto te hará saber cuando tu impresión ya esté lista para la entrega.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="impresora" class="content-section">
+                <div class="header-con-video">
+                    <h2>Nuestra Tecnología</h2>
+                    <a href="Ender-3_S1_Pro_VID.mp4" target="_blank" class="btn-video">▶ Ver Trailer Oficial</a>
+                </div>
+                
+                <div class="printer-gallery-container">
+                    
+                    <div class="printer-card-main">
+                        
+                        <div class="printer-info-side">
+                            <div class="printer-info-content">
+                                <h3>Creality Ender-3 S1 Pro</h3>
+                                <p><strong>Filamento en Uso:</strong><br> PLA Blanco</p>
+                                <p><strong>Volumen de Camilla:</strong><br> 220 x 220 x 270mm</p>
+                                <p><strong>Dimensiones de la Impresora 3D:</strong><br> 490 x 455 x 625mm</p>
+                            </div>
+                        </div>
+
+                        <div class="image-wrapper">
+                            <img src="Ender-3_S1_Pro-1.png" alt="Creality Ender-3 S1 Pro" class="printer-img" id="img-principal">
+                        </div>
+
+                    </div>
+                    
+                    <div class="printer-thumbnails">
+                        <img src="Ender-3_S1_Pro-1.png" alt="Vista 1 Creality" onclick="cambiarImagen(this.src)">
+                        <img src="Ender-3_S1_Pro-2.png" alt="Vista 2 Creality" onclick="cambiarImagen(this.src)">
+                        <img src="Ender-3_S1_Pro-3.png" alt="Vista 3 Creality" onclick="cambiarImagen(this.src)">
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="materiales" class="content-section">
+                <h2>Materiales y Calidad</h2>
+                <p>Actualmente trabajamos principalmente con <strong>PLA (Ácido Poliláctico)</strong>, un bioplástico amigable con el medio ambiente, ideal para figuras decorativas, prototipos visuales y piezas que no requieran soportar altas temperaturas.</p>
+                <p>Imprimimos con una resolución estándar de <strong>0.2mm por capa</strong>, logrando un equilibrio perfecto entre detalle y tiempo de entrega en nuestra Creality Ender-3 S1 Pro.</p>
+            </section>
+
+            <section class="cta-section">
+                <h2>¿Estás listo para obtener tus impresiones 3D?</h2>
+                <p>Pues inicia sesión y empieza a descubrir.</p>
+                <a href="login.html" class="btn-cura btn-large">Iniciar Sesión Ahora</a>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function cambiarImagen(rutaImagen) {
+            document.getElementById('img-principal').src = rutaImagen;
+        }
+    </script>
+
+</body>
+</html>
