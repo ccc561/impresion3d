@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* --- ESTILOS BASE --- */
+        /* --- ESTILOS BASE Y VARIABLES --- */
         :root {
             --cura-blue: #0055ff;
             --cura-dark: #1a1a1a;
@@ -28,6 +28,9 @@
             padding: 15px 40px;
             background: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         .logo {
             font-size: 22px;
@@ -36,6 +39,19 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+        .top-nav {
+            display: flex;
+            gap: 20px;
+        }
+        .top-nav a {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+        .top-nav a:hover {
+            color: var(--cura-blue);
         }
         .nav-buttons {
             display: flex;
@@ -50,42 +66,21 @@
             transition: 0.2s;
             font-size: 14px;
         }
-        .btn-secondary {
-            background: #e9ecef;
-            color: #333;
-        }
-        .btn-secondary:hover {
-            background: #dee2e6;
-        }
-        .btn-primary {
-            background: var(--cura-blue);
-            color: white;
-        }
-        .btn-primary:hover {
-            background: #0044cc;
-        }
+        .btn-secondary { background: #e9ecef; color: #333; }
+        .btn-secondary:hover { background: #dee2e6; }
+        .btn-primary { background: var(--cura-blue); color: white; }
+        .btn-primary:hover { background: #0044cc; }
 
-        /* --- HERO SECTION --- */
+        /* --- HERO Y BÚSQUEDA --- */
         .hero {
             max-width: 1200px;
             margin: 60px auto 40px auto;
             padding: 0 20px;
             text-align: center;
         }
-        .hero h1 {
-            font-size: 48px;
-            color: var(--cura-dark);
-            margin-bottom: 20px;
-        }
-        .hero p {
-            font-size: 18px;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto 40px auto;
-            line-height: 1.6;
-        }
-
-        /* --- CUADRO DE BÚSQUEDA --- */
+        .hero h1 { font-size: 48px; color: var(--cura-dark); margin-bottom: 20px; }
+        .hero p { font-size: 18px; color: #666; max-width: 700px; margin: 0 auto 40px auto; line-height: 1.6; }
+        
         .search-container {
             max-width: 650px;
             margin: 0 auto;
@@ -97,207 +92,101 @@
             align-items: center;
             border: 1px solid #e1e4e6;
         }
-        .search-container i {
-            color: #aaa;
-            padding-left: 20px;
-            font-size: 18px;
-        }
-        .search-container input {
-            flex: 1;
-            border: none;
-            padding: 15px;
-            font-size: 16px;
-            outline: none;
-            border-radius: 50px;
-        }
+        .search-container i { color: #aaa; padding-left: 20px; font-size: 18px; }
+        .search-container input { flex: 1; border: none; padding: 15px; font-size: 16px; outline: none; border-radius: 50px; }
         .btn-search {
-            background: var(--cura-blue);
-            color: white;
-            border: none;
-            padding: 14px 30px;
-            border-radius: 50px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
+            background: var(--cura-blue); color: white; border: none; padding: 14px 30px;
+            border-radius: 50px; font-weight: bold; cursor: pointer; transition: 0.2s;
         }
-        .btn-search:hover {
-            background: #0044cc;
-        }
+        .btn-search:hover { background: #0044cc; }
 
-        /* --- SECCIONES REUTILIZABLES --- */
-        .section-container {
+        /* --- SECCIONES GENERALES --- */
+        .content-section {
             max-width: 1200px;
             margin: 80px auto;
             padding: 0 20px;
         }
         .section-title {
-            text-align: center;
-            font-size: 32px;
-            color: var(--cura-dark);
-            margin-bottom: 40px;
-            position: relative;
+            text-align: center; font-size: 32px; color: var(--cura-dark); margin-bottom: 40px; position: relative;
         }
         .section-title::after {
-            content: '';
-            display: block;
-            width: 60px;
-            height: 4px;
-            background: var(--cura-blue);
-            margin: 10px auto 0 auto;
-            border-radius: 2px;
+            content: ''; display: block; width: 60px; height: 4px; background: var(--cura-blue); margin: 10px auto 0 auto; border-radius: 2px;
         }
 
-        /* --- SECCIÓN: PROCESO DE PEDIDO --- */
-        .process-grid {
+        /* --- PROCESO DE PEDIDO --- */
+        .timeline {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 25px;
-            margin-top: 20px;
         }
         .step-card {
-            background: white;
-            padding: 30px 20px;
-            border-radius: 12px;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            border-top: 4px solid #e9ecef;
-            transition: 0.3s;
+            background: white; padding: 30px 20px; border-radius: 12px; text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border-top: 4px solid #e9ecef; transition: 0.3s;
         }
-        .step-card:hover {
-            transform: translateY(-5px);
-            border-top-color: var(--cura-blue);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        .step-card:hover { transform: translateY(-5px); border-top-color: var(--cura-blue); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
+        .step-number {
+            width: 50px; height: 50px; background: var(--cura-blue); color: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; margin: 0 auto 20px auto;
         }
-        .step-icon {
-            width: 60px;
-            height: 60px;
-            background: #edf2ff;
-            color: var(--cura-blue);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            margin: 0 auto 20px auto;
-        }
-        .step-card h4 {
-            margin: 0 0 10px 0;
-            font-size: 18px;
-            color: var(--cura-dark);
-        }
-        .step-card p {
-            margin: 0;
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
-        }
+        .step-card h3 { margin: 0 0 10px 0; font-size: 18px; color: var(--cura-dark); }
+        .step-card p { margin: 0; font-size: 14px; color: #666; line-height: 1.5; }
 
-        /* --- SECCIÓN: NUESTRA TECNOLOGÍA --- */
-        .tech-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
+        /* --- TECNOLOGÍA (DISEÑO ANTIGUO ADAPTADO) --- */
+        .header-con-video {
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+            flex-wrap: wrap; gap: 15px;
         }
-        .tech-info h3 {
-            font-size: 26px;
-            margin: 0 0 20px 0;
-            color: var(--cura-dark);
+        .header-con-video h2 { margin: 0; font-size: 32px; color: var(--cura-dark); }
+        .btn-video {
+            background: #ff0000; color: white; padding: 10px 20px; border-radius: 6px;
+            text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: 0.2s;
         }
-        .tech-specs {
-            list-style: none;
-            padding: 0;
-            margin: 0 0 30px 0;
+        .btn-video:hover { background: #cc0000; }
+        
+        .printer-gallery-container {
+            background: white; border-radius: 16px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            display: flex; flex-direction: column; gap: 30px;
         }
-        .tech-specs li {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
-            font-size: 15px;
+        .printer-card-main {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center;
         }
-        .tech-specs i {
-            color: #28a745;
-            font-size: 16px;
+        .printer-info-content h3 { font-size: 28px; color: var(--cura-blue); margin-top: 0; }
+        .printer-info-content p { font-size: 16px; line-height: 1.6; color: #555; background: #f8f9fa; padding: 15px; border-radius: 8px; border-left: 4px solid var(--cura-blue); margin-bottom: 15px; }
+        
+        .image-wrapper { text-align: center; background: #f1f3f5; border-radius: 12px; padding: 20px; }
+        .printer-img { width: 100%; max-width: 400px; height: auto; object-fit: contain; border-radius: 8px; }
+        
+        .printer-thumbnails { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .printer-thumbnails img {
+            width: 80px; height: 80px; object-fit: cover; border-radius: 8px; cursor: pointer;
+            border: 2px solid transparent; transition: 0.2s; background: #f1f3f5; padding: 5px;
         }
-        .tech-media {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .tech-image {
-            width: 100%;
-            height: 280px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            background: #ddd;
-        }
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
-            height: 0;
-            overflow: hidden;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            background: #000;
-        }
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
+        .printer-thumbnails img:hover { border-color: var(--cura-blue); transform: scale(1.05); }
 
-        /* --- SECCIÓN GOOGLE LOGIN --- */
+        /* --- MATERIALES --- */
+        .materials-box {
+            background: white; padding: 40px; border-radius: 12px; text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03); border: 1px solid #eee;
+        }
+        .materials-box p { font-size: 16px; color: #555; line-height: 1.8; max-width: 800px; margin: 0 auto 15px auto; }
+
+        /* --- LOGIN GOOGLE --- */
         .auth-card {
-            background: white;
-            max-width: 400px;
-            margin: 60px auto;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            text-align: center;
-            border: 1px solid #eee;
+            background: white; max-width: 450px; margin: 80px auto; padding: 40px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); text-align: center; border: 1px solid #e1e4e6;
         }
-        .auth-card h3 {
-            margin-top: 0;
-            color: var(--cura-dark);
-        }
+        .auth-card h3 { margin-top: 0; color: var(--cura-dark); font-size: 24px; }
         .btn-google {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            background: white;
-            color: #444;
-            border: 1px solid #ccc;
-            padding: 12px 20px;
-            border-radius: 6px;
-            width: 100%;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 15px;
-            transition: 0.2s;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            display: flex; align-items: center; justify-content: center; gap: 12px; background: white;
+            color: #444; border: 1px solid #ccc; padding: 14px 20px; border-radius: 8px; width: 100%;
+            font-weight: bold; cursor: pointer; font-size: 16px; transition: 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .btn-google:hover {
-            background: #f8f9fa;
-            border-color: #999;
-        }
-        .btn-google img {
-            width: 20px;
-            height: 20px;
-        }
+        .btn-google:hover { background: #f8f9fa; border-color: #999; }
+        .btn-google img { width: 24px; height: 24px; }
 
-        /* Adaptabilidad Móvil */
         @media (max-width: 768px) {
-            .tech-layout { grid-template-columns: 1fr; gap: 30px; }
-            .hero h1 { font-size: 34px; }
-            .top-header { padding: 15px 20px; }
+            .printer-card-main { grid-template-columns: 1fr; }
+            .top-nav { display: none; }
         }
     </style>
 </head>
@@ -305,89 +194,110 @@
 
     <header class="top-header">
         <div class="logo">
-            <i class="fas fa-print"></i> HUB Impresión 3D
+            <i class="fas fa-cube"></i> Centro de Impresión 3D
         </div>
-        <nav class="nav-buttons">
-            <a href="ModelosThingiverse.html" class="btn-header btn-secondary">Explorar Catálogo</a>
-            <a href="login.html" id="btn-auth-main" class="btn-header btn-primary">Iniciar Sesión</a>
+        <nav class="top-nav">
+            <a href="#proceso">Proceso</a>
+            <a href="#impresora">Tecnología</a>
+            <a href="#materiales">Materiales</a>
         </nav>
+        <div class="nav-buttons">
+            <a href="ModelosThingiverse.html" class="btn-header btn-secondary">Catálogo 3D</a>
+            <a href="login.html" id="btn-auth-main" class="btn-header btn-primary">Iniciar Sesión</a>
+        </div>
     </header>
 
     <main class="hero">
-        <h1>Transforma tus ideas en objetos reales</h1>
-        <p>Busca entre millones de diseños listos para fabricar directamente desde el repositorio global de Thingiverse o entra para enviar tus propios archivos.</p>
+        <h1>Materializamos tus ideas con precisión</h1>
+        <p>Bienvenido a nuestro servicio local de impresión 3D. Calidad profesional, tiempos de entrega rápidos y precios accesibles para tus proyectos, prototipos o figuras favoritas.</p>
         
         <div class="search-container">
             <i class="fas fa-search"></i>
-            <input type="text" id="main-search-input" placeholder="¿Qué te gustaría imprimir hoy?" onkeypress="if(event.key === 'Enter') transferirBusqueda()">
+            <input type="text" id="main-search-input" placeholder="Busca una figura en Thingiverse (Ej: Batman, Maceta)..." onkeypress="if(event.key === 'Enter') transferirBusqueda()">
             <button class="btn-search" onclick="transferirBusqueda()">Buscar</button>
         </div>
     </main>
 
-    <section class="section-container">
+    <section id="proceso" class="content-section">
         <h2 class="section-title">¿Cómo es el proceso de tu pedido?</h2>
-        <div class="process-grid">
+        <div class="timeline">
             <div class="step-card">
-                <div class="step-icon"><i class="fas fa-search"></i></div>
-                <h4>1. Elige tu Modelo</h4>
-                <p>Busca un diseño en nuestro catálogo integrado de Thingiverse o prepara tu archivo STL propio.</p>
+                <div class="step-number">1</div>
+                <h3>Elige o Sube tu Diseño</h3>
+                <p>Inicia sesión y busca una figura en nuestra galería conectada a Thingiverse.com, o sube tu propio archivo 3D.</p>
             </div>
             <div class="step-card">
-                <div class="step-icon"><i class="fas fa-file-invoice-dollar"></i></div>
-                <h4>2. Cotización</h4>
-                <p>Envíanos el diseño desde tu panel para calcular los materiales, tiempos y costo de fabricación.</p>
+                <div class="step-number">2</div>
+                <h3>Cotización Automática</h3>
+                <p>Nuestro sistema calculará los gramos de filamento y tiempo de máquina para darte un precio justo y transparente al instante.</p>
             </div>
             <div class="step-card">
-                <div class="step-icon"><i class="fas fa-cogs"></i></div>
-                <h4>3. Impresión 3D</h4>
-                <p>Una vez aprobado, fabricamos tu pieza usando tecnología de alta precisión y los mejores filamentos.</p>
+                <div class="step-number">3</div>
+                <h3>Confirmación del Pedido</h3>
+                <p>Si todo te parece correcto, confirmas tu pedido y al instante nuestro experto recibirá una notificación con los datos que necesita para poner nuestra Creality Ender-3 S1 Pro a trabajar.</p>
             </div>
             <div class="step-card">
-                <div class="step-icon"><i class="fas fa-box-open"></i></div>
-                <h4>4. Entrega</h4>
-                <p>Empacamos cuidadosamente tu producto listo para ser retirado o enviado directamente a tu dirección.</p>
+                <div class="step-number">4</div>
+                <h3>Entrega</h3>
+                <p>Nuestro experto te hará saber cuando tu impresión ya esté lista para la entrega.</p>
             </div>
         </div>
     </section>
 
-    <section class="section-container" style="background: white; padding: 60px 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
-        <h2 class="section-title">Nuestra Tecnología</h2>
-        <div class="tech-layout">
-            
-            <div class="tech-info">
-                <h3>Equipamiento Industrial de Alta Precisión</h3>
-                <p style="color: #666; line-height: 1.6; margin-bottom: 25px;">Utilizamos sistemas de impresión FDM de última generación calibrados minuciosamente para garantizar acabados superficiales lisos, tolerancias mecánicas exactas y una adherencia de capa indestructible.</p>
-                
-                <ul class="tech-specs">
-                    <li><i class="fas fa-check-circle"></i> <strong>Volumen de Impresión:</strong> Hasta 250 x 250 x 260 mm para piezas de gran tamaño.</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Materiales Soportados:</strong> PLA+, PETG, ABS, Flexibles (TPU) y Nylon.</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Resolución de Capa:</strong> Desde 0.1mm para máxima definición de detalles.</li>
-                    <li><i class="fas fa-check-circle"></i> <strong>Nivelación Automática:</strong> Matriz activa para capas iniciales perfectas.</li>
-                </ul>
-            </div>
+    <section id="impresora" class="content-section">
+        <div class="header-con-video">
+            <h2>Nuestra Tecnología</h2>
+            <a href="Ender-3_S1_Pro_VID.mp4" target="_blank" class="btn-video"><i class="fas fa-play-circle"></i> Ver Trailer Oficial</a>
+        </div>
+        
+        <div class="printer-gallery-container">
+            <div class="printer-card-main">
+                <div class="printer-info-side">
+                    <div class="printer-info-content">
+                        <h3>Creality Ender-3 S1 Pro</h3>
+                        <p><strong><i class="fas fa-layer-group"></i> Filamento en Uso:</strong><br> PLA Blanco</p>
+                        <p><strong><i class="fas fa-vector-square"></i> Volumen de Camilla:</strong><br> 220 x 220 x 270mm</p>
+                        <p><strong><i class="fas fa-ruler-combined"></i> Dimensiones de la Impresora 3D:</strong><br> 490 x 455 x 625mm</p>
+                    </div>
+                </div>
 
-            <div class="tech-media">
-                <img src="img/impresora.jpg" alt="Nuestra Impresora 3D" class="tech-image" onerror="this.src='https://images.unsplash.com/photo-1615840287214-7fe58a8f3685?q=80&w=600&auto=format&fit=crop'">
-                
-                <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <div class="image-wrapper">
+                    <img src="Ender-3_S1_Pro-1.png" alt="Creality Ender-3 S1 Pro" class="printer-img" id="img-principal">
                 </div>
             </div>
+            
+            <div class="printer-thumbnails">
+                <img src="Ender-3_S1_Pro-1.png" alt="Vista 1 Creality" onclick="cambiarImagen(this.src)">
+                <img src="Ender-3_S1_Pro-2.png" alt="Vista 2 Creality" onclick="cambiarImagen(this.src)">
+                <img src="Ender-3_S1_Pro-3.png" alt="Vista 3 Creality" onclick="cambiarImagen(this.src)">
+            </div>
+        </div>
+    </section>
 
+    <section id="materiales" class="content-section">
+        <h2 class="section-title">Materiales y Calidad</h2>
+        <div class="materials-box">
+            <p>Actualmente trabajamos principalmente con <strong>PLA (Ácido Poliláctico)</strong>, un bioplástico amigable con el medio ambiente, ideal para figuras decorativas, prototipos visuales y piezas que no requieran soportar altas temperaturas.</p>
+            <p>Imprimimos con una resolución estándar de <strong>0.2mm por capa</strong>, logrando un equilibrio perfecto entre detalle y tiempo de entrega en nuestra Creality Ender-3 S1 Pro.</p>
         </div>
     </section>
 
     <section id="google-auth-section" class="auth-card">
-        <h3>Acceso Instantáneo</h3>
-        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Inicia sesión de forma segura para enviar piezas y gestionar tus solicitudes de impresión.</p>
+        <h3>¿Estás listo para imprimir?</h3>
+        <p style="color: #666; font-size: 15px; margin-bottom: 25px;">Inicia sesión de forma segura para enviar tus piezas y solicitar cotizaciones.</p>
         <button class="btn-google" onclick="loginConGoogle()">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
             Continuar con Google
         </button>
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        function cambiarImagen(rutaImagen) {
+            document.getElementById('img-principal').src = rutaImagen;
+        }
+    </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         // ==========================================
         // CONFIGURACIÓN DE SUPABASE
@@ -417,18 +327,12 @@
             }
         }
 
-        // ==========================================
-        // REDIRECCIÓN DE BÚSQUEDA (CON ENTER)
-        // ==========================================
         function transferirBusqueda() {
             const query = document.getElementById('main-search-input').value.trim();
             if (query === "") return;
             window.location.href = `ModelosThingiverse.html?search=${encodeURIComponent(query)}`;
         }
 
-        // ==========================================
-        // AUTENTICACIÓN CON GOOGLE OAUTH
-        // ==========================================
         async function loginConGoogle() {
             if (!dbCliente) return;
             try {
