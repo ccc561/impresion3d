@@ -177,23 +177,22 @@
             const { data: { session }, error } = await dbCliente.auth.getSession();
 
             if (error || !session) {
-                window.location.href = 'login.html'; // Si no hay sesión, se expulsa al login
+                window.location.href = 'login.html'; // Redirección si no hay sesión
                 return;
             }
 
-            // Si está logueado, mostramos el body y guardamos su ID
+            // Hacer visible la interfaz y guardar el ID
             document.body.style.display = 'block';
             idUsuarioActual = session.user.id;
             
-            // Mostrar nombre de Google
+            // Extraer nombre desde la metadata de Google o usar email como respaldo
             const nombreUsuario = session.user.user_metadata.full_name || session.user.email;
-            document.getElementById('usuario-nombre').textContent = nombreUsuario.split(" ")[0]; // Solo el primer nombre
+            document.getElementById('usuario-nombre').textContent = nombreUsuario.split(" ")[0];
 
-            // Cargar sus modelos
+            // Cargar modelos asignados
             cargarModelosGuardados();
         }
 
-        // --- CARGAR DATOS DESDE BASE DE DATOS ---
         // --- CARGAR DATOS DESDE BASE DE DATOS ---
         async function cargarModelosGuardados() {
             const contenedor = document.getElementById('contenedor-guardados');
@@ -201,10 +200,8 @@
             const { data, error } = await dbCliente
                 .from('modelos_guardados')
                 .select('*')
-                .eq('user_id', idUsuarioActual)
-                .order('created_at', { ascending: false }); 
+                .eq('user_id', idUsuarioActual);
 
-            // MODIFICADO: Ahora te mostrará el texto del error en rojo
             if (error) {
                 console.error("Error cargando diseños:", error.message);
                 contenedor.innerHTML = `
@@ -236,13 +233,6 @@
                         No tienes diseños guardados aún.<br>Explora la galería y guarda los que te gusten.
                     </div>`;
             }
-        });
-            } else {
-                contenedor.innerHTML = `
-                    <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #888; background: #f9fafb; border-radius: 12px; border: 1px dashed #ccc;">
-                        No tienes diseños guardados aún.<br>Explora la galería y guarda los que te gusten.
-                    </div>`;
-            }
         }
 
         // --- FUNCIONES DE ACCIÓN ---
@@ -261,7 +251,7 @@
             window.location.href = 'index.html';
         });
 
-        // Escuchar si la sesión expira
+        // Escuchar si la sesión cambia o expira externamente
         if(window.supabase) {
             window.supabase.auth.onAuthStateChange((event, session) => {
                 if (event === 'SIGNED_OUT') window.location.href = 'login.html';
