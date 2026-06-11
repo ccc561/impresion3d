@@ -76,11 +76,8 @@
                 
                 <div class="search-box">
                     <input type="text" id="busqueda-index" class="search-input" placeholder="Ej: Maceta, Soporte audífonos, Batman...">
-                    <button class="btn-cura" onclick="simularBusquedaThingiverse()">Explorar Modelos</button>
+                    <button class="btn-cura" onclick="redirigirAGaleria()">Explorar Modelos</button>
                 </div>
-
-                <div id="resultados-busqueda-index" class="features-grid" style="margin-top: 30px;">
-                    </div>
             </section>
 
             <section id="proceso" class="content-section">
@@ -172,38 +169,17 @@
             document.getElementById('img-principal').src = rutaImagen;
         }
 
-        // SIMULACIÓN VISUAL (Se reemplazará por la API de Thingiverse en la Fase 3)
-        function simularBusquedaThingiverse() {
-            const termino = document.getElementById('busqueda-index').value;
-            const contenedor = document.getElementById('resultados-busqueda-index');
+        // NUEVA FUNCIÓN: Redirige a la página de la galería, pasando el término de búsqueda si existe
+        function redirigirAGaleria() {
+            const termino = document.getElementById('busqueda-index').value.trim();
             
-            if(termino.trim() === '') {
-                alert("Por favor, escribe algo para buscar.");
-                return;
+            if(termino === '') {
+                // Si está vacío, va a la página general
+                window.location.href = 'ModelosThingiverse.html';
+            } else {
+                // Si hay texto, lo codifica en la URL (ej: ?q=Batman)
+                window.location.href = `ModelosThingiverse.html?q=${encodeURIComponent(termino)}`;
             }
-
-            contenedor.innerHTML = '<p>Buscando en Thingiverse...</p>';
-
-            // Simulamos un retraso de red de 1 segundo
-            setTimeout(() => {
-                contenedor.innerHTML = `
-                    <div class="feature-card thingiverse-item">
-                        <img src="https://via.placeholder.com/150/0055FF/FFFFFF?text=Modelo+1" alt="Modelo">
-                        <h4>${termino} Articulado</h4>
-                        <p>Diseño popular y fácil de imprimir.</p>
-                    </div>
-                    <div class="feature-card thingiverse-item">
-                        <img src="https://via.placeholder.com/150/0055FF/FFFFFF?text=Modelo+2" alt="Modelo">
-                        <h4>Soporte para ${termino}</h4>
-                        <p>Ideal para organizar tu escritorio.</p>
-                    </div>
-                    <div class="feature-card thingiverse-item">
-                        <img src="https://via.placeholder.com/150/0055FF/FFFFFF?text=Modelo+3" alt="Modelo">
-                        <h4>${termino} Low Poly</h4>
-                        <p>Estilo geométrico moderno.</p>
-                    </div>
-                `;
-            }, 1000);
         }
     </script>
 
