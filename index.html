@@ -3,185 +3,268 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servicio de Impresión 3D Profesional</title>
+    <title>Centro de Impresión 3D - Inicio</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Estilos rápidos para el buscador del index */
-        .search-box {
+        /* --- ESTILOS BASE --- */
+        :root {
+            --cura-blue: #0055ff;
+            --cura-dark: #1a1a1a;
+            --bg-light: #f8f9fa;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg-light);
+            color: #333;
+        }
+
+        /* --- HEADER --- */
+        .top-header {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--cura-blue);
+            display: flex;
+            align-items: center;
             gap: 10px;
-            margin: 20px 0;
         }
-        .search-input {
-            padding: 12px;
-            width: 60%;
-            max-width: 400px;
-            border: 2px solid #ccc;
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .btn-header {
+            padding: 10px 20px;
             border-radius: 6px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: 0.2s;
+            font-size: 14px;
+        }
+        .btn-secondary {
+            background: #e9ecef;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background: #dee2e6;
+        }
+        .btn-primary {
+            background: var(--cura-blue);
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #0044cc;
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 48px;
+            color: var(--cura-dark);
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 18px;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+            line-height: 1.6;
+        }
+
+        /* --- CUADRO DE BÚSQUEDA --- */
+        .search-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: white;
+            padding: 8px;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            border: 1px solid #e1e4e6;
+        }
+        .search-container i {
+            color: #aaa;
+            padding-left: 20px;
+            font-size: 18px;
+        }
+        .search-container input {
+            flex: 1;
+            border: none;
+            padding: 15px;
             font-size: 16px;
-        }
-        .search-input:focus {
-            border-color: #0055FF; /* cura-blue */
             outline: none;
+            border-radius: 50px;
         }
-        .thingiverse-item img {
+        .btn-search {
+            background: var(--cura-blue);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-search:hover {
+            background: #0044cc;
+        }
+
+        /* --- SECCIÓN GOOGLE LOGIN (ACCESO RÁPIDO) --- */
+        .auth-card {
+            background: white;
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            text-align: center;
+            border: 1px solid #eee;
+        }
+        .auth-card h3 {
+            margin-top: 0;
+            color: var(--cura-dark);
+        }
+        .btn-google {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: white;
+            color: #444;
+            border: 1px solid #ccc;
+            padding: 12px 20px;
+            border-radius: 6px;
             width: 100%;
-            border-radius: 4px;
-            margin-bottom: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .btn-google:hover {
+            background: #f8f9fa;
+            border-color: #999;
+        }
+        .btn-google img {
+            width: 20px;
+            height: 20px;
         }
     </style>
 </head>
 <body>
 
     <header class="top-header">
-        <div class="logo">Centro de Impresión 3D</div>
-        <nav class="top-nav">
-            <a href="#inicio">Inicio</a>
-            <a href="#que-imprimir">¿Qué puedo imprimir?</a>
-            <a href="#proceso">¿Cómo es el proceso?</a>
-            <a href="#impresora">Nuestra Tecnología</a>
+        <div class="logo">
+            <i class="fas fa-print"></i> HUB Impresión 3D
+        </div>
+        <nav class="nav-buttons">
+            <a href="ModelosThingiverse.html" class="btn-header btn-secondary">Explorar Catálogo</a>
+            <a href="login.html" id="btn-auth-main" class="btn-header btn-primary">Iniciar Sesión</a>
         </nav>
-        <a href="login.html" class="btn-header">Iniciar Sesión</a>
     </header>
 
-    <div class="page-layout">
-        <main class="main-content">
-            
-            <section id="inicio" class="content-section">
-                <div class="hero-text">
-                    <h1>Materializamos tus ideas con precisión</h1>
-                    <p>Bienvenido a nuestro servicio local de impresión 3D. Calidad profesional, tiempos de entrega rápidos y precios accesibles para tus proyectos, prototipos o figuras favoritas.</p>
-                </div>
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <h4>Sube tus modelos</h4>
-                        <p>Aceptamos archivos .STL listos para procesar.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>Búsqueda Integrada</h4>
-                        <p>Encuentra miles de diseños directamente desde Thingiverse.</p>
-                    </div>
-                    <div class="feature-card">
-                        <h4>Cotización Inmediata</h4>
-                        <p>Calculamos el precio exacto basado en peso y tiempo.</p>
-                    </div>
-                </div>
-            </section>
+    <main class="hero">
+        <h1>Transforma tus ideas en objetos reales</h1>
+        <p>Busca entre millones de diseños listos para fabricar directamente desde el repositorio global de Thingiverse.</p>
+        
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" id="main-search-input" placeholder="¿Qué te gustaría imprimir hoy?" onkeypress="if(event.key === 'Enter') transferirBusqueda()">
+            <button class="btn-search" onclick="transferirBusqueda()">Buscar</button>
+        </div>
+    </main>
 
-            <section id="que-imprimir" class="content-section">
-                <h2>¿Qué puedo imprimir?</h2>
-                <p>Un modelo 3D es un archivo digital (usualmente en formato <strong>.STL</strong>) que contiene la geometría tridimensional de un objeto. Piensa en él como los planos de construcción que le dicen a nuestra impresora cómo ir colocando el plástico fundido, capa por capa, hasta formar la pieza sólida real.</p>
-                <p>Para hacerte las cosas más fáciles, estamos conectados directamente con <strong>Thingiverse</strong>, la biblioteca de diseños 3D gratuitos más grande del mundo. Puedes buscar desde macetas y soportes para celular, hasta figuras de acción y repuestos mecánicos.</p>
-                
-                <div class="search-box">
-                    <input type="text" id="busqueda-index" class="search-input" placeholder="Ej: Maceta, Soporte audífonos, Batman...">
-                    <button class="btn-cura" onclick="redirigirAGaleria()">Explorar Modelos</button>
-                </div>
-            </section>
+    <section id="google-auth-section" class="auth-card">
+        <h3>Acceso Instantáneo</h3>
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Inicia sesión de forma segura para enviar piezas y guardar tu historial de cotizaciones.</p>
+        <button class="btn-google" onclick="loginConGoogle()">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+            Continuar con Google
+        </button>
+    </section>
 
-            <section id="proceso" class="content-section">
-                <h2>¿Cómo es el proceso de tu pedido?</h2>
-                
-                <div class="timeline">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <div>
-                            <h3>Elige o Sube tu Diseño</h3>
-                            <p>Inicia sesión y busca una figura en nuestra galería conectada a Thingiverse.com, o sube tu propio archivo 3D.</p>
-                        </div>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <div>
-                            <h3>Cotización Automática</h3>
-                            <p>Nuestro sistema calculará los gramos de filamento y tiempo de máquina para darte un precio justo y transparente al instante.</p>
-                        </div>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <div>
-                            <h3>Confirmación del Pedido</h3>
-                            <p>Si todo te parece correcto, confirmas tu pedido y al instante nuestro experto recibirá una notificación con los datos que necesita para poner nuestra Creality Ender-3 S1 Pro a Trabajar.</p>
-                        </div>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">4</div>
-                        <div>
-                            <h3>Entrega</h3>
-                            <p>Nuestro experto te hará saber cuando tu impresión ya esté lista para la entrega.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section id="impresora" class="content-section">
-                <div class="header-con-video">
-                    <h2>Nuestra Tecnología</h2>
-                    <a href="Ender-3_S1_Pro_VID.mp4" target="_blank" class="btn-video">▶ Ver Trailer Oficial</a>
-                </div>
-                
-                <div class="printer-gallery-container">
-                    
-                    <div class="printer-card-main">
-                        
-                        <div class="printer-info-side">
-                            <div class="printer-info-content">
-                                <h3>Creality Ender-3 S1 Pro</h3>
-                                <p><strong>Filamento en Uso:</strong><br> PLA Blanco</p>
-                                <p><strong>Volumen de Camilla:</strong><br> 220 x 220 x 270mm</p>
-                                <p><strong>Dimensiones de la Impresora:</strong><br> 490 x 455 x 625mm</p>
-                            </div>
-                        </div>
-
-                        <div class="image-wrapper">
-                            <img src="Ender-3_S1_Pro-1.png" alt="Creality Ender-3 S1 Pro" class="printer-img" id="img-principal">
-                        </div>
-
-                    </div>
-                    
-                    <div class="printer-thumbnails">
-                        <img src="Ender-3_S1_Pro-1.png" alt="Vista 1 Creality" onclick="cambiarImagen(this.src)">
-                        <img src="Ender-3_S1_Pro-2.png" alt="Vista 2 Creality" onclick="cambiarImagen(this.src)">
-                        <img src="Ender-3_S1_Pro-3.png" alt="Vista 3 Creality" onclick="cambiarImagen(this.src)">
-                    </div>
-
-                </div>
-            </section>
-
-            <section id="materiales" class="content-section">
-                <h2>Materiales y Calidad</h2>
-                <p>Actualmente trabajamos principalmente con <strong>PLA (Ácido Poliláctico)</strong>, un bioplástico amigable con el medio ambiente, ideal para figuras decorativas, prototipos visuales y piezas que no requieran soportar altas temperaturas.</p>
-                <p>Imprimimos con una resolución estándar de <strong>0.2mm por capa</strong>, logrando un equilibrio perfecto entre detalle y tiempo de entrega.</p>
-            </section>
-
-            <section class="cta-section">
-                <h2>¿Estás listo para obtener tus impresiones 3D?</h2>
-                <p>Pues inicia sesión y empieza a descubrir.</p>
-                <a href="login.html" class="btn-cura btn-large">Iniciar Sesión Ahora</a>
-            </section>
-
-        </main>
-    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        function cambiarImagen(rutaImagen) {
-            document.getElementById('img-principal').src = rutaImagen;
+        // ==========================================
+        // CONFIGURACIÓN DE SUPABASE
+        // ==========================================
+        const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
+        
+        let dbCliente = null;
+
+        window.onload = async function() {
+            if (window.supabase) {
+                dbCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // Comprobar si el usuario ya tiene sesión activa
+                const { data: { session } } = await dbCliente.auth.getSession();
+                evaluarEstadoSesion(session?.user);
+            }
+        };
+
+        // Cambiar la interfaz si el usuario ya está dentro
+        function evaluarEstadoSesion(usuario) {
+            const btnAuth = document.getElementById('btn-auth-main');
+            const googleCard = document.getElementById('google-auth-section');
+            
+            if (usuario) {
+                btnAuth.href = "dashboard.html";
+                btnAuth.innerHTML = '<i class="fas fa-user-circle"></i> Mi Panel';
+                
+                // Ocultar la tarjeta de login si ya está autenticado
+                if (googleCard) googleCard.style.display = "none";
+            }
         }
 
-        // NUEVA FUNCIÓN: Redirige a la página de la galería, pasando el término de búsqueda si existe
-        function redirigirAGaleria() {
-            const termino = document.getElementById('busqueda-index').value.trim();
+        // ==========================================
+        // FLUJO DE REDIRECCIÓN DE BÚSQUEDA (CON ENTER)
+        // ==========================================
+        function transferirBusqueda() {
+            const query = document.getElementById('main-search-input').value.trim();
+            if (query === "") return;
             
-            if(termino === '') {
-                // Si está vacío, va a la página general
-                window.location.href = 'ModelosThingiverse.html';
-            } else {
-                // Si hay texto, lo codifica en la URL (ej: ?q=Batman)
-                window.location.href = `ModelosThingiverse.html?q=${encodeURIComponent(termino)}`;
+            // Redirige a la página de la galería inyectando el parámetro en la URL
+            window.location.href = `ModelosThingiverse.html?search=${encodeURIComponent(query)}`;
+        }
+
+        // ==========================================
+        // AUTENTICACIÓN CON GOOGLE OAUTH
+        // ==========================================
+        async function loginConGoogle() {
+            if (!dbCliente) return;
+            
+            try {
+                const { data, error } = await dbCliente.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        // Al terminar el login, Google lo devolverá aquí de manera automática
+                        redirectTo: window.location.origin + '/dashboard.html'
+                    }
+                });
+                
+                if (error) throw error;
+            } catch (err) {
+                console.error("Error en Google Auth:", err.message);
+                alert("No se pudo iniciar sesión con Google. Revisa tus credenciales en Supabase.");
             }
         }
     </script>
-
 </body>
 </html>
