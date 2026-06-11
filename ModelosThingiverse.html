@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería de Modelos - Centro de Impresión 3D</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Estilos específicos para la galería */
+        .gallery-header {
+            text-align: center;
+            padding: 40px 20px;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid #ddd;
+        }
+        .gallery-search-bar {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .gallery-search-bar input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .gallery-search-bar input:focus {
+            border-color: var(--cura-blue);
+            outline: none;
+        }
+        .thingiverse-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .model-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            text-align: center;
+            padding-bottom: 15px;
+        }
+        .model-card:hover {
+            transform: translateY(-5px);
+        }
+        .model-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 3px solid var(--cura-blue);
+        }
+        .model-card h4 {
+            margin: 15px 10px 5px;
+            font-size: 18px;
+            color: var(--text-color);
+        }
+        .model-card p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .loading-message {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            grid-column: 1 / -1;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <a href="index.html" class="btn-header" style="background-color: transparent; border: 1px solid white;"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+        <div class="logo">Galería Thingiverse</div>
+        <a href="login.html" class="btn-header">Iniciar Sesión</a>
+    </header>
+
+    <div class="gallery-header">
+        <h1>Explora millones de diseños 3D</h1>
+        <p>Busca lo que necesitas. Si te gusta, inicia sesión y pídenos que lo imprimamos para ti.</p>
+        
+        <div class="gallery-search-bar">
+            <input type="text" id="busqueda-galeria" placeholder="¿Qué quieres imprimir hoy? Ej: Llavero, Maceta, Batman...">
+            <button class="btn-cura" onclick="ejecutarBusqueda()">Buscar</button>
+        </div>
+    </div>
+
+    <main class="thingiverse-grid" id="contenedor-resultados">
+        <div class="loading-message">
+            <i class="fas fa-search" style="font-size: 40px; color: #ccc; margin-bottom: 15px;"></i><br>
+            Usa el buscador de arriba para explorar diseños.
+        </div>
+    </main>
+
+    <script>
+        // Esta función lee la URL cuando la página carga para ver si el usuario envió una búsqueda desde index.html
+        window.onload = function() {
+            // Obtenemos los parámetros de la URL (lo que va después del '?')
+            const parametrosURL = new URLSearchParams(window.location.search);
+            const terminoDeBusqueda = parametrosURL.get('q'); // Buscamos el parámetro 'q'
+
+            if (terminoDeBusqueda) {
+                // Si existe, lo ponemos en la barra de texto
+                document.getElementById('busqueda-galeria').value = terminoDeBusqueda;
+                // Y ejecutamos la búsqueda automáticamente
+                ejecutarBusqueda();
+            } else {
+                // Si no hay búsqueda en la URL, podemos cargar modelos destacados por defecto
+                cargarDestacados();
+            }
+        };
+
+        function ejecutarBusqueda() {
+            const termino = document.getElementById('busqueda-galeria').value.trim();
+            const contenedor = document.getElementById('contenedor-resultados');
+            
+            if(termino === '') {
+                contenedor.innerHTML = '<div class="loading-message">Por favor, ingresa un término de búsqueda.</div>';
+                return;
+            }
+
+            // Mostramos estado de carga
+            contenedor.innerHTML = '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Buscando en Thingiverse...</div>';
+
+            // Simulación de conexión a la API (Esto se cambiará en la Fase 3 por fetch real a Thingiverse)
+            setTimeout(() => {
+                contenedor.innerHTML = `
+                    <div class="model-card">
+                        <img src="https://via.placeholder.com/300x200/0055FF/FFFFFF?text=Modelo+1" alt="Modelo">
+                        <h4>${termino} Articulado</h4>
+                        <p>Por: UsuarioMaker_99</p>
+                    </div>
+                    <div class="model-card">
+                        <img src="https://via.placeholder.com/300x200/0055FF/FFFFFF?text=Modelo+2" alt="Modelo">
+                        <h4>Soporte para ${termino}</h4>
+                        <p>Por: 3D_Prints_Pro</p>
+                    </div>
+                    <div class="model-card">
+                        <img src="https://via.placeholder.com/300x200/0055FF/FFFFFF?text=Modelo+3" alt="Modelo">
+                        <h4>${termino} Geométrico</h4>
+                        <p>Por: ArtDesign3D</p>
+                    </div>
+                    <div class="model-card">
+                        <img src="https://via.placeholder.com/300x200/0055FF/FFFFFF?text=Modelo+4" alt="Modelo">
+                        <h4>Miniatura de ${termino}</h4>
+                        <p>Por: TabletopFan</p>
+                    </div>
+                `;
+            }, 800);
+        }
+
+        // Función para mostrar modelos por defecto si el usuario entró sin buscar nada
+        function cargarDestacados() {
+            const contenedor = document.getElementById('contenedor-resultados');
+            contenedor.innerHTML = `
+                <div class="model-card">
+                    <img src="https://via.placeholder.com/300x200/555555/FFFFFF?text=Destacado+1" alt="Modelo">
+                    <h4>Maceta Groot</h4>
+                    <p>Diseño Popular</p>
+                </div>
+                <div class="model-card">
+                    <img src="https://via.placeholder.com/300x200/555555/FFFFFF?text=Destacado+2" alt="Modelo">
+                    <h4>Soporte Auriculares</h4>
+                    <p>Diseño Útil</p>
+                </div>
+                <div class="model-card">
+                    <img src="https://via.placeholder.com/300x200/555555/FFFFFF?text=Destacado+3" alt="Modelo">
+                    <h4>Dragón Articulado</h4>
+                    <p>Tendencia</p>
+                </div>
+            `;
+        }
+    </script>
+
+</body>
+</html>
