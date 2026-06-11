@@ -22,7 +22,7 @@
             <div style="margin: 30px 0; text-align: center;">
                 <p style="margin-bottom: 15px; color: #666;">Accede de forma rápida y segura para gestionar tus impresiones</p>
                 
-                <button id="btn-google" class="btn-cura btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; font-size: 16px; border: none; cursor: pointer; background-color: var(--cura-blue); color: white; padding: 14px; width: 100%;">
+                <button id="btn-google" class="btn-cura btn-full" style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; font-size: 16px; border: none; cursor: pointer; background-color: var(--cura-blue); color: white; padding: 14px; width: 100%; border-radius: 8px;">
                     <span style="background: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">
                         <i class="fab fa-google" style="background: linear-gradient(45deg, #4285F4, #EA4335, #FBBC05, #34A353); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 14px;"></i>
                     </span>
@@ -39,23 +39,37 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // REEMPLAZA ESTOS DATOS con tu URL y Anon Key reales de Supabase
-        const SUPABASE_URL = "https://TU_PROYECTO_AQUÍ.supabase.co"; 
-        const SUPABASE_ANON_KEY = "TU_LLAVE_ANON_AQUÍ";
+        // ==========================================
+        // CONFIGURACIÓN DE SUPABASE
+        // ==========================================
+        const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
 
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let dbCliente = null;
+
+        window.onload = function() {
+            if (window.supabase) {
+                dbCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        };
 
         document.getElementById('btn-google').addEventListener('click', async () => {
-            // VALIDACIÓN DEL ERROR: Comprobamos si estás abriendo el archivo como 'file://'
+            // VALIDACIÓN: Evitar error si se abre el archivo localmente (doble clic)
             if (window.location.protocol === 'file:') {
-                mostrarError("¡Atención! Google no permite iniciar sesión abriendo el archivo HTML directamente con doble clic. Necesitas ejecutar un servidor local (usa la extensión 'Live Server' de VS Code o súbelo a Vercel).");
+                mostrarError("¡Atención! Google no permite iniciar sesión abriendo el archivo HTML directamente con doble clic. Debes usar un servidor local o subirlo a Vercel.");
+                return;
+            }
+
+            if (!dbCliente) {
+                mostrarError("Error al inicializar la base de datos. Revisa tu conexión.");
                 return;
             }
 
             try {
-                const { data, error } = await supabase.auth.signInWithOAuth({
+                const { data, error } = await dbCliente.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
+                        // Redirección exitosa hacia el panel de usuario
                         redirectTo: window.location.origin + '/dashboard.html' 
                     }
                 });
