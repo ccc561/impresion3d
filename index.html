@@ -23,7 +23,7 @@
             padding: 0;
             background-color: var(--bg-white);
             color: var(--cura-dark);
-            line-height: 1.7; /* Da aire al texto para que no se apriete */
+            line-height: 1.7;
         }
 
         /* --- HEADER AMPLIO Y LIMPIO --- */
@@ -130,7 +130,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 30px;
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
         }
@@ -151,28 +151,28 @@
             background-color: var(--bg-light);
         }
         .section-inner {
-            max-width: 1100px;
+            max-width: 1200px; /* Ampliado de 1100 a 1200 para dar más espacio horizontal */
             margin: 0 auto;
         }
         .section-inner h2 {
             font-size: 32px;
             font-weight: 700;
             text-align: center;
-            margin-0-0-50px-0: 0 0 60px 0;
+            margin: 0 0 50px 0;
             position: relative;
         }
 
-        /* --- SECCIÓN PROCESO (TIMELINE MODERNO) --- */
+        /* --- SECCIÓN PROCESO (TIMELINE MODERNO MEJORADO) --- */
         .timeline-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(4, 1fr); /* Forzado a 4 columnas en desktop para expandir los cuadros */
+            gap: 25px;
         }
         .step-box {
             background: var(--bg-white);
-            padding: 40px 30px;
+            padding: 40px 25px;
             border-radius: 16px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.01);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
             border: 1px solid var(--border-color);
             position: relative;
         }
@@ -189,10 +189,10 @@
             font-size: 18px;
             margin-bottom: 25px;
         }
-        .step-box h3 { font-size: 19px; margin: 0 0 12px 0; font-weight: 600; }
-        .step-box p { font-size: 14.5px; margin: 0; color: var(--text-muted); }
+        .step-box h3 { font-size: 18px; margin: 0 0 12px 0; font-weight: 600; line-height: 1.4; }
+        .step-box p { font-size: 14px; margin: 0; color: var(--text-muted); line-height: 1.6; }
 
-        /* --- SECCIÓN TECNOLOGÍA (EQUILIBRADA Y ASIMÉTRICA) --- */
+        /* --- SECCIÓN TECNOLOGÍA --- */
         .tech-header-area {
             display: flex;
             justify-content: space-between;
@@ -202,6 +202,8 @@
             padding-bottom: 20px;
         }
         .tech-header-area h2 { font-size: 32px; margin: 0; font-weight: 700; }
+        
+        /* Corregido el doble ícono de reproducción */
         .btn-video {
             background: #ef4444;
             color: white;
@@ -284,10 +286,10 @@
         .materials-layout p { font-size: 17px; color: var(--text-muted); margin-bottom: 20px; }
         .materials-layout p:last-child { margin-bottom: 0; }
 
-        /* --- CTA GOOGLE AUTH --- */
+        /* --- CTA GOOGLE AUTH (COMPACTADO Y AJUSTADO) --- */
         .cta-auth-box {
             max-width: 500px;
-            margin: 100px auto;
+            margin: 0 auto; /* Eliminado el margen superior gigante de 100px */
             padding: 50px 40px;
             background: var(--bg-white);
             border-radius: 20px;
@@ -318,11 +320,17 @@
         .btn-google img { width: 22px; height: 22px; }
 
         /* RESPONSIVO */
+        @media (max-width: 1024px) {
+            .timeline-grid { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 900px) {
             .printer-showcase { grid-template-columns: 1fr; gap: 40px; }
             .features-grid { grid-template-columns: 1fr; }
             .top-header { padding: 20px; }
             .top-nav { display: none; }
+        }
+        @media (max-width: 600px) {
+            .timeline-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -368,7 +376,7 @@
 
     <section id="proceso" class="content-section">
         <div class="section-inner">
-            <h2 style="text-align:center; margin-bottom:60px;">¿Cómo es el proceso de tu pedido?</h2>
+            <h2>¿Cómo es el proceso de tu pedido?</h2>
             <div class="timeline-grid">
                 <div class="step-box">
                     <div class="step-number">1</div>
@@ -399,7 +407,7 @@
             <div class="tech-header-area">
                 <h2>Nuestra Tecnología</h2>
                 <a href="Ender-3_S1_Pro_VID.mp4" target="_blank" class="btn-video">
-                    <i class="fas fa-play"></i> ▶ Ver Trailer Oficial
+                    <i class="fas fa-play"></i> Ver Trailer Oficial
                 </a>
             </div>
             
@@ -435,9 +443,9 @@
         </div>
     </section>
 
-    <section id="materiales" class="content-section">
+    <section id="materiales" class="content-section" style="padding-bottom: 60px;">
         <div class="section-inner">
-            <h2 style="text-align:center; margin-bottom:50px;">Materiales y Calidad</h2>
+            <h2>Materiales y Calidad</h2>
             <div class="materials-layout">
                 <p>Actualmente trabajamos principalmente con <strong>PLA (Ácido Poliláctico)</strong>, un bioplástico amigable con el medio ambiente, ideal para figuras decorativas, prototipos visuales y piezas que no requieran soportar altas temperaturas.</p>
                 <p>Imprimimos con una resolución estándar de <strong>0.2mm por capa</strong>, logrando un equilibrio perfecto entre detalle y tiempo de entrega en nuestra Creality Ender-3 S1 Pro.</p>
@@ -445,7 +453,7 @@
         </div>
     </section>
 
-    <section id="google-auth-section" class="content-section">
+    <section id="google-auth-section" class="content-section" style="padding-top: 20px; padding-bottom: 100px;">
         <div class="cta-auth-box">
             <h2>¿Estás listo para obtener tus impresiones 3D?</h2>
             <p>Pues inicia sesión y empieza a descubrir.</p>
