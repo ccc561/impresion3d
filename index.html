@@ -68,7 +68,7 @@
         /* --- HERO SECTION --- */
         .hero {
             max-width: 1200px;
-            margin: 60px auto;
+            margin: 60px auto 40px auto;
             padding: 0 20px;
             text-align: center;
         }
@@ -124,11 +124,139 @@
             background: #0044cc;
         }
 
-        /* --- SECCIÓN GOOGLE LOGIN (ACCESO RÁPIDO) --- */
+        /* --- SECCIONES REUTILIZABLES --- */
+        .section-container {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 32px;
+            color: var(--cura-dark);
+            margin-bottom: 40px;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--cura-blue);
+            margin: 10px auto 0 auto;
+            border-radius: 2px;
+        }
+
+        /* --- SECCIÓN: PROCESO DE PEDIDO --- */
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .step-card {
+            background: white;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            border-top: 4px solid #e9ecef;
+            transition: 0.3s;
+        }
+        .step-card:hover {
+            transform: translateY(-5px);
+            border-top-color: var(--cura-blue);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            background: #edf2ff;
+            color: var(--cura-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 20px auto;
+        }
+        .step-card h4 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: var(--cura-dark);
+        }
+        .step-card p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* --- SECCIÓN: NUESTRA TECNOLOGÍA --- */
+        .tech-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        .tech-info h3 {
+            font-size: 26px;
+            margin: 0 0 20px 0;
+            color: var(--cura-dark);
+        }
+        .tech-specs {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px 0;
+        }
+        .tech-specs li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 15px;
+        }
+        .tech-specs i {
+            color: #28a745;
+            font-size: 16px;
+        }
+        .tech-media {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .tech-image {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: #ddd;
+        }
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%; /* Relación de aspecto 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: #000;
+        }
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* --- SECCIÓN GOOGLE LOGIN --- */
         .auth-card {
             background: white;
             max-width: 400px;
-            margin: 50px auto;
+            margin: 60px auto;
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -164,6 +292,13 @@
             width: 20px;
             height: 20px;
         }
+
+        /* Adaptabilidad Móvil */
+        @media (max-width: 768px) {
+            .tech-layout { grid-template-columns: 1fr; gap: 30px; }
+            .hero h1 { font-size: 34px; }
+            .top-header { padding: 15px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -180,7 +315,7 @@
 
     <main class="hero">
         <h1>Transforma tus ideas en objetos reales</h1>
-        <p>Busca entre millones de diseños listos para fabricar directamente desde el repositorio global de Thingiverse.</p>
+        <p>Busca entre millones de diseños listos para fabricar directamente desde el repositorio global de Thingiverse o entra para enviar tus propios archivos.</p>
         
         <div class="search-container">
             <i class="fas fa-search"></i>
@@ -189,9 +324,62 @@
         </div>
     </main>
 
+    <section class="section-container">
+        <h2 class="section-title">¿Cómo es el proceso de tu pedido?</h2>
+        <div class="process-grid">
+            <div class="step-card">
+                <div class="step-icon"><i class="fas fa-search"></i></div>
+                <h4>1. Elige tu Modelo</h4>
+                <p>Busca un diseño en nuestro catálogo integrado de Thingiverse o prepara tu archivo STL propio.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                <h4>2. Cotización</h4>
+                <p>Envíanos el diseño desde tu panel para calcular los materiales, tiempos y costo de fabricación.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon"><i class="fas fa-cogs"></i></div>
+                <h4>3. Impresión 3D</h4>
+                <p>Una vez aprobado, fabricamos tu pieza usando tecnología de alta precisión y los mejores filamentos.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon"><i class="fas fa-box-open"></i></div>
+                <h4>4. Entrega</h4>
+                <p>Empacamos cuidadosamente tu producto listo para ser retirado o enviado directamente a tu dirección.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-container" style="background: white; padding: 60px 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.02);">
+        <h2 class="section-title">Nuestra Tecnología</h2>
+        <div class="tech-layout">
+            
+            <div class="tech-info">
+                <h3>Equipamiento Industrial de Alta Precisión</h3>
+                <p style="color: #666; line-height: 1.6; margin-bottom: 25px;">Utilizamos sistemas de impresión FDM de última generación calibrados minuciosamente para garantizar acabados superficiales lisos, tolerancias mecánicas exactas y una adherencia de capa indestructible.</p>
+                
+                <ul class="tech-specs">
+                    <li><i class="fas fa-check-circle"></i> <strong>Volumen de Impresión:</strong> Hasta 250 x 250 x 260 mm para piezas de gran tamaño.</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Materiales Soportados:</strong> PLA+, PETG, ABS, Flexibles (TPU) y Nylon.</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Resolución de Capa:</strong> Desde 0.1mm para máxima definición de detalles.</li>
+                    <li><i class="fas fa-check-circle"></i> <strong>Nivelación Automática:</strong> Matriz activa para capas iniciales perfectas.</li>
+                </ul>
+            </div>
+
+            <div class="tech-media">
+                <img src="img/impresora.jpg" alt="Nuestra Impresora 3D" class="tech-image" onerror="this.src='https://images.unsplash.com/photo-1615840287214-7fe58a8f3685?q=80&w=600&auto=format&fit=crop'">
+                
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <section id="google-auth-section" class="auth-card">
         <h3>Acceso Instantáneo</h3>
-        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Inicia sesión de forma segura para enviar piezas y guardar tu historial de cotizaciones.</p>
+        <p style="color: #666; font-size: 14px; margin-bottom: 20px;">Inicia sesión de forma segura para enviar piezas y gestionar tus solicitudes de impresión.</p>
         <button class="btn-google" onclick="loginConGoogle()">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
             Continuar con Google
@@ -213,13 +401,11 @@
             if (window.supabase) {
                 dbCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 
-                // Comprobar si el usuario ya tiene sesión activa
                 const { data: { session } } = await dbCliente.auth.getSession();
                 evaluarEstadoSesion(session?.user);
             }
         };
 
-        // Cambiar la interfaz si el usuario ya está dentro
         function evaluarEstadoSesion(usuario) {
             const btnAuth = document.getElementById('btn-auth-main');
             const googleCard = document.getElementById('google-auth-section');
@@ -227,20 +413,16 @@
             if (usuario) {
                 btnAuth.href = "dashboard.html";
                 btnAuth.innerHTML = '<i class="fas fa-user-circle"></i> Mi Panel';
-                
-                // Ocultar la tarjeta de login si ya está autenticado
                 if (googleCard) googleCard.style.display = "none";
             }
         }
 
         // ==========================================
-        // FLUJO DE REDIRECCIÓN DE BÚSQUEDA (CON ENTER)
+        // REDIRECCIÓN DE BÚSQUEDA (CON ENTER)
         // ==========================================
         function transferirBusqueda() {
             const query = document.getElementById('main-search-input').value.trim();
             if (query === "") return;
-            
-            // Redirige a la página de la galería inyectando el parámetro en la URL
             window.location.href = `ModelosThingiverse.html?search=${encodeURIComponent(query)}`;
         }
 
@@ -249,20 +431,17 @@
         // ==========================================
         async function loginConGoogle() {
             if (!dbCliente) return;
-            
             try {
                 const { data, error } = await dbCliente.auth.signInWithOAuth({
                     provider: 'google',
                     options: {
-                        // Al terminar el login, Google lo devolverá aquí de manera automática
                         redirectTo: window.location.origin + '/dashboard.html'
                     }
                 });
-                
                 if (error) throw error;
             } catch (err) {
                 console.error("Error en Google Auth:", err.message);
-                alert("No se pudo iniciar sesión con Google. Revisa tus credenciales en Supabase.");
+                alert("No se pudo conectar con el servicio de autenticación.");
             }
         }
     </script>
