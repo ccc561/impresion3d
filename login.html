@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso - Centro de Impresión 3D</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="login-page">
+
+    <div class="login-container">
+        <div class="login-card">
+            
+            <div class="login-header">
+                <a href="index.html" class="back-home" style="text-decoration: none; color: var(--text-color); font-weight: bold;"><i class="fas fa-arrow-left"></i> Volver</a>
+                <div class="login-logo" style="color: var(--cura-blue); font-weight: bold; font-size: 24px;">Centro 3D</div>
+            </div>
+
+            <div id="alert-container"></div>
+
+            <div style="margin: 30px 0; text-align: center;">
+                <p style="margin-bottom: 15px; color: #666;">Accede de forma rápida y segura para gestionar tus impresiones</p>
+                <button id="btn-google" class="btn-cura btn-full" style="background-color: #4285F4; color: white; display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: none; font-size: 16px;">
+                    <i class="fab fa-google" style="font-size: 18px;"></i> Iniciar Sesión con Google
+                </button>
+            </div>
+
+            <div class="auth-switch" style="text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
+                <p style="font-size: 13px; color: #888;">Al iniciar sesión aceptas nuestras condiciones de servicio local.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+        // 2. REEMPLAZA ESTOS DATOS con los que copiaste en el Paso 1 de tu panel de Supabase
+        const SUPABASE_URL = "https://TU_PROYECTO_AQUÍ.supabase.co"; 
+        const SUPABASE_ANON_KEY = "TU_LLAVE_ANON_AQUÍ";
+
+        // Inicializamos el cliente de Supabase
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // 3. Programamos la acción del botón de Google
+        document.getElementById('btn-google').addEventListener('click', async () => {
+            try {
+                const { data, error } = await supabase.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        // Vercel o tu entorno local. Al terminar el login, Google mandará al usuario aquí:
+                        redirectTo: window.location.origin + '/dashboard.html' 
+                    }
+                });
+
+                if (error) throw error;
+            } catch (error) {
+                mostrarError("No se pudo conectar con Google: " + error.message);
+            }
+        });
+
+        // Función auxiliar para pintar alertas bonitas en pantalla si algo falla
+        function mostrarError(mensaje) {
+            const container = document.getElementById('alert-container');
+            container.innerHTML = `
+                <div class="alert alert-error" style="background-color: #f8d7da; color: #721c24; padding: 12px; border-radius: 6px; margin-bottom: 15px; font-weight: bold; font-size: 14px;">
+                    <i class="fas fa-exclamation-circle"></i> ${mensaje}
+                </div>
+            `;
+        }
+    </script>
+
+</body>
+</html>
