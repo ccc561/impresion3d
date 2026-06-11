@@ -245,25 +245,47 @@
         }
 
         async function guardar(item) {
-            // Reemplazo del alert() por el nuevo bloque modal interactivo
+            // 1. Verificamos si hay sesión iniciada
             if(!usuarioActual || !dbCliente) { 
                 document.getElementById('modal-auth-required').style.display = 'flex';
                 return; 
             }
+
             try {
+                // 2. Cambiamos el texto del botón temporalmente para que el usuario sepa que está cargando
+                const btnGuardar = document.getElementById('btn-guardar-panel');
+                const textoOriginal = btnGuardar.innerHTML;
+                btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+                btnGuardar.disabled = true;
+
+                // 3. Enviamos los datos a Supabase
                 const { error } = await dbCliente.from('modelos_guardados').insert([{ 
                     user_id: usuarioActual.id, 
                     titulo: item.name, 
                     autor: item.creator ? item.creator.name : 'Maker', 
                     imagen_url: item.thumbnail || item.preview_image
                 }]);
+
+                // 4. Restauramos el botón
+                btnGuardar.innerHTML = textoOriginal;
+                btnGuardar.disabled = false;
+
+                // 5. Si Supabase devuelve un error, lo lanzamos para verlo
                 if (error) throw error;
                 
+                // 6. Si todo sale bien, mostramos el mensaje verde
                 const toast = document.getElementById('toast-notificacion');
                 toast.style.display = 'block';
                 setTimeout(() => toast.style.display = 'none', 3000);
+
             } catch (e) {
-                console.error("Error guardando:", e);
+                console.error("Error guardando en Supabase:", e);
+                // Ahora la página te dirá EXACTAMENTE por qué está fallando
+                alert("Error al guardar el modelo: " + e.message);
+                
+                const btnGuardar = document.getElementById('btn-guardar-panel');
+                btnGuardar.innerHTML = '<i class="fas fa-bookmark"></i> Guardar en mi Panel';
+                btnGuardar.disabled = false;
             }
         }
     </script>
