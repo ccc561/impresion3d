@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Variables de diseño profesional */
         :root {
             --cura-blue: #0055ff;
             --cura-dark: #111827;
@@ -17,7 +16,6 @@
             --border-color: #e5e7eb;
         }
 
-        /* CAPA DE SEGURIDAD 1: Ocultar el body hasta verificar la sesión */
         body {
             display: none;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -26,88 +24,61 @@
             color: var(--cura-dark);
         }
 
-        /* --- HEADER DEL PANEL --- */
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 40px;
-            background: var(--bg-white);
-            border-bottom: 1px solid var(--border-color);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+        /* HEADER & LAYOUT */
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: var(--bg-white); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
         .logo { font-size: 20px; font-weight: 700; color: var(--cura-blue); display: flex; align-items: center; gap: 8px; text-decoration: none;}
         .user-controls { display: flex; align-items: center; gap: 20px; }
         .user-greeting { font-weight: 600; color: var(--text-muted); }
         .btn-logout { background-color: #ef4444; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-logout:hover { background-color: #dc2626; }
 
-        /* --- CONTENEDOR PRINCIPAL --- */
-        .dashboard-layout {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-        }
-
-        /* --- TARJETAS DEL PANEL --- */
-        .panel-card {
-            background: var(--bg-white);
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            border: 1px solid var(--border-color);
-        }
+        .dashboard-layout { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        .panel-card { background: var(--bg-white); padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
         .panel-card h3 { margin: 0 0 15px 0; font-size: 20px; display: flex; align-items: center; gap: 10px; }
         .panel-card h3 i { color: var(--cura-blue); }
         .panel-card p { color: var(--text-muted); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
 
-        /* --- FORMULARIO DE SUBIDA --- */
-        .file-upload-area {
-            border: 2px dashed #ccc;
-            padding: 30px;
-            text-align: center;
-            border-radius: 12px;
-            background: #fdfdfd;
-            margin-bottom: 20px;
-            transition: 0.2s;
-        }
+        /* FORMULARIO DE SUBIDA */
+        .file-upload-area { border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 12px; background: #fdfdfd; margin-bottom: 20px; transition: 0.2s; }
         .file-upload-area:hover { border-color: var(--cura-blue); background: #f0f4ff; }
         .btn-action { background: var(--cura-dark); color: white; width: 100%; border: none; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-action:hover { background: var(--cura-blue); }
 
-        /* --- GRID DE MODELOS GUARDADOS --- */
-        .saved-models-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-        .saved-card {
-            background: var(--bg-light);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            text-align: center;
-            transition: transform 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
-        .saved-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        /* GRID DE MODELOS GUARDADOS */
+        .saved-models-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .saved-card { background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; text-align: center; transition: transform 0.2s; cursor: pointer; }
+        .saved-card:hover { transform: translateY(-4px); border-color: var(--cura-blue); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
         .saved-card img { width: 100%; height: 160px; object-fit: cover; border-bottom: 3px solid var(--border-color); }
-        .saved-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; }
-        .saved-info h4 { margin: 0 0 5px 0; font-size: 15px; color: var(--cura-dark); }
-        .saved-info p { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; }
-        .btn-cotizar-mini { background: var(--cura-blue); color: white; border: none; padding: 8px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; margin-top: auto; transition: 0.2s; }
-        .btn-cotizar-mini:hover { background: #0044cc; }
+        .saved-info { padding: 15px; }
+        .saved-info h4 { margin: 0 0 5px 0; font-size: 15px; color: var(--cura-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .saved-info p { font-size: 13px; color: var(--text-muted); margin: 0; }
 
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .dashboard-layout { grid-template-columns: 1fr; }
-        }
+        /* --- MODALES --- */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(4px); }
+        .modal-content { background: white; width: 90%; max-width: 800px; border-radius: 16px; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; position: relative; animation: zoomIn 0.3s ease; max-height: 90vh; }
+        @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; z-index: 10; width: 35px; height: 35px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .close-modal:hover { background: #ddd; }
+        
+        .modal-sidebar { padding: 40px 30px; display: flex; flex-direction: column; gap: 15px; background: white; overflow-y: auto;}
+        .modal-img-container { background: #f1f3f5; display: flex; align-items: center; justify-content: center; padding: 20px;}
+        .modal-img-container img { width: 100%; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-height: 400px; object-fit: contain;}
+        
+        .btn-modal-thingiverse { background: #e9ecef; color: #333; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .btn-modal-thingiverse:hover { background: #dee2e6; }
+        .btn-modal-print { background: #FFB000; color: #111; border: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .btn-modal-print:hover { background: #e69e00; }
+
+        /* --- FORMULARIO DE COTIZACIÓN --- */
+        .quote-form-container { display: none; padding: 30px; max-width: 600px; width: 90%; background: white; border-radius: 16px; position: relative; max-height: 90vh; overflow-y: auto; }
+        .quote-instructions { background: #eef2ff; border-left: 4px solid var(--cura-blue); padding: 15px 20px; border-radius: 0 8px 8px 0; margin-bottom: 25px; }
+        .quote-instructions p { margin: 0; font-size: 14px; color: #3730a3; line-height: 1.6; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: var(--cura-dark); }
+        .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: inherit; }
+        .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--cura-blue); }
+
+        #toast-success { position: fixed; bottom: 30px; right: 30px; background: #10b981; color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; display: none; z-index: 11000; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
 </head>
 <body>
@@ -124,34 +95,105 @@
         
         <div class="panel-card" style="height: fit-content;">
             <h3><i class="fas fa-cloud-upload-alt"></i> Cotizar Archivo Propio</h3>
-            <p>¿Tienes tu propio diseño? Sube tu archivo <strong>.STL</strong> para que evaluemos el tiempo de impresión y peso en gramos.</p>
-            
-            <form id="form-subida" onsubmit="procesarSubida(event)">
+            <p>Sube tu archivo <strong>.STL</strong> para que evaluemos el tiempo de impresión y peso.</p>
+            <form onsubmit="event.preventDefault(); alert('Función en desarrollo');">
                 <div class="file-upload-area">
                     <i class="fas fa-file-code" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i><br>
-                    <input type="file" id="archivo_stl" accept=".stl" required style="max-width: 100%; cursor: pointer;">
+                    <input type="file" accept=".stl" required style="max-width: 100%;">
                 </div>
-                <button type="submit" class="btn-action"><i class="fas fa-calculator"></i> Solicitar Cotización</button>
+                <button type="submit" class="btn-action"><i class="fas fa-calculator"></i> Enviar a revisión</button>
             </form>
         </div>
 
         <div class="panel-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
-                <h3 style="margin: 0;"><i class="fas fa-bookmark"></i> Mi Biblioteca (Thingiverse)</h3>
-                <a href="ModelosThingiverse.html" class="btn-action" style="width: auto; padding: 10px 20px; font-size: 14px; text-decoration: none; background: var(--cura-blue);"><i class="fas fa-search"></i> Explorar más</a>
+                <h3 style="margin: 0;"><i class="fas fa-bookmark"></i> Mi Biblioteca</h3>
+                <a href="ModelosThingiverse.html" class="btn-action" style="width: auto; padding: 10px 20px; font-size: 14px; text-decoration: none; background: var(--cura-blue);"><i class="fas fa-search"></i> Explorar Thingiverse</a>
             </div>
             
-            <p>Tus diseños favoritos guardados desde el catálogo mundial.</p>
+            <p>Selecciona un diseño para ver detalles y solicitar tu cotización exacta.</p>
             
             <div class="saved-models-grid" id="contenedor-guardados">
-                <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #888; background: #f9fafb; border-radius: 12px; border: 1px dashed #ccc;">
-                    <i class="fas fa-folder-open" style="font-size: 30px; margin-bottom: 10px;"></i><br>
-                    Cargando tus modelos guardados...
                 </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-detalle" onclick="if(event.target === this) cerrarModales()">
+        <div class="modal-content">
+            <span class="close-modal" onclick="cerrarModales()">&times;</span>
+            <div class="modal-img-container">
+                <img id="detalle-img" src="" alt="Modelo">
+            </div>
+            <div class="modal-sidebar">
+                <h2 id="detalle-titulo" style="margin:0; color:var(--cura-blue); font-size: 22px;">Título</h2>
+                <p style="margin:0; color:#666;">Diseñador: <span id="detalle-autor" style="font-weight:bold; color:#333;">Autor</span></p>
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 10px 0;">
+                
+                <p style="font-size: 14px; color: #555; line-height: 1.6;">Este diseño está guardado en tu panel. Puedes revisarlo en la página original o solicitar que lo evaluemos para darte un precio de impresión.</p>
+
+                <a href="#" id="detalle-link-thingiverse" target="_blank" class="btn-modal-thingiverse">
+                    <i class="fas fa-external-link-alt"></i> Ver completo en Thingiverse
+                </a>
+                
+                <button class="btn-modal-print" onclick="abrirFormularioCotizacion()">
+                    <i class="fas fa-paper-plane"></i> Solicitar Impresión
+                </button>
             </div>
         </div>
-
     </div>
+
+    <div class="modal-overlay" id="modal-cotizacion" onclick="if(event.target === this) cerrarModales()">
+        <div class="quote-form-container">
+            <span class="close-modal" onclick="cerrarModales()">&times;</span>
+            <h2 style="margin-top:0; color: var(--cura-dark);"><i class="fas fa-file-invoice-dollar" style="color:var(--cura-blue);"></i> Solicitud de Impresión</h2>
+            
+            <div class="quote-instructions">
+                <p><strong><i class="fas fa-info-circle"></i> ¿Qué ocurre ahora?</strong><br>
+                Rellena este formulario. Nuestro equipo evaluará el modelo y en los próximos días <strong>recibirás un correo electrónico</strong> con las dimensiones finales, el tiempo de entrega y el precio exacto. Para confirmar tu pedido, solo deberás responder ese correo dando tu aprobación.</p>
+            </div>
+
+            <form id="form-cotizacion" onsubmit="enviarSolicitud(event)">
+                <div class="form-group">
+                    <label>Tamaño aproximado deseado</label>
+                    <select id="form-tamano" required>
+                        <option value="">Selecciona una opción...</option>
+                        <option value="Pequeño (Aprox 5 - 8 cm)">Pequeño (Llavero, miniatura ~5cm)</option>
+                        <option value="Mediano (Aprox 10 - 15 cm)">Mediano (Figura de escritorio ~12cm)</option>
+                        <option value="Grande (Aprox 20 cm)">Grande (Tamaño máximo ~20cm)</option>
+                        <option value="Tamaño original del archivo">Mantener el tamaño original del archivo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Calidad / Resolución de Capa</label>
+                    <select id="form-resolucion" required>
+                        <option value="Estándar (0.2mm)">Estándar 0.2mm (Recomendado - Excelente calidad/precio)</option>
+                        <option value="Alta (0.12mm)">Alta 0.12mm (Para máximo detalle - Incrementa el precio)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Resistencia (Porcentaje de relleno)</label>
+                    <select id="form-relleno" required>
+                        <option value="Decorativo (15%)">Decorativo (15% - Piezas de exhibición)</option>
+                        <option value="Funcional (40%)">Resistente (40% - Piezas que van a manipularse)</option>
+                        <option value="Sólido (100%)">Sólido (100% - Resistencia mecánica extrema)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Detalles extras o consultas (Opcional)</label>
+                    <textarea id="form-detalles" rows="3" placeholder="Ej: Me gustaría que fuera de color negro si es posible, o necesito que esté listo para el viernes..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-action" id="btn-enviar-solicitud" style="font-size: 16px;">
+                    <i class="fas fa-envelope"></i> Enviar Solicitud a Revisión
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast-success"><i class="fas fa-check-circle"></i> ¡Solicitud enviada con éxito! Revisa tu correo en los próximos días.</div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -164,6 +206,8 @@
         
         let dbCliente = null;
         let idUsuarioActual = null;
+        let emailUsuarioActual = null;
+        let modeloSeleccionado = {}; // Guarda temporalmente los datos del modelo al que le damos click
 
         window.onload = async function() {
             if (window.supabase) {
@@ -172,60 +216,58 @@
             }
         };
 
-        // --- SEGURIDAD: VERIFICAR SESIÓN ---
         async function verificarAcceso() {
             const { data: { session }, error } = await dbCliente.auth.getSession();
-
             if (error || !session) {
-                window.location.href = 'login.html'; // Redirección si no hay sesión
+                window.location.href = 'login.html'; 
                 return;
             }
 
-            // Hacer visible la interfaz y guardar el ID
             document.body.style.display = 'block';
             idUsuarioActual = session.user.id;
+            emailUsuarioActual = session.user.email; // Guardamos el email para el formulario
             
-            // Extraer nombre desde la metadata de Google o usar email como respaldo
             const nombreUsuario = session.user.user_metadata.full_name || session.user.email;
             document.getElementById('usuario-nombre').textContent = nombreUsuario.split(" ")[0];
 
-            // Cargar modelos asignados
             cargarModelosGuardados();
         }
 
-        // --- CARGAR DATOS DESDE BASE DE DATOS ---
         async function cargarModelosGuardados() {
             const contenedor = document.getElementById('contenedor-guardados');
             
             const { data, error } = await dbCliente
                 .from('modelos_guardados')
                 .select('*')
-                .eq('user_id', idUsuarioActual);
+                .eq('user_id', idUsuarioActual)
+                .order('created_at', { ascending: false });
 
             if (error) {
-                console.error("Error cargando diseños:", error.message);
-                contenedor.innerHTML = `
-                    <div style="grid-column: 1/-1; padding: 20px; text-align: center; color: #dc2626; background: #fee2e2; border-radius: 12px; border: 1px solid #fca5a5;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 8px;"></i><br>
-                        <strong>Error al cargar tu biblioteca:</strong><br>
-                        <code style="font-size: 13px; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px;">${error.message}</code>
-                    </div>`;
+                contenedor.innerHTML = `<p style="color:red; text-align:center;">Error cargando la biblioteca.</p>`;
                 return;
             }
 
             if (data && data.length > 0) {
                 contenedor.innerHTML = ''; 
                 data.forEach(modelo => {
-                    contenedor.innerHTML += `
-                        <div class="saved-card">
-                            <img src="${modelo.imagen_url || 'https://via.placeholder.com/200x120?text=Sin+Imagen'}" alt="Modelo">
-                            <div class="saved-info">
-                                <h4>${modelo.titulo}</h4>
-                                <p>De: ${modelo.autor}</p>
-                                <button class="btn-cotizar-mini" onclick="cotizarModelo('${modelo.titulo}')">Solicitar Impresión</button>
-                            </div>
+                    // Creamos la tarjeta y le añadimos un evento onclick para abrir el detalle
+                    const div = document.createElement('div');
+                    div.className = 'saved-card';
+                    
+                    // Asegurar que el título no rompa el JS escapando comillas
+                    const tituloSeguro = modelo.titulo.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const autorSeguro = modelo.autor ? modelo.autor.replace(/'/g, "\\'") : 'Maker';
+
+                    div.onclick = () => abrirModalDetalle(tituloSeguro, autorSeguro, modelo.imagen_url);
+                    
+                    div.innerHTML = `
+                        <img src="${modelo.imagen_url || 'https://via.placeholder.com/200x120?text=Sin+Imagen'}" alt="Modelo">
+                        <div class="saved-info">
+                            <h4>${modelo.titulo}</h4>
+                            <p>De: ${modelo.autor}</p>
                         </div>
                     `;
+                    contenedor.appendChild(div);
                 });
             } else {
                 contenedor.innerHTML = `
@@ -235,14 +277,71 @@
             }
         }
 
-        // --- FUNCIONES DE ACCIÓN ---
-        function procesarSubida(e) {
-            e.preventDefault();
-            alert("¡Archivo recibido! En una próxima actualización conectaremos esto con tu sistema de cotización para calcular el peso en gramos del archivo .STL.");
+        // --- LÓGICA DE LOS MODALES ---
+        function abrirModalDetalle(titulo, autor, imagen) {
+            modeloSeleccionado = { titulo, autor, imagen }; // Guardar en memoria
+            
+            document.getElementById('detalle-titulo').innerText = titulo;
+            document.getElementById('detalle-autor').innerText = autor;
+            document.getElementById('detalle-img').src = imagen;
+            
+            // Como no tenemos el link directo a Thingiverse en la BD, creamos un enlace de búsqueda directa por título
+            document.getElementById('detalle-link-thingiverse').href = `https://www.thingiverse.com/search?q=${encodeURIComponent(titulo)}&type=things&sort=relevant`;
+
+            document.getElementById('modal-detalle').style.display = 'flex';
+            document.getElementById('modal-cotizacion').style.display = 'none';
         }
 
-        function cotizarModelo(titulo) {
-            alert(`Has solicitado la cotización para: "${titulo}". Un administrador revisará las dimensiones y te contactará.`);
+        function abrirFormularioCotizacion() {
+            document.getElementById('modal-detalle').style.display = 'none';
+            document.getElementById('modal-cotizacion').style.display = 'flex';
+        }
+
+        function cerrarModales() {
+            document.getElementById('modal-detalle').style.display = 'none';
+            document.getElementById('modal-cotizacion').style.display = 'none';
+        }
+
+        // --- ENVIAR SOLICITUD A SUPABASE ---
+        async function enviarSolicitud(event) {
+            event.preventDefault(); // Evita que recargue la página
+
+            const btnEnviar = document.getElementById('btn-enviar-solicitud');
+            btnEnviar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+            btnEnviar.disabled = true;
+
+            const datosFormulario = {
+                user_id: idUsuarioActual,
+                user_email: emailUsuarioActual,
+                modelo_titulo: modeloSeleccionado.titulo,
+                imagen_url: modeloSeleccionado.imagen,
+                tamano_deseado: document.getElementById('form-tamano').value,
+                resolucion: document.getElementById('form-resolucion').value,
+                relleno: document.getElementById('form-relleno').value,
+                detalles_extra: document.getElementById('form-detalles').value
+            };
+
+            try {
+                // Insertamos en la nueva tabla "solicitudes_impresion"
+                const { error } = await dbCliente.from('solicitudes_impresion').insert([datosFormulario]);
+                
+                if (error) throw error;
+
+                // Éxito
+                cerrarModales();
+                document.getElementById('form-cotizacion').reset(); // Limpiar formulario
+                
+                const toast = document.getElementById('toast-success');
+                toast.style.display = 'block';
+                setTimeout(() => toast.style.display = 'none', 5000);
+
+            } catch (err) {
+                console.error("Error enviando solicitud:", err);
+                alert("Hubo un error al enviar tu solicitud. Intenta de nuevo.");
+            } finally {
+                btnEnviar.innerHTML = '<i class="fas fa-envelope"></i> Enviar Solicitud a Revisión';
+                btnEnviar.disabled = false;
+            }
         }
 
         // --- CERRAR SESIÓN ---
@@ -250,13 +349,6 @@
             await dbCliente.auth.signOut();
             window.location.href = 'index.html';
         });
-
-        // Escuchar si la sesión cambia o expira externamente
-        if(window.supabase) {
-            window.supabase.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_OUT') window.location.href = 'login.html';
-            });
-        }
     </script>
 </body>
 </html>
