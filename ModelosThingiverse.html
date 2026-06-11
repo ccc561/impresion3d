@@ -82,7 +82,10 @@
 <body>
 
     <header class="top-header">
-        <a href="index.html" class="btn-header" style="background-color: transparent; border: 1px solid white;"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+        <a href="index.html" class="btn-header" style="background-color: #003DF5; color: white; border: 1px solid white; display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+        
         <div class="logo">Galería Thingiverse</div>
         <a href="login.html" class="btn-header">Iniciar Sesión</a>
     </header>
@@ -105,19 +108,14 @@
     </main>
 
     <script>
-        // Esta función lee la URL cuando la página carga para ver si el usuario envió una búsqueda desde index.html
         window.onload = function() {
-            // Obtenemos los parámetros de la URL (lo que va después del '?')
             const parametrosURL = new URLSearchParams(window.location.search);
-            const terminoDeBusqueda = parametrosURL.get('q'); // Buscamos el parámetro 'q'
+            const terminoDeBusqueda = parametrosURL.get('q');
 
             if (terminoDeBusqueda) {
-                // Si existe, lo ponemos en la barra de texto
                 document.getElementById('busqueda-galeria').value = terminoDeBusqueda;
-                // Y ejecutamos la búsqueda automáticamente
                 ejecutarBusqueda();
             } else {
-                // Si no hay búsqueda en la URL, podemos cargar modelos destacados por defecto
                 cargarDestacados();
             }
         };
@@ -131,10 +129,8 @@
                 return;
             }
 
-            // Mostramos estado de carga
             contenedor.innerHTML = '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Buscando en Thingiverse...</div>';
 
-            // Simulación de conexión a la API (Esto se cambiará en la Fase 3 por fetch real a Thingiverse)
             setTimeout(() => {
                 contenedor.innerHTML = `
                     <div class="model-card">
@@ -161,7 +157,6 @@
             }, 800);
         }
 
-        // Función para mostrar modelos por defecto si el usuario entró sin buscar nada
         function cargarDestacados() {
             const contenedor = document.getElementById('contenedor-resultados');
             contenedor.innerHTML = `
