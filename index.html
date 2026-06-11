@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Servicio de Impresión 3D Profesional</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Estilos rápidos para el buscador del index */
+        .search-box {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .search-input {
+            padding: 12px;
+            width: 60%;
+            max-width: 400px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        .search-input:focus {
+            border-color: #0055FF; /* cura-blue */
+            outline: none;
+        }
+        .thingiverse-item img {
+            width: 100%;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 
@@ -12,9 +38,9 @@
         <div class="logo">Centro de Impresión 3D</div>
         <nav class="top-nav">
             <a href="#inicio">Inicio</a>
+            <a href="#que-imprimir">¿Qué puedo imprimir?</a>
             <a href="#proceso">¿Cómo es el proceso?</a>
             <a href="#impresora">Nuestra Tecnología</a>
-            <a href="#materiales">Materiales y Calidad</a>
         </nav>
         <a href="login.html" class="btn-header">Iniciar Sesión</a>
     </header>
@@ -41,6 +67,20 @@
                         <p>Calculamos el precio exacto basado en peso y tiempo.</p>
                     </div>
                 </div>
+            </section>
+
+            <section id="que-imprimir" class="content-section">
+                <h2>¿Qué puedo imprimir?</h2>
+                <p>Un modelo 3D es un archivo digital (usualmente en formato <strong>.STL</strong>) que contiene la geometría tridimensional de un objeto. Piensa en él como los planos de construcción que le dicen a nuestra impresora cómo ir colocando el plástico fundido, capa por capa, hasta formar la pieza sólida real.</p>
+                <p>Para hacerte las cosas más fáciles, estamos conectados directamente con <strong>Thingiverse</strong>, la biblioteca de diseños 3D gratuitos más grande del mundo. Puedes buscar desde macetas y soportes para celular, hasta figuras de acción y repuestos mecánicos.</p>
+                
+                <div class="search-box">
+                    <input type="text" id="busqueda-index" class="search-input" placeholder="Ej: Maceta, Soporte audífonos, Batman...">
+                    <button class="btn-cura" onclick="simularBusquedaThingiverse()">Explorar Modelos</button>
+                </div>
+
+                <div id="resultados-busqueda-index" class="features-grid" style="margin-top: 30px;">
+                    </div>
             </section>
 
             <section id="proceso" class="content-section">
@@ -93,7 +133,7 @@
                                 <h3>Creality Ender-3 S1 Pro</h3>
                                 <p><strong>Filamento en Uso:</strong><br> PLA Blanco</p>
                                 <p><strong>Volumen de Camilla:</strong><br> 220 x 220 x 270mm</p>
-                                <p><strong>Dimensiones de la Impresora 3D:</strong><br> 490 x 455 x 625mm</p>
+                                <p><strong>Dimensiones de la Impresora:</strong><br> 490 x 455 x 625mm</p>
                             </div>
                         </div>
 
@@ -115,7 +155,7 @@
             <section id="materiales" class="content-section">
                 <h2>Materiales y Calidad</h2>
                 <p>Actualmente trabajamos principalmente con <strong>PLA (Ácido Poliláctico)</strong>, un bioplástico amigable con el medio ambiente, ideal para figuras decorativas, prototipos visuales y piezas que no requieran soportar altas temperaturas.</p>
-                <p>Imprimimos con una resolución estándar de <strong>0.2mm por capa</strong>, logrando un equilibrio perfecto entre detalle y tiempo de entrega en nuestra Creality Ender-3 S1 Pro.</p>
+                <p>Imprimimos con una resolución estándar de <strong>0.2mm por capa</strong>, logrando un equilibrio perfecto entre detalle y tiempo de entrega.</p>
             </section>
 
             <section class="cta-section">
@@ -130,6 +170,40 @@
     <script>
         function cambiarImagen(rutaImagen) {
             document.getElementById('img-principal').src = rutaImagen;
+        }
+
+        // SIMULACIÓN VISUAL (Se reemplazará por la API de Thingiverse en la Fase 3)
+        function simularBusquedaThingiverse() {
+            const termino = document.getElementById('busqueda-index').value;
+            const contenedor = document.getElementById('resultados-busqueda-index');
+            
+            if(termino.trim() === '') {
+                alert("Por favor, escribe algo para buscar.");
+                return;
+            }
+
+            contenedor.innerHTML = '<p>Buscando en Thingiverse...</p>';
+
+            // Simulamos un retraso de red de 1 segundo
+            setTimeout(() => {
+                contenedor.innerHTML = `
+                    <div class="feature-card thingiverse-item">
+                        <img src="https://via.placeholder.com/150/0055FF/FFFFFF?text=Modelo+1" alt="Modelo">
+                        <h4>${termino} Articulado</h4>
+                        <p>Diseño popular y fácil de imprimir.</p>
+                    </div>
+                    <div class="feature-card thingiverse-item">
+                        <img src="https://via.placeholder.com/150/0055FF/FFFFFF?text=Modelo+2" alt="Modelo">
+                        <h4>Soporte para ${termino}</h4>
+                        <p>Ideal para organizar tu escritorio.</p>
+                    </div>
+                    <div class="feature-card thingiverse-item">
+                        <img src="https://via.placeholder.com/150/0055FF/FFFFFF?text=Modelo+3" alt="Modelo">
+                        <h4>${termino} Low Poly</h4>
+                        <p>Estilo geométrico moderno.</p>
+                    </div>
+                `;
+            }, 1000);
         }
     </script>
 
