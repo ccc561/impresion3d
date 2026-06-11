@@ -151,7 +151,7 @@
             background-color: var(--bg-light);
         }
         .section-inner {
-            max-width: 1200px; /* Ampliado de 1100 a 1200 para dar más espacio horizontal */
+            max-width: 1200px;
             margin: 0 auto;
         }
         .section-inner h2 {
@@ -165,7 +165,7 @@
         /* --- SECCIÓN PROCESO (TIMELINE MODERNO MEJORADO) --- */
         .timeline-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Forzado a 4 columnas en desktop para expandir los cuadros */
+            grid-template-columns: repeat(4, 1fr);
             gap: 25px;
         }
         .step-box {
@@ -203,7 +203,6 @@
         }
         .tech-header-area h2 { font-size: 32px; margin: 0; font-weight: 700; }
         
-        /* Corregido el doble ícono de reproducción */
         .btn-video {
             background: #ef4444;
             color: white;
@@ -286,10 +285,10 @@
         .materials-layout p { font-size: 17px; color: var(--text-muted); margin-bottom: 20px; }
         .materials-layout p:last-child { margin-bottom: 0; }
 
-        /* --- CTA GOOGLE AUTH (COMPACTADO Y AJUSTADO) --- */
+        /* --- CTA GOOGLE AUTH --- */
         .cta-auth-box {
             max-width: 500px;
-            margin: 0 auto; /* Eliminado el margen superior gigante de 100px */
+            margin: 0 auto;
             padding: 50px 40px;
             background: var(--bg-white);
             border-radius: 20px;
@@ -417,7 +416,7 @@
                     
                     <div class="spec-item">
                         <strong>Filamento en Uso</strong>
-                        <span>PLA Blanco</span>
+                        <span id="filamento-db"><i class="fas fa-spinner fa-spin" style="font-size:12px;"></i> Consultando base de datos...</span>
                     </div>
                     <div class="spec-item">
                         <strong>Volumen de Camilla</strong>
@@ -472,6 +471,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // ==========================================
+        // CONFIGURACIÓN DE SUPABASE Y APIS
+        // ==========================================
         const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
         
@@ -480,10 +482,38 @@
         window.onload = async function() {
             if (window.supabase) {
                 dbCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // 1. Cargar estado de sesión
                 const { data: { session } } = await dbCliente.auth.getSession();
                 evaluarEstadoSesion(session?.user);
+
+                // 2. NUEVO: Llamar a la base de datos para obtener el filamento actual
+                cargarInfoImpresora();
             }
         };
+
+        // --- NUEVA FUNCIÓN PARA OBTENER EL FILAMENTO DESDE SUPABASE ---
+        async function cargarInfoImpresora() {
+            try {
+                // Hacemos una consulta a la tabla que acabas de crear
+                const { data, error } = await dbCliente
+                    .from('configuracion_impresora')
+                    .select('filamento_en_uso')
+                    .eq('id', 1)
+                    .single();
+
+                if (error) throw error;
+
+                if (data && data.filamento_en_uso) {
+                    // Si encuentra el dato, actualiza el HTML automáticamente
+                    document.getElementById('filamento-db').innerText = data.filamento_en_uso;
+                }
+            } catch (err) {
+                console.error("Error al cargar la información de la impresora:", err.message);
+                // Si algo falla, ponemos un texto por defecto para que la página no se rompa
+                document.getElementById('filamento-db').innerText = "PLA Blanco (Por defecto)";
+            }
+        }
 
         function evaluarEstadoSesion(usuario) {
             const btnAuth = document.getElementById('btn-auth-main');
