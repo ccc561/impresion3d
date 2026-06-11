@@ -119,6 +119,11 @@
             <input type="text" id="busqueda-galeria" placeholder="¿Qué quieres imprimir hoy? Ej: Llavero, Maceta, Batman...">
             <button class="btn-cura" onclick="ejecutarBusqueda()">Buscar</button>
         </div>
+
+        <p style="font-size: 13px; color: #666; margin-top: 12px; max-width: 600px; margin-left: auto; margin-right: auto; background-color: #f1f3f5; padding: 8px 15px; border-radius: 20px; display: inline-block;">
+            <i class="fas fa-info-circle" style="color: var(--cura-blue);"></i> 
+            <strong>Consejo Pro:</strong> Como la biblioteca mundial está en inglés, obtendrás miles de resultados más si buscas por ejemplo <em>"Planter"</em> en vez de maceta, o <em>"Holder"</em> en vez de soporte.
+        </p>
     </div>
 
     <main class="thingiverse-grid" id="contenedor-resultados">
@@ -133,21 +138,21 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // CONFIGURACIÓN DE SUPABASE (Usa las mismas llaves que en dashboard.html)
-        const SUPABASE_URL = "https://TU_PROYECTO_AQUÍ.supabase.co"; 
-        const SUPABASE_ANON_KEY = "TU_LLAVE_ANON_AQUÍ";
-        
+        // 1. CONFIGURACIÓN DE SUPABASE (Pega tus datos de Supabase aquí)
+        const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co"; 
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
         let supabase;
-        let usuarioActual = null; // Variable para saber quién está navegando
+        let usuarioActual = null; 
+
+        // 2. CONFIGURACIÓN DE THINGIVERSE (Pega aquí tu App Token de Thingiverse)
+        const THINGIVERSE_TOKEN = "2459c29910830f90950d75dbd627e442";
 
         window.onload = async function() {
-            // Inicializar base de datos
             if (!SUPABASE_URL.includes("TU_PROYECTO_AQUÍ")) {
                 supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 await verificarUsuario();
             }
 
-            // Revisar si venimos de index.html con una búsqueda pendiente
             const parametrosURL = new URLSearchParams(window.location.search);
             const terminoDeBusqueda = parametrosURL.get('q');
 
@@ -159,7 +164,6 @@
             }
         };
 
-        // FUNCIÓN: Verifica si hay sesión y cambia el encabezado
         async function verificarUsuario() {
             const { data: { session } } = await supabase.auth.getSession();
             if (session) {
@@ -167,13 +171,12 @@
                 const btnAuth = document.getElementById('btn-auth');
                 btnAuth.href = 'dashboard.html';
                 btnAuth.innerHTML = '<i class="fas fa-user-circle"></i> Mi Panel';
-                btnAuth.style.backgroundColor = '#FFB000'; // Color distintivo para el panel
+                btnAuth.style.backgroundColor = '#FFB000'; 
                 btnAuth.style.color = '#333';
             }
         }
 
-        // FUNCIÓN: Muestra resultados (Simulando API por ahora)
-        function ejecutarBusqueda() {
+        async function ejecutarBusqueda() {
             const termino = document.getElementById('busqueda-galeria').value.trim();
             const contenedor = document.getElementById('contenedor-resultados');
             
@@ -182,46 +185,67 @@
                 return;
             }
 
-            contenedor.innerHTML = '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Buscando en la biblioteca...</div>';
+            contenedor.innerHTML = '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Buscando en la biblioteca mundial de Thingiverse...</div>';
 
-            // Simulación de resultados. Generamos los datos y los inyectamos en las tarjetas.
-            setTimeout(() => {
-                const modelos = [
-                    { titulo: `${termino} Articulado`, autor: 'UsuarioMaker_99', img: `https://via.placeholder.com/300x200/0055FF/FFFFFF?text=${termino}` },
-                    { titulo: `Soporte para ${termino}`, autor: '3D_Prints_Pro', img: `https://via.placeholder.com/300x200/003DF5/FFFFFF?text=Soporte` },
-                    { titulo: `${termino} Geométrico`, autor: 'ArtDesign3D', img: `https://via.placeholder.com/300x200/2b2b2b/FFFFFF?text=Diseño` },
-                    { titulo: `Miniatura de ${termino}`, autor: 'TabletopFan', img: `https://via.placeholder.com/300x200/FFB000/333333?text=Mini` }
-                ];
-                renderizarModelos(modelos);
-            }, 800);
+            try {
+                const respuesta = await fetch(`https://api.thingiverse.com/search/${encodeURIComponent(termino)}/?access_token=${THINGIVERSE_TOKEN}`);
+                
+                if (!respuesta.ok) throw new Error("Error al conectar con Thingiverse");
+
+                const datos = await respuesta.json();
+                const resultados = datos.hits || datos;
+
+                // SI NO SE ENCUENTRAN RESULTADOS, RECORDAR RECOMENDACIÓN DE IDIOMA EN PANTALLA
+                if (resultados.length === 0) {
+                    contenedor.innerHTML = `
+                        <div class="loading-message" style="grid-column: 1/-1; padding: 5px 20px;">
+                            <i class="fas fa-search-minus" style="font-size: 40px; color: #999; margin-bottom: 15px;"></i><br>
+                            No encontramos modelos para <strong>"${termino}"</strong>.<br><br>
+                            <span style="font-size: 15px; color: #666;">
+                                <i class="fas fa-lightbulb" style="color: #FFB000;"></i> Intenta escribir tu búsqueda en <strong>inglés</strong> para acceder a todo el catálogo mundial.
+                            </span>
+                        </div>`;
+                    return;
+                }
+
+                const modelosLimpios = resultados.map(item => ({
+                    titulo: item.name,
+                    autor: item.creator ? item.creator.name : "Anónimo",
+                    img: item.thumbnail || 'https://via.placeholder.com/300x200/555555/FFFFFF?text=Sin+Imagen'
+                }));
+
+                renderizarModelos(modelosLimpios);
+
+            } catch (error) {
+                console.error(error);
+                contenedor.innerHTML = '<div class="loading-message" style="color: red;"><i class="fas fa-exclamation-triangle"></i> Error al cargar los modelos. Revisa tu App Token de Thingiverse.</div>';
+            }
         }
 
         function cargarDestacados() {
             const modelos = [
-                { titulo: 'Maceta Groot', autor: 'Diseño Popular', img: 'https://via.placeholder.com/300x200/555555/FFFFFF?text=Maceta' },
-                { titulo: 'Soporte Auriculares', autor: 'Diseño Útil', img: 'https://via.placeholder.com/300x200/555555/FFFFFF?text=Soporte' },
-                { titulo: 'Dragón Articulado', autor: 'Tendencia Maker', img: 'https://via.placeholder.com/300x200/555555/FFFFFF?text=Dragón' }
+                { titulo: 'Maceta Groot', autor: 'Diseño Popular', img: 'https://cdn.thingiverse.com/renders/71/34/fb/01/a4/Baby_Groot_Planter_display_large.jpg' },
+                { titulo: 'Soporte Auriculares', autor: 'Diseño Útil', img: 'https://cdn.thingiverse.com/renders/24/ce/27/ef/20/Headphone_Stand_display_large.jpg' },
+                { titulo: 'Dragón Articulado', autor: 'Tendencia Maker', img: 'https://cdn.thingiverse.com/renders/f2/87/4a/01/5e/Articulated_Dragon_display_large.jpg' }
             ];
             renderizarModelos(modelos);
         }
 
-        // FUNCIÓN: Dibuja las tarjetas y les añade el botón de Guardar
         function renderizarModelos(modelos) {
             const contenedor = document.getElementById('contenedor-resultados');
-            contenedor.innerHTML = ''; // Limpiar
+            contenedor.innerHTML = ''; 
 
             modelos.forEach(mod => {
-                // Preparamos los datos para que no se rompan al pasarlos por JavaScript
-                const tituloSafe = mod.titulo.replace(/'/g, "\\'");
-                const autorSafe = mod.autor.replace(/'/g, "\\'");
+                const tituloSafe = mod.titulo.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+                const autorSafe = mod.autor.replace(/'/g, "\\'").replace(/"/g, "&quot;");
                 const imgSafe = mod.img;
 
                 contenedor.innerHTML += `
                     <div class="model-card">
                         <div>
-                            <img src="${imgSafe}" alt="${mod.titulo}">
-                            <h4>${mod.titulo}</h4>
-                            <p>Por: ${mod.autor}</p>
+                            <img src="${imgSafe}" alt="${tituloSafe}">
+                            <h4>${tituloSafe}</h4>
+                            <p>Por: ${autorSafe}</p>
                         </div>
                         <div style="padding: 15px;">
                             <button class="btn-cura btn-full" style="background-color: #2b2b2b; font-size: 14px;" 
@@ -234,16 +258,13 @@
             });
         }
 
-        // FUNCIÓN PRINCIPAL: Guardar el modelo en la base de datos
         async function guardarEnPanel(titulo, autor, imagenUrl) {
-            // 1. Verificamos si el usuario ha iniciado sesión
             if (!usuarioActual) {
                 alert("Debes iniciar sesión con Google para guardar modelos.");
                 window.location.href = 'login.html';
                 return;
             }
 
-            // 2. Si está logueado, lo insertamos en la tabla 'modelos_guardados'
             try {
                 const { error } = await supabase
                     .from('modelos_guardados')
@@ -257,8 +278,6 @@
                     ]);
 
                 if (error) throw error;
-
-                // 3. Mostramos la notificación visual bonita
                 mostrarNotificacion();
 
             } catch (err) {
@@ -267,12 +286,11 @@
             }
         }
 
-        // FUNCIÓN: Muestra el pequeño mensaje verde flotante
+        function function_placeholder() {}
+
         function mostrarNotificacion() {
             const toast = document.getElementById('toast-notificacion');
             toast.style.display = 'block';
-            
-            // Ocultar automáticamente después de 3 segundos
             setTimeout(() => {
                 toast.style.display = 'none';
             }, 3000);
