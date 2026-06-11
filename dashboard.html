@@ -194,6 +194,7 @@
         }
 
         // --- CARGAR DATOS DESDE BASE DE DATOS ---
+        // --- CARGAR DATOS DESDE BASE DE DATOS ---
         async function cargarModelosGuardados() {
             const contenedor = document.getElementById('contenedor-guardados');
             
@@ -201,11 +202,17 @@
                 .from('modelos_guardados')
                 .select('*')
                 .eq('user_id', idUsuarioActual)
-                .order('created_at', { ascending: false }); // Los más recientes primero
+                .order('created_at', { ascending: false }); 
 
+            // MODIFICADO: Ahora te mostrará el texto del error en rojo
             if (error) {
                 console.error("Error cargando diseños:", error.message);
-                contenedor.innerHTML = '<p style="color:red;">Error al cargar tu biblioteca.</p>';
+                contenedor.innerHTML = `
+                    <div style="grid-column: 1/-1; padding: 20px; text-align: center; color: #dc2626; background: #fee2e2; border-radius: 12px; border: 1px solid #fca5a5;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 8px;"></i><br>
+                        <strong>Error al cargar tu biblioteca:</strong><br>
+                        <code style="font-size: 13px; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px;">${error.message}</code>
+                    </div>`;
                 return;
             }
 
@@ -223,6 +230,13 @@
                         </div>
                     `;
                 });
+            } else {
+                contenedor.innerHTML = `
+                    <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #888; background: #f9fafb; border-radius: 12px; border: 1px dashed #ccc;">
+                        No tienes diseños guardados aún.<br>Explora la galería y guarda los que te gusten.
+                    </div>`;
+            }
+        });
             } else {
                 contenedor.innerHTML = `
                     <div style="grid-column: 1/-1; padding: 40px; text-align: center; color: #888; background: #f9fafb; border-radius: 12px; border: 1px dashed #ccc;">
