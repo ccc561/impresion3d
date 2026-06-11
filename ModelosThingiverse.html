@@ -17,11 +17,10 @@
         .model-card img { width: 100%; height: 180px; object-fit: cover; }
         .model-card-info { padding: 12px; text-align: center; }
 
-        /* --- MODAL DE DETALLES Y GALERÍA DE IMÁGENES --- */
+        /* --- MODAL DE DETALLES Y GALERÍA --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 10000; }
         .modal-content { background: white; width: 95%; max-width: 1000px; height: 80vh; border-radius: 12px; display: grid; grid-template-columns: 1.4fr 1fr; overflow: hidden; position: relative; }
         
-        /* Contenedor escaneable para múltiples ángulos de imagen */
         #images-container { background: #f1f3f5; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; align-items: center; height: 100%; }
         #images-container img { width: 100%; max-height: 450px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); object-fit: contain; background: white; }
         
@@ -39,6 +38,18 @@
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; z-index: 10001; color: #333; background: #e9ecef; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .close-modal:hover { background: #dee2e6; }
         #toast-notificacion { position: fixed; bottom: 30px; right: 30px; background-color: #28a745; color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; display: none; z-index: 11000; }
+
+        /* --- NUEVO BLOQUE INTERACTIVO: LOGIN REQUERIDO --- */
+        .auth-prompt-content { background: white; padding: 40px; border-radius: 12px; text-align: center; max-width: 450px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: promptScale 0.3s ease; }
+        @keyframes promptScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .auth-icon { font-size: 50px; color: #FFB000; margin-bottom: 20px; }
+        .auth-prompt-content h3 { margin: 0 0 12px 0; color: #003DF5; font-size: 22px; }
+        .auth-prompt-content p { color: #555; font-size: 15px; line-height: 1.6; margin: 0 0 25px 0; }
+        .auth-prompt-buttons { display: flex; flex-direction: column; gap: 10px; }
+        .btn-login-redirect { background: #0055ff; color: white; }
+        .btn-login-redirect:hover { background: #0044cc; }
+        .btn-cancel-auth { background: #e9ecef; color: #333; }
+        .btn-cancel-auth:hover { background: #dee2e6; }
     </style>
 </head>
 <body>
@@ -69,9 +80,7 @@
     <div class="modal-overlay" id="modal-container" onclick="if(event.target === this) cerrarModal()">
         <div class="modal-content">
             <span class="close-modal" onclick="cerrarModal()">&times;</span>
-            
             <div id="images-container"></div>
-
             <div class="modal-sidebar">
                 <h2 id="modal-titulo" style="margin:0; color:var(--cura-blue); font-size: 24px; line-height: 1.3;">Nombre del Modelo</h2>
                 <p style="margin: 0; font-size: 16px;"><strong>Autor:</strong> <span id="modal-autor">Cargando...</span></p>
@@ -82,6 +91,22 @@
                 </a>
                 <button class="btn-action btn-save-panel" id="btn-guardar-panel">
                     <i class="fas fa-bookmark"></i> Guardar en mi Panel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-auth-required" onclick="if(event.target === this) cerrarModalAuth()">
+        <div class="auth-prompt-content">
+            <i class="fas fa-user-lock auth-icon"></i>
+            <h3>Acceso Requerido</h3>
+            <p>Para almacenar tus diseños favoritos y poder gestionar tus cotizaciones de impresión, es necesario contar con una sesión activa en la plataforma.</p>
+            <div class="auth-prompt-buttons">
+                <a href="login.html" class="btn-action btn-login-redirect">
+                    <i class="fas fa-sign-in-alt"></i> Ir a Iniciar Sesión
+                </a>
+                <button class="btn-action btn-cancel-auth" onclick="cerrarModalAuth()">
+                    Volver a la galería
                 </button>
             </div>
         </div>
@@ -169,7 +194,6 @@
         }
 
         async function abrirDetalle(item) {
-            // Configurar textos inmediatos del Sidebar
             document.getElementById('modal-titulo').innerText = item.name;
             document.getElementById('modal-autor').innerText = item.creator ? item.creator.name : 'Maker';
             document.getElementById('link-thingiverse').href = item.public_url;
@@ -180,16 +204,14 @@
             
             document.getElementById('modal-container').style.display = 'flex';
             
-            // Consultar la API para traer todas las imágenes disponibles de este objeto
             try {
                 const respuesta = await fetch(`https://api.thingiverse.com/things/${item.id}/images?access_token=${THINGIVERSE_TOKEN}`);
                 const imagenesObj = await respuesta.json();
                 
-                imgContainer.innerHTML = ""; // Limpiar spinner
+                imgContainer.innerHTML = "";
                 
                 if(imagenesObj && imagenesObj.length > 0) {
                     imagenesObj.forEach(img => {
-                        // Extraer la resolución óptima disponible (large)
                         let targetUrl = "";
                         if(img.sizes && img.sizes.length > 0) {
                             const sizeLarge = img.sizes.find(s => s.type === 'large' || s.size === 'large');
@@ -206,7 +228,6 @@
                         }
                     });
                 } else {
-                    // Fallback si no tiene galería extendida
                     imgContainer.innerHTML = `<img src="${item.thumbnail || item.preview_image}" alt="Imagen base">`;
                 }
             } catch (err) {
@@ -219,9 +240,14 @@
             document.getElementById('modal-container').style.display = 'none'; 
         }
 
+        function cerrarModalAuth() {
+            document.getElementById('modal-auth-required').style.display = 'none';
+        }
+
         async function guardar(item) {
+            // Reemplazo del alert() por el nuevo bloque modal interactivo
             if(!usuarioActual || !dbCliente) { 
-                alert("Por favor, inicia sesión para poder guardar este diseño en tu panel personal."); 
+                document.getElementById('modal-auth-required').style.display = 'flex';
                 return; 
             }
             try {
@@ -238,7 +264,6 @@
                 setTimeout(() => toast.style.display = 'none', 3000);
             } catch (e) {
                 console.error("Error guardando:", e);
-                alert("Ocurrió un inconveniente al conectar con la base de datos de Supabase.");
             }
         }
     </script>
