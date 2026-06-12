@@ -16,13 +16,7 @@
             --border-color: #e5e7eb;
         }
 
-        body {
-            display: none;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            background-color: var(--bg-light);
-            color: var(--cura-dark);
-        }
+        body { display: none; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; margin: 0; background-color: var(--bg-light); color: var(--cura-dark); }
 
         /* HEADER & LAYOUT */
         .dashboard-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; background: var(--bg-white); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 1000; }
@@ -38,13 +32,11 @@
         .panel-card h3 i { color: var(--cura-blue); }
         .panel-card p { color: var(--text-muted); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
 
-        /* FORMULARIO DE SUBIDA */
         .file-upload-area { border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 12px; background: #fdfdfd; margin-bottom: 20px; transition: 0.2s; }
         .file-upload-area:hover { border-color: var(--cura-blue); background: #f0f4ff; }
         .btn-action { background: var(--cura-dark); color: white; width: 100%; border: none; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-action:hover { background: var(--cura-blue); }
 
-        /* GRID DE MODELOS GUARDADOS */
         .saved-models-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
         .saved-card { background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; text-align: center; transition: transform 0.2s; cursor: pointer; position: relative; }
         .saved-card:hover { transform: translateY(-4px); border-color: var(--cura-blue); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
@@ -53,19 +45,17 @@
         .saved-info h4 { margin: 0 0 5px 0; font-size: 15px; color: var(--cura-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         .saved-info p { font-size: 13px; color: var(--text-muted); margin: 0; }
 
-        /* BOTÓN DE ELIMINAR MODELO */
         .btn-delete { position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .btn-delete:hover { background: rgba(220, 38, 38, 1); transform: scale(1.1); }
 
-        /* --- MODALES --- */
+        /* MODALES */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(4px); }
         .modal-content { background: white; width: 90%; max-width: 900px; border-radius: 16px; display: grid; grid-template-columns: 1.2fr 1fr; overflow: hidden; position: relative; animation: zoomIn 0.3s ease; height: 80vh; }
         @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; z-index: 10; width: 35px; height: 35px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; z-index: 10; width: 35px; height: 35px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s;}
         .close-modal:hover { background: #ddd; }
         
         .modal-sidebar { padding: 40px 30px; display: flex; flex-direction: column; gap: 15px; background: white; overflow-y: auto;}
-        
         .modal-img-container { background: #f1f3f5; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; overflow-y: auto; height: 100%; }
         .modal-img-container img { width: 100%; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white; object-fit: contain;}
         
@@ -73,8 +63,8 @@
         .btn-modal-thingiverse:hover { background: #dee2e6; }
         .btn-modal-print { background: #FFB000; color: #111; border: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
         .btn-modal-print:hover { background: #e69e00; }
+        .btn-modal-print:disabled { background: #ccc; cursor: not-allowed; }
 
-        /* --- FORMULARIO DE COTIZACIÓN (Arreglado el display) --- */
         .quote-form-container { padding: 30px; max-width: 600px; width: 90%; background: white; border-radius: 16px; position: relative; max-height: 90vh; overflow-y: auto; }
         .quote-instructions { background: #eef2ff; border-left: 4px solid var(--cura-blue); padding: 15px 20px; border-radius: 0 8px 8px 0; margin-bottom: 25px; }
         .quote-instructions p { margin: 0; font-size: 14px; color: #3730a3; line-height: 1.6; }
@@ -82,6 +72,17 @@
         .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; color: var(--cura-dark); }
         .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; font-family: inherit; }
         .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--cura-blue); }
+
+        /* MODAL DE ADVERTENCIA (ELIMINAR Y LÍMITES) */
+        .warning-modal-container { background: white; padding: 35px; border-radius: 16px; max-width: 400px; width: 90%; text-align: center; animation: zoomIn 0.3s ease; }
+        .warning-icon { font-size: 50px; color: #ef4444; margin-bottom: 15px; }
+        .warning-modal-container h3 { margin: 0 0 10px 0; color: var(--cura-dark); font-size: 22px; }
+        .warning-modal-container p { color: #555; font-size: 15px; margin-bottom: 25px; line-height: 1.5; }
+        .warning-buttons { display: flex; gap: 10px; justify-content: center; }
+        .btn-cancel { background: #e9ecef; color: #333; padding: 12px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1; }
+        .btn-cancel:hover { background: #dee2e6; }
+        .btn-confirm-delete { background: #ef4444; color: white; padding: 12px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; flex: 1; }
+        .btn-confirm-delete:hover { background: #dc2626; }
 
         #toast-success { position: fixed; bottom: 30px; right: 30px; background: #10b981; color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; display: none; z-index: 11000; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
     </style>
@@ -122,11 +123,9 @@
     <div class="modal-overlay" id="modal-detalle" onclick="if(event.target === this) cerrarModales()">
         <div class="modal-content">
             <span class="close-modal" onclick="cerrarModales()">&times;</span>
-            
             <div class="modal-img-container" id="galeria-imagenes">
                 <img id="detalle-img" src="" alt="Modelo Base">
             </div>
-            
             <div class="modal-sidebar">
                 <h2 id="detalle-titulo" style="margin:0; color:var(--cura-blue); font-size: 22px;">Título</h2>
                 <p style="margin:0; color:#666;">Diseñador: <span id="detalle-autor" style="font-weight:bold; color:#333;">Autor</span></p>
@@ -138,9 +137,10 @@
                     <i class="fas fa-external-link-alt"></i> Ver enlace original
                 </a>
                 
-                <button class="btn-modal-print" onclick="abrirFormularioCotizacion()">
+                <button class="btn-modal-print" id="btn-abrir-cotizacion" onclick="abrirFormularioCotizacion()">
                     <i class="fas fa-paper-plane"></i> Solicitar Impresión
                 </button>
+                <p id="aviso-limite" style="color: #ef4444; font-size: 13px; text-align: center; display: none; font-weight: bold; margin-top: 5px;">Has alcanzado el límite de 3 solicitudes por día.</p>
             </div>
         </div>
     </div>
@@ -152,7 +152,7 @@
             
             <div class="quote-instructions">
                 <p><strong><i class="fas fa-info-circle"></i> ¿Qué ocurre ahora?</strong><br>
-                Rellena este formulario. Nuestro equipo evaluará el modelo y en los próximos días <strong>recibirás un correo electrónico</strong> con las dimensiones finales, el tiempo de entrega y el precio exacto. Para confirmar tu pedido, solo deberás responder ese correo dando tu aprobación.</p>
+                Nuestro equipo evaluará el modelo y en los próximos días <strong>recibirás un correo electrónico a Claudio.cisternas@estudiante.cfta.cl </strong> (uso interno) y a tu correo personal con las dimensiones finales y el precio exacto.</p>
             </div>
 
             <form id="form-cotizacion" onsubmit="enviarSolicitud(event)">
@@ -166,7 +166,6 @@
                         <option value="Tamaño original del archivo">Mantener el tamaño original del archivo</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label>Calidad / Resolución de Capa</label>
                     <select id="form-resolucion" required>
@@ -174,7 +173,6 @@
                         <option value="Alta (0.12mm)">Alta 0.12mm (Para máximo detalle - Incrementa el precio)</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label>Resistencia (Porcentaje de relleno)</label>
                     <select id="form-relleno" required>
@@ -183,16 +181,26 @@
                         <option value="Sólido (100%)">Sólido (100% - Resistencia mecánica extrema)</option>
                     </select>
                 </div>
-
                 <div class="form-group">
                     <label>Detalles extras o consultas (Opcional)</label>
-                    <textarea id="form-detalles" rows="3" placeholder="Ej: Me gustaría que fuera de color negro si es posible, o necesito que esté listo para el viernes..."></textarea>
+                    <textarea id="form-detalles" rows="3" placeholder="Ej: Me gustaría que fuera de color negro si es posible..."></textarea>
                 </div>
-
                 <button type="submit" class="btn-action" id="btn-enviar-solicitud" style="font-size: 16px;">
                     <i class="fas fa-envelope"></i> Enviar Solicitud a Revisión
                 </button>
             </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-confirmar-eliminar" onclick="if(event.target === this) cerrarModales()">
+        <div class="warning-modal-container">
+            <i class="fas fa-trash-alt warning-icon"></i>
+            <h3>Eliminar Diseño</h3>
+            <p>¿Estás seguro de que deseas eliminar este modelo de tu biblioteca? Esta acción no se puede deshacer.</p>
+            <div class="warning-buttons">
+                <button class="btn-cancel" onclick="cerrarModales()">Cancelar</button>
+                <button class="btn-confirm-delete" id="btn-ejecutar-eliminar" onclick="ejecutarEliminacion()">Sí, eliminar</button>
+            </div>
         </div>
     </div>
 
@@ -212,6 +220,8 @@
         let idUsuarioActual = null;
         let emailUsuarioActual = null;
         let modeloSeleccionado = {};
+        let modeloIdAEliminar = null; // Variable para el modal de borrado
+        let cantidadSolicitudesHoy = 0; // Para el límite anti-trolls
 
         window.onload = async function() {
             if (window.supabase) {
@@ -222,10 +232,7 @@
 
         async function verificarAcceso() {
             const { data: { session }, error } = await dbCliente.auth.getSession();
-            if (error || !session) {
-                window.location.href = 'login.html'; 
-                return;
-            }
+            if (error || !session) { window.location.href = 'login.html'; return; }
 
             document.body.style.display = 'block';
             idUsuarioActual = session.user.id;
@@ -235,20 +242,29 @@
             document.getElementById('usuario-nombre').textContent = nombreUsuario.split(" ")[0];
 
             cargarModelosGuardados();
+            verificarLimiteDiario(); // Comprobamos cuántos correos ha enviado hoy
+        }
+
+        // Verifica cuántos pedidos ha hecho el usuario hoy
+        async function verificarLimiteDiario() {
+            const hoy = new Date();
+            hoy.setHours(0,0,0,0);
+            
+            const { count, error } = await dbCliente.from('solicitudes_impresion')
+                .select('*', { count: 'exact', head: true })
+                .eq('user_id', idUsuarioActual)
+                .gte('created_at', hoy.toISOString());
+
+            if (!error) {
+                cantidadSolicitudesHoy = count;
+            }
         }
 
         async function cargarModelosGuardados() {
             const contenedor = document.getElementById('contenedor-guardados');
-            
-            const { data, error } = await dbCliente
-                .from('modelos_guardados')
-                .select('*')
-                .eq('user_id', idUsuarioActual);
+            const { data, error } = await dbCliente.from('modelos_guardados').select('*').eq('user_id', idUsuarioActual);
 
-            if (error) {
-                contenedor.innerHTML = `<p style="color:red; text-align:center;">Error cargando la biblioteca.</p>`;
-                return;
-            }
+            if (error) { contenedor.innerHTML = `<p style="color:red; text-align:center;">Error cargando la biblioteca.</p>`; return; }
 
             if (data && data.length > 0) {
                 contenedor.innerHTML = ''; 
@@ -261,9 +277,8 @@
                     const urlOriginal = modelo.public_url ? modelo.public_url : ''; 
                     const thingId = modelo.thing_id ? modelo.thing_id : null; 
 
-                    // Aquí agregamos el botón de eliminar y la estructura de la tarjeta
                     div.innerHTML = `
-                        <button class="btn-delete" onclick="eliminarModelo(event, ${modelo.id})" title="Eliminar modelo">
+                        <button class="btn-delete" onclick="prepararEliminar(event, ${modelo.id})" title="Eliminar modelo">
                             <i class="fas fa-trash"></i>
                         </button>
                         <div onclick="abrirModalDetalle('${tituloSeguro}', '${autorSeguro}', '${modelo.imagen_url}', '${urlOriginal}', ${thingId})" style="height: 100%; display: flex; flex-direction: column;">
@@ -284,63 +299,62 @@
             }
         }
 
-        // --- NUEVA FUNCIÓN: ELIMINAR MODELO ---
-        async function eliminarModelo(event, modeloId) {
-            // event.stopPropagation() evita que se abra el modal al hacer clic en la papelera
-            event.stopPropagation(); 
-            
-            if(!confirm("¿Estás seguro de que deseas eliminar este diseño de tu biblioteca?")) return;
+        // --- SISTEMA DE BORRADO SEGURO ---
+        function prepararEliminar(event, modeloId) {
+            event.stopPropagation(); // Evita abrir el detalle
+            modeloIdAEliminar = modeloId;
+            document.getElementById('modal-confirmar-eliminar').style.display = 'flex';
+        }
+
+        async function ejecutarEliminacion() {
+            const btnConfirm = document.getElementById('btn-ejecutar-eliminar');
+            btnConfirm.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            btnConfirm.disabled = true;
 
             try {
-                const { error } = await dbCliente
-                    .from('modelos_guardados')
-                    .delete()
-                    .eq('id', modeloId);
-
+                const { error } = await dbCliente.from('modelos_guardados').delete().eq('id', modeloIdAEliminar);
                 if (error) throw error;
 
-                // Notificación de éxito y recarga
-                const toast = document.getElementById('toast-success');
-                toast.innerHTML = '<i class="fas fa-trash-alt"></i> Modelo eliminado correctamente';
-                toast.style.background = '#ef4444'; // Color rojo
-                toast.style.display = 'block';
-                setTimeout(() => toast.style.display = 'none', 3000);
-
-                cargarModelosGuardados(); // Recargar la lista
+                cerrarModales();
+                mostrarToast('<i class="fas fa-trash-alt"></i> Modelo eliminado correctamente', '#ef4444');
+                cargarModelosGuardados(); 
 
             } catch (err) {
-                console.error("Error eliminando:", err);
                 alert("Hubo un error al eliminar el modelo.");
+            } finally {
+                btnConfirm.innerHTML = 'Sí, eliminar';
+                btnConfirm.disabled = false;
             }
         }
 
-        // --- LÓGICA DE LOS MODALES ---
+        // --- SISTEMA DE MODALES ---
         async function abrirModalDetalle(titulo, autor, imagen, urlOriginal, thingId) {
             modeloSeleccionado = { titulo, autor, imagen };
             
             document.getElementById('detalle-titulo').innerText = titulo;
             document.getElementById('detalle-autor').innerText = autor;
-            
-            const linkThingiverse = document.getElementById('detalle-link-thingiverse');
-            if (urlOriginal) {
-                linkThingiverse.href = urlOriginal;
+            document.getElementById('detalle-link-thingiverse').href = urlOriginal || `https://www.thingiverse.com/search?q=${encodeURIComponent(titulo)}&type=things&sort=relevant`;
+
+            // Verificador visual de límite de envíos
+            const btnCotizar = document.getElementById('btn-abrir-cotizacion');
+            const avisoLimite = document.getElementById('aviso-limite');
+            if (cantidadSolicitudesHoy >= 3) {
+                btnCotizar.disabled = true;
+                avisoLimite.style.display = 'block';
             } else {
-                linkThingiverse.href = `https://www.thingiverse.com/search?q=${encodeURIComponent(titulo)}&type=things&sort=relevant`;
+                btnCotizar.disabled = false;
+                avisoLimite.style.display = 'none';
             }
 
             document.getElementById('modal-detalle').style.display = 'flex';
-            document.getElementById('modal-cotizacion').style.display = 'none';
-
-            const galeria = document.getElementById('galeria-imagenes');
             
+            const galeria = document.getElementById('galeria-imagenes');
             if (thingId) {
                 galeria.innerHTML = '<div style="text-align:center; color:#666; margin:auto;"><i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>Cargando galería...</div>';
                 try {
                     const res = await fetch(`https://api.thingiverse.com/things/${thingId}/images?access_token=${THINGIVERSE_TOKEN}`);
                     const imagenesArray = await res.json();
-                    
                     galeria.innerHTML = "";
-                    
                     if(imagenesArray && imagenesArray.length > 0) {
                         imagenesArray.forEach(img => {
                             let targetUrl = img.sizes?.find(s => s.type === 'large' || s.size === 'large')?.url || img.url || img.thumbnail;
@@ -350,25 +364,27 @@
                                 galeria.appendChild(imgDom);
                             }
                         });
-                    } else {
-                        galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`;
-                    }
-                } catch (e) {
-                    galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`;
-                }
-            } else {
-                galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`;
-            }
+                    } else { galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`; }
+                } catch (e) { galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`; }
+            } else { galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`; }
         }
 
         function abrirFormularioCotizacion() {
+            if (cantidadSolicitudesHoy >= 3) return; // Doble capa de seguridad
             document.getElementById('modal-detalle').style.display = 'none';
             document.getElementById('modal-cotizacion').style.display = 'flex';
         }
 
         function cerrarModales() {
-            document.getElementById('modal-detalle').style.display = 'none';
-            document.getElementById('modal-cotizacion').style.display = 'none';
+            document.querySelectorAll('.modal-overlay').forEach(modal => modal.style.display = 'none');
+        }
+
+        function mostrarToast(mensaje, color) {
+            const toast = document.getElementById('toast-success');
+            toast.innerHTML = mensaje;
+            toast.style.background = color;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
         }
 
         // --- ENVIAR SOLICITUD A SUPABASE ---
@@ -391,20 +407,23 @@
             };
 
             try {
+                // Aquí el Trigger de Supabase bloqueará el envío si detecta al hacker superando los 3 envíos
                 const { error } = await dbCliente.from('solicitudes_impresion').insert([datosFormulario]);
-                if (error) throw error;
+                if (error) {
+                    if(error.message.includes("Límite")) {
+                        throw new Error("Límite de 3 solicitudes diarias alcanzado. Intenta mañana.");
+                    }
+                    throw error;
+                }
+
+                cantidadSolicitudesHoy++; // Sumamos 1 al contador interno
 
                 cerrarModales();
                 document.getElementById('form-cotizacion').reset();
-                
-                const toast = document.getElementById('toast-success');
-                toast.innerHTML = '<i class="fas fa-check-circle"></i> ¡Solicitud enviada! Revisa tu correo en los próximos días.';
-                toast.style.background = '#10b981'; // Color verde original
-                toast.style.display = 'block';
-                setTimeout(() => toast.style.display = 'none', 5000);
+                mostrarToast('<i class="fas fa-check-circle"></i> ¡Solicitud enviada! Revisa tu correo pronto.', '#10b981');
 
             } catch (err) {
-                alert("Hubo un error al enviar tu solicitud: " + err.message);
+                alert("Atención: " + err.message);
             } finally {
                 btnEnviar.innerHTML = '<i class="fas fa-envelope"></i> Enviar Solicitud a Revisión';
                 btnEnviar.disabled = false;
