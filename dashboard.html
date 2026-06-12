@@ -55,14 +55,16 @@
 
         /* --- MODALES --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(4px); }
-        .modal-content { background: white; width: 90%; max-width: 800px; border-radius: 16px; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; position: relative; animation: zoomIn 0.3s ease; max-height: 90vh; }
+        .modal-content { background: white; width: 90%; max-width: 900px; border-radius: 16px; display: grid; grid-template-columns: 1.2fr 1fr; overflow: hidden; position: relative; animation: zoomIn 0.3s ease; height: 80vh; }
         @keyframes zoomIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; color: #333; z-index: 10; width: 35px; height: 35px; background: #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
         .close-modal:hover { background: #ddd; }
         
         .modal-sidebar { padding: 40px 30px; display: flex; flex-direction: column; gap: 15px; background: white; overflow-y: auto;}
-        .modal-img-container { background: #f1f3f5; display: flex; align-items: center; justify-content: center; padding: 20px;}
-        .modal-img-container img { width: 100%; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-height: 400px; object-fit: contain;}
+        
+        /* Contenedor de Galería actualizado para scroll vertical */
+        .modal-img-container { background: #f1f3f5; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; overflow-y: auto; height: 100%; }
+        .modal-img-container img { width: 100%; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white; object-fit: contain;}
         
         .btn-modal-thingiverse { background: #e9ecef; color: #333; text-decoration: none; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
         .btn-modal-thingiverse:hover { background: #dee2e6; }
@@ -92,7 +94,6 @@
     </header>
 
     <div class="dashboard-layout">
-        
         <div class="panel-card" style="height: fit-content;">
             <h3><i class="fas fa-cloud-upload-alt"></i> Cotizar Archivo Propio</h3>
             <p>Sube tu archivo <strong>.STL</strong> para que evaluemos el tiempo de impresión y peso.</p>
@@ -110,20 +111,19 @@
                 <h3 style="margin: 0;"><i class="fas fa-bookmark"></i> Mi Biblioteca</h3>
                 <a href="ModelosThingiverse.html" class="btn-action" style="width: auto; padding: 10px 20px; font-size: 14px; text-decoration: none; background: var(--cura-blue);"><i class="fas fa-search"></i> Explorar Thingiverse</a>
             </div>
-            
-            <p>Selecciona un diseño para ver detalles y solicitar tu cotización exacta.</p>
-            
-            <div class="saved-models-grid" id="contenedor-guardados">
-                </div>
+            <p>Selecciona un diseño para ver detalles, su galería de ángulos y solicitar tu cotización.</p>
+            <div class="saved-models-grid" id="contenedor-guardados"></div>
         </div>
     </div>
 
     <div class="modal-overlay" id="modal-detalle" onclick="if(event.target === this) cerrarModales()">
         <div class="modal-content">
             <span class="close-modal" onclick="cerrarModales()">&times;</span>
-            <div class="modal-img-container">
-                <img id="detalle-img" src="" alt="Modelo">
+            
+            <div class="modal-img-container" id="galeria-imagenes">
+                <img id="detalle-img" src="" alt="Modelo Base">
             </div>
+            
             <div class="modal-sidebar">
                 <h2 id="detalle-titulo" style="margin:0; color:var(--cura-blue); font-size: 22px;">Título</h2>
                 <p style="margin:0; color:#666;">Diseñador: <span id="detalle-autor" style="font-weight:bold; color:#333;">Autor</span></p>
@@ -132,7 +132,7 @@
                 <p style="font-size: 14px; color: #555; line-height: 1.6;">Este diseño está guardado en tu panel. Puedes revisarlo en la página original o solicitar que lo evaluemos para darte un precio de impresión.</p>
 
                 <a href="#" id="detalle-link-thingiverse" target="_blank" class="btn-modal-thingiverse">
-                    <i class="fas fa-external-link-alt"></i> Ver completo en Thingiverse
+                    <i class="fas fa-external-link-alt"></i> Ver enlace original
                 </a>
                 
                 <button class="btn-modal-print" onclick="abrirFormularioCotizacion()">
@@ -199,10 +199,11 @@
 
     <script>
         // ==========================================
-        // CONFIGURACIÓN DE SUPABASE
+        // CONFIGURACIÓN DE CREDENCIALES
         // ==========================================
         const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
+        const THINGIVERSE_TOKEN = "2459c29910830f90950d75dbd627e442"; // Necesario para buscar las imágenes de la galería
         
         let dbCliente = null;
         let idUsuarioActual = null;
@@ -233,25 +234,16 @@
             cargarModelosGuardados();
         }
 
-        // --- FUNCIÓN CORREGIDA ---
         async function cargarModelosGuardados() {
             const contenedor = document.getElementById('contenedor-guardados');
             
-            // Petición limpia sin .order() para evitar cualquier conflicto de columnas obsoletas
             const { data, error } = await dbCliente
                 .from('modelos_guardados')
                 .select('*')
                 .eq('user_id', idUsuarioActual);
 
-            // Si hay un error, se pintará un recuadro detallado con el motivo exacto
             if (error) {
-                console.error("Error cargando diseños desde Supabase:", error.message);
-                contenedor.innerHTML = `
-                    <div style="grid-column: 1/-1; padding: 20px; text-align: center; color: #dc2626; background: #fee2e2; border-radius: 12px; border: 1px solid #fca5a5;">
-                        <i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 8px;"></i><br>
-                        <strong>Error al cargar tu biblioteca:</strong><br>
-                        <code style="font-size: 13px; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 5px;">${error.message}</code>
-                    </div>`;
+                contenedor.innerHTML = `<p style="color:red; text-align:center;">Error cargando la biblioteca.</p>`;
                 return;
             }
 
@@ -263,8 +255,11 @@
                     
                     const tituloSeguro = modelo.titulo.replace(/'/g, "\\'").replace(/"/g, '&quot;');
                     const autorSeguro = modelo.autor ? modelo.autor.replace(/'/g, "\\'") : 'Maker';
+                    const urlOriginal = modelo.public_url ? modelo.public_url : ''; 
+                    const thingId = modelo.thing_id ? modelo.thing_id : null; 
 
-                    div.onclick = () => abrirModalDetalle(tituloSeguro, autorSeguro, modelo.imagen_url);
+                    // Ahora le enviamos el ID y la URL original a la función del Modal
+                    div.onclick = () => abrirModalDetalle(tituloSeguro, autorSeguro, modelo.imagen_url, urlOriginal, thingId);
                     
                     div.innerHTML = `
                         <img src="${modelo.imagen_url || 'https://via.placeholder.com/200x120?text=Sin+Imagen'}" alt="Modelo">
@@ -284,17 +279,54 @@
         }
 
         // --- LÓGICA DE LOS MODALES ---
-        function abrirModalDetalle(titulo, autor, imagen) {
+        async function abrirModalDetalle(titulo, autor, imagen, urlOriginal, thingId) {
             modeloSeleccionado = { titulo, autor, imagen };
             
             document.getElementById('detalle-titulo').innerText = titulo;
             document.getElementById('detalle-autor').innerText = autor;
-            document.getElementById('detalle-img').src = imagen;
             
-            document.getElementById('detalle-link-thingiverse').href = `https://www.thingiverse.com/search?q=${encodeURIComponent(titulo)}&type=things&sort=relevant`;
+            // Si el modelo tiene la urlOriginal guardada, vamos directo a ella. Si es antiguo, busca el título.
+            const linkThingiverse = document.getElementById('detalle-link-thingiverse');
+            if (urlOriginal) {
+                linkThingiverse.href = urlOriginal;
+            } else {
+                linkThingiverse.href = `https://www.thingiverse.com/search?q=${encodeURIComponent(titulo)}&type=things&sort=relevant`;
+            }
 
+            // Ocultar formulario, Mostrar detalle
             document.getElementById('modal-detalle').style.display = 'flex';
             document.getElementById('modal-cotizacion').style.display = 'none';
+
+            // CARGAR LA GALERÍA DE IMÁGENES USANDO LA API
+            const galeria = document.getElementById('galeria-imagenes');
+            
+            if (thingId) {
+                galeria.innerHTML = '<div style="text-align:center; color:#666; margin:auto;"><i class="fas fa-circle-notch fa-spin fa-2x"></i><br><br>Cargando galería...</div>';
+                try {
+                    const res = await fetch(`https://api.thingiverse.com/things/${thingId}/images?access_token=${THINGIVERSE_TOKEN}`);
+                    const imagenesArray = await res.json();
+                    
+                    galeria.innerHTML = "";
+                    
+                    if(imagenesArray && imagenesArray.length > 0) {
+                        imagenesArray.forEach(img => {
+                            let targetUrl = img.sizes?.find(s => s.type === 'large' || s.size === 'large')?.url || img.url || img.thumbnail;
+                            if(targetUrl) {
+                                const imgDom = document.createElement('img');
+                                imgDom.src = targetUrl;
+                                galeria.appendChild(imgDom);
+                            }
+                        });
+                    } else {
+                        galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`;
+                    }
+                } catch (e) {
+                    galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`;
+                }
+            } else {
+                // Fallback para modelos guardados sin thingId
+                galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`;
+            }
         }
 
         function abrirFormularioCotizacion() {
@@ -302,7 +334,6 @@
             document.getElementById('modal-cotizacion').style.display = 'flex';
         }
 
-        /* Modificado para cerrar ambos modales */
         function cerrarModales() {
             document.getElementById('modal-detalle').style.display = 'none';
             document.getElementById('modal-cotizacion').style.display = 'none';
@@ -329,7 +360,6 @@
 
             try {
                 const { error } = await dbCliente.from('solicitudes_impresion').insert([datosFormulario]);
-                
                 if (error) throw error;
 
                 cerrarModales();
@@ -340,7 +370,6 @@
                 setTimeout(() => toast.style.display = 'none', 5000);
 
             } catch (err) {
-                console.error("Error enviando solicitud:", err);
                 alert("Hubo un error al enviar tu solicitud: " + err.message);
             } finally {
                 btnEnviar.innerHTML = '<i class="fas fa-envelope"></i> Enviar Solicitud a Revisión';
@@ -348,7 +377,6 @@
             }
         }
 
-        // --- CERRAR SESIÓN ---
         document.getElementById('btn-logout').addEventListener('click', async () => {
             await dbCliente.auth.signOut();
             window.location.href = 'index.html';
