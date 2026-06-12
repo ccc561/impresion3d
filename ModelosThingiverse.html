@@ -7,20 +7,21 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .gallery-header { text-align: center; padding: 40px 20px; background-color: var(--card-bg); border-bottom: 1px solid #ddd; }
+        .gallery-header { text-align: center; padding: 40px 20px; background-color: #f8f9fa; border-bottom: 1px solid #ddd; }
         .gallery-search-bar { display: flex; justify-content: center; gap: 10px; margin-top: 20px; max-width: 600px; margin-left: auto; margin-right: auto; }
         .gallery-search-bar input { flex: 1; padding: 15px; border: 2px solid #ccc; border-radius: 8px; font-size: 16px; }
         .thingiverse-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
         
-        .model-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer; border-bottom: 4px solid var(--cura-blue); }
+        .model-card { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; cursor: pointer; border-bottom: 4px solid #0055ff; }
         .model-card:hover { transform: translateY(-5px); box-shadow: 0 8px 15px rgba(0,0,0,0.2); }
         .model-card img { width: 100%; height: 180px; object-fit: cover; }
         .model-card-info { padding: 12px; text-align: center; }
 
-        /* --- MODAL DE DETALLES Y GALERÍA --- */
+        /* --- MODAL DE DETALLES Y GALERÍA DE IMÁGENES --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: none; justify-content: center; align-items: center; z-index: 10000; }
         .modal-content { background: white; width: 95%; max-width: 1000px; height: 80vh; border-radius: 12px; display: grid; grid-template-columns: 1.4fr 1fr; overflow: hidden; position: relative; }
         
+        /* Contenedor escaneable para múltiples ángulos de imagen */
         #images-container { background: #f1f3f5; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; align-items: center; height: 100%; }
         #images-container img { width: 100%; max-height: 450px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); object-fit: contain; background: white; }
         
@@ -33,41 +34,41 @@
         .btn-save-panel:hover { background: #e69e00; }
         
         .pagination-container { text-align: center; padding: 40px; }
-        #btn-cargar-mas { background: var(--cura-blue); color: white; border: none; padding: 12px 35px; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; }
+        #btn-cargar-mas { background: #0055ff; color: white; border: none; padding: 12px 35px; border-radius: 6px; cursor: pointer; display: none; font-weight: bold; }
         
         .close-modal { position: absolute; top: 15px; right: 20px; font-size: 28px; cursor: pointer; z-index: 10001; color: #333; background: #e9ecef; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .close-modal:hover { background: #dee2e6; }
-        #toast-notificacion { position: fixed; bottom: 30px; right: 30px; background-color: #28a745; color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; display: none; z-index: 11000; }
+        #toast-notificacion { position: fixed; bottom: 30px; right: 30px; background-color: #28a745; color: white; padding: 15px 25px; border-radius: 8px; font-weight: bold; display: none; z-index: 11000; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
 
         /* --- NUEVO BLOQUE INTERACTIVO: LOGIN REQUERIDO --- */
         .auth-prompt-content { background: white; padding: 40px; border-radius: 12px; text-align: center; max-width: 450px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: promptScale 0.3s ease; }
         @keyframes promptScale { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .auth-icon { font-size: 50px; color: #FFB000; margin-bottom: 20px; }
-        .auth-prompt-content h3 { margin: 0 0 12px 0; color: #003DF5; font-size: 22px; }
+        .auth-prompt-content h3 { margin: 0 0 12px 0; color: #0055ff; font-size: 22px; }
         .auth-prompt-content p { color: #555; font-size: 15px; line-height: 1.6; margin: 0 0 25px 0; }
         .auth-prompt-buttons { display: flex; flex-direction: column; gap: 10px; }
         .btn-login-redirect { background: #0055ff; color: white; }
         .btn-login-redirect:hover { background: #0044cc; }
-        .btn-cancel-auth { background: #e9ecef; color: #333; }
+        .btn-cancel-auth { background: #e9ecef; color: #333; border: none; padding: 14px; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .btn-cancel-auth:hover { background: #dee2e6; }
     </style>
 </head>
 <body>
 
-    <header class="top-header">
-        <a href="index.html" class="btn-header" style="background: #003DF5; color: white; display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 6px; font-weight: bold; text-decoration: none;">
+    <header class="top-header" style="display: flex; justify-content: space-between; padding: 15px 40px; background: white; border-bottom: 1px solid #ddd; align-items: center;">
+        <a href="index.html" class="btn-header" style="background: #0055ff; color: white; display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 6px; font-weight: bold; text-decoration: none;">
             <i class="fas fa-arrow-left"></i> Volver al Inicio
         </a>
-        <div class="logo">Explorador de Diseños</div>
-        <a href="login.html" id="btn-auth" class="btn-header">Iniciar Sesión</a>
+        <div class="logo" style="font-weight: bold; font-size: 20px; color: #0055ff;">Explorador de Diseños</div>
+        <a href="login.html" id="btn-auth" class="btn-header" style="background: #e9ecef; color: #333; padding: 10px 20px; border-radius: 6px; font-weight: bold; text-decoration: none;">Iniciar Sesión</a>
     </header>
 
     <div class="gallery-header">
-        <h1>Biblioteca Digital 3D</h1>
-        <p>Busca diseños del catálogo mundial, examina sus ángulos y guárdalos en tu panel.</p>
+        <h1 style="margin-top: 0;">Biblioteca Digital 3D</h1>
+        <p style="color: #666;">Busca diseños del catálogo mundial, examina sus ángulos y guárdalos en tu panel.</p>
         <div class="gallery-search-bar">
             <input type="text" id="busqueda-galeria" placeholder="Ej: Batman, Maceta, Soporte..." onkeypress="if(event.key === 'Enter') ejecutarBusqueda()">
-            <button class="btn-cura" onclick="ejecutarBusqueda()">Buscar</button>
+            <button class="btn-action" style="background: #0055ff; color: white;" onclick="ejecutarBusqueda()">Buscar</button>
         </div>
     </div>
 
@@ -82,7 +83,7 @@
             <span class="close-modal" onclick="cerrarModal()">&times;</span>
             <div id="images-container"></div>
             <div class="modal-sidebar">
-                <h2 id="modal-titulo" style="margin:0; color:var(--cura-blue); font-size: 24px; line-height: 1.3;">Nombre del Modelo</h2>
+                <h2 id="modal-titulo" style="margin:0; color:#0055ff; font-size: 24px; line-height: 1.3;">Nombre del Modelo</h2>
                 <p style="margin: 0; font-size: 16px;"><strong>Autor:</strong> <span id="modal-autor">Cargando...</span></p>
                 <hr style="border: 0; border-top: 1px solid #eee; width: 100%; margin: 10px 0;">
                 
@@ -105,7 +106,7 @@
                 <a href="login.html" class="btn-action btn-login-redirect">
                     <i class="fas fa-sign-in-alt"></i> Ir a Iniciar Sesión
                 </a>
-                <button class="btn-action btn-cancel-auth" onclick="cerrarModalAuth()">
+                <button class="btn-cancel-auth" onclick="cerrarModalAuth()">
                     Volver a la galería
                 </button>
             </div>
@@ -136,10 +137,23 @@
                 usuarioActual = session?.user;
                 if (usuarioActual) {
                     const btn = document.getElementById('btn-auth');
-                    btn.href = 'dashboard.html'; btn.innerHTML = '<i class="fas fa-user-circle"></i> Mi Panel';
+                    btn.href = 'dashboard.html'; 
+                    btn.innerHTML = '<i class="fas fa-user-circle"></i> Mi Panel';
+                    btn.style.background = '#0055ff';
+                    btn.style.color = 'white';
                 }
             }
-            ejecutarBusqueda(true);
+
+            // Capturar parámetros de la URL si vienen del index.html
+            const params = new URLSearchParams(window.location.search);
+            const busquedaDesdeInicio = params.get('search');
+
+            if (busquedaDesdeInicio) {
+                document.getElementById('busqueda-galeria').value = busquedaDesdeInicio;
+                ejecutarBusqueda(false); 
+            } else {
+                ejecutarBusqueda(true); 
+            }
         };
 
         async function ejecutarBusqueda(primeraVez = false) {
@@ -181,7 +195,7 @@
                 document.getElementById('btn-cargar-mas').style.display = hits.length >= 20 ? "inline-block" : "none";
             } catch (error) {
                 console.error("Error al cargar datos:", error);
-                document.getElementById('contenedor-resultados').innerHTML = '<div style="grid-column: 1/-1; color: red; text-align: center; padding: 20px;">Error de red. Verifica tus credenciales de API.</div>';
+                document.getElementById('contenedor-resultados').innerHTML = '<div style="grid-column: 1/-1; color: red; text-align: center; padding: 20px;">Error de red. Verifica tus credenciales de API de Thingiverse.</div>';
             }
         }
 
@@ -244,6 +258,9 @@
             document.getElementById('modal-auth-required').style.display = 'none';
         }
 
+        // ==========================================
+        // FUNCIÓN MEJORADA PARA GUARDAR EN SUPABASE
+        // ==========================================
         async function guardar(item) {
             // 1. Verificamos si hay sesión iniciada
             if(!usuarioActual || !dbCliente) { 
@@ -252,35 +269,35 @@
             }
 
             try {
-                // 2. Cambiamos el texto del botón temporalmente para que el usuario sepa que está cargando
+                // 2. Animación de carga en el botón
                 const btnGuardar = document.getElementById('btn-guardar-panel');
                 const textoOriginal = btnGuardar.innerHTML;
                 btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
                 btnGuardar.disabled = true;
 
-                // 3. Enviamos los datos a Supabase
+                // 3. Enviamos los datos a Supabase INCLUYENDO ID y URL de Thingiverse
                 const { error } = await dbCliente.from('modelos_guardados').insert([{ 
                     user_id: usuarioActual.id, 
                     titulo: item.name, 
                     autor: item.creator ? item.creator.name : 'Maker', 
-                    imagen_url: item.thumbnail || item.preview_image
+                    imagen_url: item.thumbnail || item.preview_image,
+                    thing_id: item.id,           // <--- ID de Thingiverse
+                    public_url: item.public_url  // <--- Enlace original de Thingiverse
                 }]);
 
-                // 4. Restauramos el botón
+                // Restauramos el botón
                 btnGuardar.innerHTML = textoOriginal;
                 btnGuardar.disabled = false;
 
-                // 5. Si Supabase devuelve un error, lo lanzamos para verlo
                 if (error) throw error;
                 
-                // 6. Si todo sale bien, mostramos el mensaje verde
+                // 4. Mostramos éxito
                 const toast = document.getElementById('toast-notificacion');
                 toast.style.display = 'block';
                 setTimeout(() => toast.style.display = 'none', 3000);
 
             } catch (e) {
                 console.error("Error guardando en Supabase:", e);
-                // Ahora la página te dirá EXACTAMENTE por qué está fallando
                 alert("Error al guardar el modelo: " + e.message);
                 
                 const btnGuardar = document.getElementById('btn-guardar-panel');
