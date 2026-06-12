@@ -22,6 +22,8 @@ Esta página web actúa como el escaparate principal y el punto de entrada para 
 * **APIs Externas:**
     * `WeatherAPI` (Datos meteorológicos en tiempo real).
     * `Mindicador.cl` (Valores oficiales de divisas en Chile).
+    * `Thingiverse.com` (Centro de modelos para Impresión 3D)
+    * `Autenticación de Google` (Ingreso al sistema rápido con Google)
 * **Iconografía:** FontAwesome 6.0.
 
 ## 📂 Estructura Principal
