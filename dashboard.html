@@ -46,12 +46,16 @@
 
         /* GRID DE MODELOS GUARDADOS */
         .saved-models-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .saved-card { background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; text-align: center; transition: transform 0.2s; cursor: pointer; }
+        .saved-card { background: var(--bg-light); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden; text-align: center; transition: transform 0.2s; cursor: pointer; position: relative; }
         .saved-card:hover { transform: translateY(-4px); border-color: var(--cura-blue); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
         .saved-card img { width: 100%; height: 160px; object-fit: cover; border-bottom: 3px solid var(--border-color); }
         .saved-info { padding: 15px; }
         .saved-info h4 { margin: 0 0 5px 0; font-size: 15px; color: var(--cura-dark); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
         .saved-info p { font-size: 13px; color: var(--text-muted); margin: 0; }
+
+        /* BOTÓN DE ELIMINAR MODELO */
+        .btn-delete { position: absolute; top: 10px; right: 10px; background: rgba(239, 68, 68, 0.9); color: white; border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; z-index: 10; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .btn-delete:hover { background: rgba(220, 38, 38, 1); transform: scale(1.1); }
 
         /* --- MODALES --- */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; justify-content: center; align-items: center; z-index: 10000; backdrop-filter: blur(4px); }
@@ -62,7 +66,6 @@
         
         .modal-sidebar { padding: 40px 30px; display: flex; flex-direction: column; gap: 15px; background: white; overflow-y: auto;}
         
-        /* Contenedor de Galería actualizado para scroll vertical */
         .modal-img-container { background: #f1f3f5; display: flex; flex-direction: column; align-items: center; gap: 20px; padding: 20px; overflow-y: auto; height: 100%; }
         .modal-img-container img { width: 100%; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: white; object-fit: contain;}
         
@@ -71,8 +74,8 @@
         .btn-modal-print { background: #FFB000; color: #111; border: none; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 16px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;}
         .btn-modal-print:hover { background: #e69e00; }
 
-        /* --- FORMULARIO DE COTIZACIÓN --- */
-        .quote-form-container { display: none; padding: 30px; max-width: 600px; width: 90%; background: white; border-radius: 16px; position: relative; max-height: 90vh; overflow-y: auto; }
+        /* --- FORMULARIO DE COTIZACIÓN (Arreglado el display) --- */
+        .quote-form-container { padding: 30px; max-width: 600px; width: 90%; background: white; border-radius: 16px; position: relative; max-height: 90vh; overflow-y: auto; }
         .quote-instructions { background: #eef2ff; border-left: 4px solid var(--cura-blue); padding: 15px 20px; border-radius: 0 8px 8px 0; margin-bottom: 25px; }
         .quote-instructions p { margin: 0; font-size: 14px; color: #3730a3; line-height: 1.6; }
         .form-group { margin-bottom: 20px; }
@@ -193,7 +196,7 @@
         </div>
     </div>
 
-    <div id="toast-success"><i class="fas fa-check-circle"></i> ¡Solicitud enviada con éxito! Revisa tu correo en los próximos días.</div>
+    <div id="toast-success"><i class="fas fa-check-circle"></i> ¡Acción completada con éxito!</div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -201,9 +204,9 @@
         // ==========================================
         // CONFIGURACIÓN DE CREDENCIALES
         // ==========================================
-        const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co";
+        const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co"; 
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
-        const THINGIVERSE_TOKEN = "2459c29910830f90950d75dbd627e442"; // Necesario para buscar las imágenes de la galería
+        const THINGIVERSE_TOKEN = "2459c29910830f90950d75dbd627e442";
         
         let dbCliente = null;
         let idUsuarioActual = null;
@@ -258,14 +261,17 @@
                     const urlOriginal = modelo.public_url ? modelo.public_url : ''; 
                     const thingId = modelo.thing_id ? modelo.thing_id : null; 
 
-                    // Ahora le enviamos el ID y la URL original a la función del Modal
-                    div.onclick = () => abrirModalDetalle(tituloSeguro, autorSeguro, modelo.imagen_url, urlOriginal, thingId);
-                    
+                    // Aquí agregamos el botón de eliminar y la estructura de la tarjeta
                     div.innerHTML = `
-                        <img src="${modelo.imagen_url || 'https://via.placeholder.com/200x120?text=Sin+Imagen'}" alt="Modelo">
-                        <div class="saved-info">
-                            <h4>${modelo.titulo}</h4>
-                            <p>De: ${modelo.autor}</p>
+                        <button class="btn-delete" onclick="eliminarModelo(event, ${modelo.id})" title="Eliminar modelo">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <div onclick="abrirModalDetalle('${tituloSeguro}', '${autorSeguro}', '${modelo.imagen_url}', '${urlOriginal}', ${thingId})" style="height: 100%; display: flex; flex-direction: column;">
+                            <img src="${modelo.imagen_url || 'https://via.placeholder.com/200x120?text=Sin+Imagen'}" alt="Modelo">
+                            <div class="saved-info">
+                                <h4>${modelo.titulo}</h4>
+                                <p>De: ${modelo.autor}</p>
+                            </div>
                         </div>
                     `;
                     contenedor.appendChild(div);
@@ -278,6 +284,36 @@
             }
         }
 
+        // --- NUEVA FUNCIÓN: ELIMINAR MODELO ---
+        async function eliminarModelo(event, modeloId) {
+            // event.stopPropagation() evita que se abra el modal al hacer clic en la papelera
+            event.stopPropagation(); 
+            
+            if(!confirm("¿Estás seguro de que deseas eliminar este diseño de tu biblioteca?")) return;
+
+            try {
+                const { error } = await dbCliente
+                    .from('modelos_guardados')
+                    .delete()
+                    .eq('id', modeloId);
+
+                if (error) throw error;
+
+                // Notificación de éxito y recarga
+                const toast = document.getElementById('toast-success');
+                toast.innerHTML = '<i class="fas fa-trash-alt"></i> Modelo eliminado correctamente';
+                toast.style.background = '#ef4444'; // Color rojo
+                toast.style.display = 'block';
+                setTimeout(() => toast.style.display = 'none', 3000);
+
+                cargarModelosGuardados(); // Recargar la lista
+
+            } catch (err) {
+                console.error("Error eliminando:", err);
+                alert("Hubo un error al eliminar el modelo.");
+            }
+        }
+
         // --- LÓGICA DE LOS MODALES ---
         async function abrirModalDetalle(titulo, autor, imagen, urlOriginal, thingId) {
             modeloSeleccionado = { titulo, autor, imagen };
@@ -285,7 +321,6 @@
             document.getElementById('detalle-titulo').innerText = titulo;
             document.getElementById('detalle-autor').innerText = autor;
             
-            // Si el modelo tiene la urlOriginal guardada, vamos directo a ella. Si es antiguo, busca el título.
             const linkThingiverse = document.getElementById('detalle-link-thingiverse');
             if (urlOriginal) {
                 linkThingiverse.href = urlOriginal;
@@ -293,11 +328,9 @@
                 linkThingiverse.href = `https://www.thingiverse.com/search?q=${encodeURIComponent(titulo)}&type=things&sort=relevant`;
             }
 
-            // Ocultar formulario, Mostrar detalle
             document.getElementById('modal-detalle').style.display = 'flex';
             document.getElementById('modal-cotizacion').style.display = 'none';
 
-            // CARGAR LA GALERÍA DE IMÁGENES USANDO LA API
             const galeria = document.getElementById('galeria-imagenes');
             
             if (thingId) {
@@ -324,7 +357,6 @@
                     galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`;
                 }
             } else {
-                // Fallback para modelos guardados sin thingId
                 galeria.innerHTML = `<img src="${imagen}" alt="Modelo Base">`;
             }
         }
@@ -366,6 +398,8 @@
                 document.getElementById('form-cotizacion').reset();
                 
                 const toast = document.getElementById('toast-success');
+                toast.innerHTML = '<i class="fas fa-check-circle"></i> ¡Solicitud enviada! Revisa tu correo en los próximos días.';
+                toast.style.background = '#10b981'; // Color verde original
                 toast.style.display = 'block';
                 setTimeout(() => toast.style.display = 'none', 5000);
 
