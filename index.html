@@ -492,15 +492,15 @@
                 const { data: { session } } = await dbCliente.auth.getSession();
                 evaluarEstadoSesion(session?.user);
 
-                // 2. NUEVO: Llamar a la base de datos para obtener el filamento actual
+                // 2. Llamar a la base de datos para obtener el filamento actual
                 cargarInfoImpresora();
             }
         };
 
-        // --- NUEVA FUNCIÓN PARA OBTENER EL FILAMENTO DESDE SUPABASE ---
+        // --- FUNCIÓN PARA OBTENER EL FILAMENTO DESDE SUPABASE ---
         async function cargarInfoImpresora() {
             try {
-                // Hacemos una consulta a la tabla que acabas de crear
+                // Hacemos una consulta a la tabla
                 const { data, error } = await dbCliente
                     .from('configuracion_impresora')
                     .select('filamento_en_uso')
@@ -531,10 +531,15 @@
             }
         }
 
+        // --- MODIFICACIÓN DEL BUSCADOR ---
         function transferirBusqueda() {
             const query = document.getElementById('main-search-input').value.trim();
-            if (query === "") return;
-            window.location.href = `ModelosThingiverse.html?search=${encodeURIComponent(query)}`;
+            // Si está vacío, lleva a la página general. Si tiene texto, realiza la búsqueda.
+            if (query === "") {
+                window.location.href = "ModelosThingiverse.html";
+            } else {
+                window.location.href = `ModelosThingiverse.html?search=${encodeURIComponent(query)}`;
+            }
         }
 
         async function loginConGoogle() {
