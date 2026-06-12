@@ -26,14 +26,12 @@
         .btn-logout { background-color: #ef4444; color: white; border: none; padding: 10px 18px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-logout:hover { background-color: #dc2626; }
 
-        .dashboard-layout { max-width: 1200px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        .dashboard-layout { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
         .panel-card { background: var(--bg-white); padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border-color); }
         .panel-card h3 { margin: 0 0 15px 0; font-size: 20px; display: flex; align-items: center; gap: 10px; }
         .panel-card h3 i { color: var(--cura-blue); }
         .panel-card p { color: var(--text-muted); font-size: 15px; margin-bottom: 20px; line-height: 1.6; }
 
-        .file-upload-area { border: 2px dashed #ccc; padding: 30px; text-align: center; border-radius: 12px; background: #fdfdfd; margin-bottom: 20px; transition: 0.2s; }
-        .file-upload-area:hover { border-color: var(--cura-blue); background: #f0f4ff; }
         .btn-action { background: var(--cura-dark); color: white; width: 100%; border: none; padding: 14px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
         .btn-action:hover { background: var(--cura-blue); }
 
@@ -98,18 +96,6 @@
     </header>
 
     <div class="dashboard-layout">
-        <div class="panel-card" style="height: fit-content;">
-            <h3><i class="fas fa-cloud-upload-alt"></i> Cotizar Archivo Propio</h3>
-            <p>Sube tu archivo <strong>.STL</strong> para que evaluemos el tiempo de impresión y peso.</p>
-            <form onsubmit="event.preventDefault(); alert('Función en desarrollo');">
-                <div class="file-upload-area">
-                    <i class="fas fa-file-code" style="font-size: 40px; color: #ccc; margin-bottom: 10px;"></i><br>
-                    <input type="file" accept=".stl" required style="max-width: 100%;">
-                </div>
-                <button type="submit" class="btn-action"><i class="fas fa-calculator"></i> Enviar a revisión</button>
-            </form>
-        </div>
-
         <div class="panel-card">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
                 <h3 style="margin: 0;"><i class="fas fa-bookmark"></i> Mi Biblioteca</h3>
@@ -152,7 +138,7 @@
             
             <div class="quote-instructions">
                 <p><strong><i class="fas fa-info-circle"></i> ¿Qué ocurre ahora?</strong><br>
-                Nuestro equipo evaluará el modelo y en los próximos días <strong>recibirás un correo electrónico a Claudio.cisternas@estudiante.cfta.cl </strong> (uso interno) y a tu correo personal con las dimensiones finales y el precio exacto.</p>
+                Nuestro equipo evaluará el modelo y en los próximos días <strong>recibirás un correo electrónico</strong> con las dimensiones finales y el precio exacto.</p>
             </div>
 
             <form id="form-cotizacion" onsubmit="enviarSolicitud(event)">
@@ -220,8 +206,8 @@
         let idUsuarioActual = null;
         let emailUsuarioActual = null;
         let modeloSeleccionado = {};
-        let modeloIdAEliminar = null; // Variable para el modal de borrado
-        let cantidadSolicitudesHoy = 0; // Para el límite anti-trolls
+        let modeloIdAEliminar = null;
+        let cantidadSolicitudesHoy = 0;
 
         window.onload = async function() {
             if (window.supabase) {
@@ -242,10 +228,9 @@
             document.getElementById('usuario-nombre').textContent = nombreUsuario.split(" ")[0];
 
             cargarModelosGuardados();
-            verificarLimiteDiario(); // Comprobamos cuántos correos ha enviado hoy
+            verificarLimiteDiario(); 
         }
 
-        // Verifica cuántos pedidos ha hecho el usuario hoy
         async function verificarLimiteDiario() {
             const hoy = new Date();
             hoy.setHours(0,0,0,0);
@@ -299,9 +284,8 @@
             }
         }
 
-        // --- SISTEMA DE BORRADO SEGURO ---
         function prepararEliminar(event, modeloId) {
-            event.stopPropagation(); // Evita abrir el detalle
+            event.stopPropagation();
             modeloIdAEliminar = modeloId;
             document.getElementById('modal-confirmar-eliminar').style.display = 'flex';
         }
@@ -327,7 +311,6 @@
             }
         }
 
-        // --- SISTEMA DE MODALES ---
         async function abrirModalDetalle(titulo, autor, imagen, urlOriginal, thingId) {
             modeloSeleccionado = { titulo, autor, imagen };
             
@@ -335,7 +318,6 @@
             document.getElementById('detalle-autor').innerText = autor;
             document.getElementById('detalle-link-thingiverse').href = urlOriginal || `https://www.thingiverse.com/search?q=${encodeURIComponent(titulo)}&type=things&sort=relevant`;
 
-            // Verificador visual de límite de envíos
             const btnCotizar = document.getElementById('btn-abrir-cotizacion');
             const avisoLimite = document.getElementById('aviso-limite');
             if (cantidadSolicitudesHoy >= 3) {
@@ -370,7 +352,7 @@
         }
 
         function abrirFormularioCotizacion() {
-            if (cantidadSolicitudesHoy >= 3) return; // Doble capa de seguridad
+            if (cantidadSolicitudesHoy >= 3) return; 
             document.getElementById('modal-detalle').style.display = 'none';
             document.getElementById('modal-cotizacion').style.display = 'flex';
         }
@@ -387,7 +369,6 @@
             setTimeout(() => toast.style.display = 'none', 3000);
         }
 
-        // --- ENVIAR SOLICITUD A SUPABASE ---
         async function enviarSolicitud(event) {
             event.preventDefault();
 
@@ -407,7 +388,6 @@
             };
 
             try {
-                // Aquí el Trigger de Supabase bloqueará el envío si detecta al hacker superando los 3 envíos
                 const { error } = await dbCliente.from('solicitudes_impresion').insert([datosFormulario]);
                 if (error) {
                     if(error.message.includes("Límite")) {
@@ -416,7 +396,7 @@
                     throw error;
                 }
 
-                cantidadSolicitudesHoy++; // Sumamos 1 al contador interno
+                cantidadSolicitudesHoy++; 
 
                 cerrarModales();
                 document.getElementById('form-cotizacion').reset();
