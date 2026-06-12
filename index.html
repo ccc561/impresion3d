@@ -321,7 +321,7 @@
         .btn-google:hover { background: var(--bg-light); border-color: #9ca3af; }
         .btn-google img { width: 22px; height: 22px; }
 
-        /* --- WIDGET DE CLIMA INTERACTIVO --- */
+        /* --- WIDGET DE CLIMA INTERACTIVO (ESQUINA INFERIOR IZQUIERDA) --- */
         .weather-widget {
             position: fixed;
             bottom: 20px;
@@ -331,56 +331,110 @@
             border-radius: 12px;
             padding: 10px 16px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            display: none; /* Se oculta hasta que carguen los datos */
+            display: none; 
             align-items: flex-start;
             gap: 12px;
             z-index: 1000;
             cursor: pointer;
             transition: max-height 0.3s ease, padding 0.3s ease;
-            max-height: 50px; /* Altura colapsada (aprox) */
+            max-height: 50px; 
             overflow: hidden;
         }
-        /* Clase añadida vía JS al hacer clic */
-        .weather-widget.expanded {
-            max-height: 120px; /* Altura expandida */
+        .weather-widget.expanded { max-height: 120px; }
+        .weather-header { display: flex; align-items: center; gap: 12px; }
+        .weather-info { display: flex; flex-direction: column; justify-content: center; }
+        .weather-temp { font-size: 18px; font-weight: 700; color: var(--cura-dark); line-height: 1.1; }
+        .weather-desc { font-size: 12px; color: var(--text-muted); text-transform: capitalize; }
+        .weather-icon { width: 40px; height: 40px; object-fit: contain; }
+        .weather-source {
+            font-size: 11px; color: var(--text-muted); margin-top: 8px; padding-top: 8px;
+            border-top: 1px solid var(--border-color); opacity: 0; transition: opacity 0.3s ease;
         }
-        .weather-header {
+        .weather-widget.expanded .weather-source { opacity: 1; }
+
+        /* --- WIDGET DE DIVISAS (ESQUINA INFERIOR DERECHA) --- */
+        .currency-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            z-index: 1000;
+            width: 270px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            max-height: 44px; /* Oculta el contenido, solo muestra el header */
+        }
+        .currency-widget.expanded {
+            max-height: 250px; /* Tamaño expandido */
+        }
+        .currency-header {
+            padding: 10px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
+            cursor: pointer;
+            background: var(--bg-light);
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--cura-dark);
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.3s;
         }
-        .weather-info {
+        .currency-widget.expanded .currency-header { border-bottom-color: var(--border-color); }
+        .currency-header i.fa-exchange-alt { color: var(--cura-blue); }
+        .currency-header .toggle-icon { color: var(--text-muted); transition: transform 0.3s; }
+        .currency-widget.expanded .toggle-icon { transform: rotate(180deg); }
+        
+        .currency-body {
+            padding: 15px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            gap: 12px;
         }
-        .weather-temp {
-            font-size: 18px;
+        .currency-input-group input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .currency-input-group input:focus { border-color: var(--cura-blue); }
+        
+        .currency-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: space-between;
+        }
+        .currency-controls select {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            outline: none;
+            flex: 1;
+            background: var(--bg-white);
+            cursor: pointer;
+        }
+        .currency-result {
+            text-align: center;
+            font-size: 20px;
             font-weight: 700;
             color: var(--cura-dark);
-            line-height: 1.1;
+            margin-top: 5px;
+            word-break: break-word;
         }
-        .weather-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: capitalize;
-        }
-        .weather-icon {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-        .weather-source {
+        .currency-source {
             font-size: 11px;
             color: var(--text-muted);
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px solid var(--border-color);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .weather-widget.expanded .weather-source {
-            opacity: 1;
+            text-align: center;
+            margin-top: -2px;
         }
 
         /* RESPONSIVO */
@@ -396,6 +450,7 @@
         @media (max-width: 600px) {
             .timeline-grid { grid-template-columns: 1fr; }
             .weather-widget { bottom: 10px; left: 10px; }
+            .currency-widget { bottom: 10px; right: 10px; width: calc(100% - 20px); max-width: 270px; }
         }
     </style>
 </head>
@@ -544,6 +599,38 @@
         </div>
     </div>
 
+    <div class="currency-widget" id="currency-widget">
+        <div class="currency-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Conversor de Divisas</span>
+            </div>
+            <i class="fas fa-chevron-up toggle-icon"></i>
+        </div>
+        <div class="currency-body">
+            <div class="currency-input-group">
+                <input type="number" id="currency-amount" placeholder="Monto" value="1000" oninput="calcularConversion()" min="0">
+            </div>
+            <div class="currency-controls">
+                <select id="currency-from" onchange="calcularConversion()">
+                    <option value="CLP">CLP</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                </select>
+                <i class="fas fa-arrow-right" style="color: var(--text-muted); font-size: 12px;"></i>
+                <select id="currency-to" onchange="calcularConversion()">
+                    <option value="USD">USD</option>
+                    <option value="CLP">CLP</option>
+                    <option value="EUR">EUR</option>
+                </select>
+            </div>
+            <div class="currency-result">
+                <span id="currency-result-value">Cargando...</span>
+            </div>
+            <div class="currency-source">Datos oficiales por Mindicador.cl</div>
+        </div>
+    </div>
+
     <script>
         function cambiarImagen(rutaImagen) {
             document.getElementById('img-principal').src = rutaImagen;
@@ -563,10 +650,12 @@
         const CIUDAD = "Calama"; 
         
         let dbCliente = null;
+        let valoresDivisas = { CLP: 1, USD: null, EUR: null };
 
         window.onload = async function() {
-            // Cargar Widget del clima
+            // Cargar APIs externas
             cargarClima();
+            cargarDivisas();
 
             if (window.supabase) {
                 dbCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -580,6 +669,62 @@
             }
         };
 
+        // --- FUNCIÓN PARA OBTENER LAS DIVISAS (MINDICADOR.CL) ---
+        async function cargarDivisas() {
+            try {
+                const respuesta = await fetch('https://mindicador.cl/api');
+                if (!respuesta.ok) throw new Error("No se pudo contactar con Mindicador");
+                
+                const datos = await respuesta.json();
+                
+                // Guardamos el valor actual del Dólar y Euro en pesos chilenos
+                valoresDivisas.USD = datos.dolar.valor;
+                valoresDivisas.EUR = datos.euro.valor;
+                
+                // Realizamos el primer cálculo automático
+                calcularConversion();
+            } catch (error) {
+                console.error("Error al cargar divisas:", error);
+                document.getElementById('currency-result-value').innerText = "Error de conexión";
+                document.getElementById('currency-result-value').style.fontSize = "14px";
+            }
+        }
+
+        // --- FUNCIÓN PARA CALCULAR LA CONVERSIÓN ---
+        function calcularConversion() {
+            // Si las divisas aún no cargan, detenemos la función
+            if (!valoresDivisas.USD || !valoresDivisas.EUR) return;
+            
+            const monto = parseFloat(document.getElementById('currency-amount').value) || 0;
+            const from = document.getElementById('currency-from').value;
+            const to = document.getElementById('currency-to').value;
+            
+            // 1. Convertimos la moneda de origen a Peso Chileno (CLP) como punto base
+            let valorEnCLP = 0;
+            if (from === 'CLP') valorEnCLP = monto;
+            else if (from === 'USD') valorEnCLP = monto * valoresDivisas.USD;
+            else if (from === 'EUR') valorEnCLP = monto * valoresDivisas.EUR;
+            
+            // 2. Convertimos el valor en CLP hacia la moneda de destino
+            let resultado = 0;
+            if (to === 'CLP') resultado = valorEnCLP;
+            else if (to === 'USD') resultado = valorEnCLP / valoresDivisas.USD;
+            else if (to === 'EUR') resultado = valorEnCLP / valoresDivisas.EUR;
+            
+            // 3. Formateamos el resultado para que se vea profesional (ej: $1.000 o $1.25)
+            const opcionesFormato = { style: 'currency', currency: to };
+            if(to === 'CLP') {
+                opcionesFormato.minimumFractionDigits = 0;
+                opcionesFormato.maximumFractionDigits = 0;
+            } else {
+                opcionesFormato.minimumFractionDigits = 2;
+                opcionesFormato.maximumFractionDigits = 2;
+            }
+            
+            const formateador = new Intl.NumberFormat('es-CL', opcionesFormato);
+            document.getElementById('currency-result-value').innerText = formateador.format(resultado);
+        }
+
         // --- FUNCIÓN PARA OBTENER EL CLIMA ---
         async function cargarClima() {
             try {
@@ -589,15 +734,11 @@
                 
                 const datos = await respuesta.json();
                 
-                // Actualizar los elementos del DOM
                 document.getElementById('weather-icon').src = "https:" + datos.current.condition.icon;
                 document.getElementById('weather-temp').innerText = Math.round(datos.current.temp_c) + "°C";
                 document.getElementById('weather-desc').innerText = datos.current.condition.text;
                 
-                // Actualizar la fuente oculta
                 document.getElementById('weather-source').innerHTML = `<strong>Ubicación:</strong> ${datos.location.name}, ${datos.location.country}`;
-                
-                // Mostrar el widget una vez que los datos están listos
                 document.getElementById('weather-widget').style.display = "flex";
             } catch (error) {
                 console.error("No se pudo cargar el clima:", error);
