@@ -3,273 +3,553 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centro de Impresión 3D</title>
+    <title>Centro de Impresión 3D - Servicio Profesional</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* ==========================================
-           ESTILOS EXTRA (Buscador y APIs)
-           Los ponemos aquí para no modificar más tu style.css
-        ========================================== */
-        
-        /* Contenedor del Buscador */
-        .search-container {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-            max-width: 500px;
+        /* --- VARIABLES DE DISEÑO PROFESIONAL --- */
+        :root {
+            --cura-blue: #0055ff;
+            --cura-dark: #111827;
+            --text-muted: #4b5563;
+            --bg-light: #f9fafb;
+            --bg-white: #ffffff;
+            --border-color: #e5e7eb;
         }
-        #buscador-inicio {
-            flex: 1;
-            padding: 14px 18px;
-            border: 2px solid #e2e8f0;
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-white);
+            color: var(--cura-dark);
+            line-height: 1.7;
+        }
+
+        /* --- HEADER AMPLIO Y LIMPIO --- */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: var(--bg-white);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--cura-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo i { color: var(--cura-blue); }
+        
+        .top-nav {
+            display: flex;
+            gap: 35px;
+            /* Solución para centrar perfectamente el menú */
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .top-nav a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+        .top-nav a:hover { color: var(--cura-blue); }
+        
+        .btn-header {
+            background: var(--cura-blue);
+            color: white;
+            padding: 12px 24px;
             border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .btn-header:hover { background: #0044cc; }
+
+        /* --- HERO SECTION PRINCIPAL --- */
+        .hero-section {
+            max-width: 900px;
+            margin: 90px auto 70px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .hero-section h1 {
+            font-size: 46px;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--cura-dark);
+            margin-bottom: 24px;
+            letter-spacing: -0.5px;
+        }
+        .hero-section p {
+            font-size: 19px;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+        }
+
+        /* --- CUADRO DE BÚSQUEDA THINGIVERSE --- */
+        .search-wrapper {
+            max-width: 680px;
+            margin: 0 auto 60px auto;
+            background: var(--bg-white);
+            padding: 8px 12px;
+            border-radius: 50px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+        }
+        .search-wrapper i { color: #9ca3af; padding-left: 15px; font-size: 18px; }
+        .search-wrapper input {
+            flex: 1;
+            border: none;
+            padding: 14px 15px;
             font-size: 16px;
             outline: none;
-            transition: border-color 0.3s;
-            font-family: inherit;
         }
-        #buscador-inicio:focus {
-            border-color: var(--cura-blue);
-        }
-        .btn-buscar {
-            background-color: var(--cura-blue);
-            color: white;
+        .btn-search {
+            background: var(--cura-dark);
+            color: var(--bg-white);
             border: none;
-            padding: 0 25px;
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.1s;
+            transition: background 0.2s;
+        }
+        .btn-search:hover { background: var(--cura-blue); }
+
+        /* --- CUADRÍCULA DE CARACTERÍSTICAS INICIALES --- */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .feature-card {
+            background: var(--bg-light);
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .feature-card h4 { font-size: 18px; margin: 0 0 12px 0; color: var(--cura-dark); }
+        .feature-card p { font-size: 14px; margin: 0; color: var(--text-muted); }
+
+        /* --- CONTENEDORES DE SECCIÓN (ESPACIOSOS) --- */
+        .content-section {
+            padding: 100px 20px;
+        }
+        .content-section:nth-of-type(even) {
+            background-color: var(--bg-light);
+        }
+        .section-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-inner h2 {
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin: 0 0 50px 0;
+            position: relative;
+        }
+
+        /* --- SECCIÓN PROCESO (TIMELINE MODERNO MEJORADO) --- */
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+        .step-box {
+            background: var(--bg-white);
+            padding: 40px 25px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        .step-number {
+            width: 45px;
+            height: 45px;
+            background: var(--cura-blue);
+            color: var(--bg-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+        .step-box h3 { font-size: 18px; margin: 0 0 12px 0; font-weight: 600; line-height: 1.4; }
+        .step-box p { font-size: 14px; margin: 0; color: var(--text-muted); line-height: 1.6; }
+
+        /* --- SECCIÓN TECNOLOGÍA --- */
+        .tech-header-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 45px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        .tech-header-area h2 { font-size: 32px; margin: 0; font-weight: 700; }
+        
+        .btn-video {
+            background: #ef4444;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
+            transition: background 0.2s;
         }
-        .btn-buscar:hover {
-            background-color: var(--cura-dark-blue);
-        }
-        .btn-buscar:active {
-            transform: scale(0.98);
-        }
+        .btn-video:hover { background: #dc2626; }
 
-        /* Widgets de APIs Flotantes */
-        .api-widgets-container {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
+        .printer-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 60px;
+            align-items: center;
+        }
+        .printer-spec-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            z-index: 1000;
+            gap: 20px;
         }
-        .api-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(5px);
-            border: 1px solid #e5e7eb;
-            padding: 12px 18px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        .printer-spec-list h3 { font-size: 28px; margin: 0 0 10px 0; color: var(--cura-dark); }
+        .spec-item {
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid var(--cura-blue);
+        }
+        .spec-item strong { display: block; font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
+        .spec-item span { font-size: 16px; font-weight: 600; color: var(--cura-dark); }
+
+        /* GALERÍA DE LA IMPRESORA */
+        .printer-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .main-image-box {
+            background: var(--bg-light);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .main-image-box img { width: 100%; max-width: 320px; height: auto; object-fit: contain; }
+        .thumb-row {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .thumb-row img {
+            width: 80px;
+            height: 80px;
+            object-fit: scale-down;
+            background: var(--bg-light);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .thumb-row img:hover { border-color: var(--cura-blue); transform: translateY(-2px); }
+
+        /* --- MATERIALES --- */
+        .materials-layout {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            background: var(--bg-white);
+            padding: 50px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+            border: 1px solid var(--border-color);
+        }
+        .materials-layout p { font-size: 17px; color: var(--text-muted); margin-bottom: 20px; }
+        .materials-layout p:last-child { margin-bottom: 0; }
+
+        /* --- CTA GOOGLE AUTH --- */
+        .cta-auth-box {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 50px 40px;
+            background: var(--bg-white);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.05);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        .cta-auth-box h2 { font-size: 26px; margin: 0 0 12px 0; font-weight: 700; }
+        .cta-auth-box p { color: var(--text-muted); font-size: 15px; margin-bottom: 30px; }
+        
+        .btn-google {
             display: flex;
             align-items: center;
-            gap: 15px;
-            min-width: 190px;
-            transition: transform 0.2s;
+            justify-content: center;
+            gap: 12px;
+            background: var(--bg-white);
+            color: #374151;
+            border: 1px solid #d1d5db;
+            padding: 14px 24px;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.2s, border-color 0.2s;
         }
-        .api-card:hover {
-            transform: translateY(-4px);
+        .btn-google:hover { background: var(--bg-light); border-color: #9ca3af; }
+        .btn-google img { width: 22px; height: 22px; }
+
+        /* RESPONSIVO */
+        @media (max-width: 1024px) {
+            .timeline-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        .weather-icon { color: #f59e0b; font-size: 24px; }
-        .currency-icon { color: #10b981; font-size: 24px; }
-        .api-info { display: flex; flex-direction: column; }
-        .api-title { font-size: 11px; color: #6b7280; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
-        .api-value { font-size: 15px; color: #111827; font-weight: bold; margin-top: 2px;}
+        @media (max-width: 900px) {
+            .printer-showcase { grid-template-columns: 1fr; gap: 40px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .top-header { padding: 20px; }
+            .top-nav { display: none; }
+        }
+        @media (max-width: 600px) {
+            .timeline-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
     <header class="top-header">
-        <div class="logo"><i class="fas fa-cube"></i> Print3D</div>
-        <ul class="top-nav">
-            <li><a href="#proceso">¿Cómo es el proceso?</a></li>
-            <li><a href="#tecnologia">Nuestra Tecnología</a></li>
-            <li><a href="#materiales">Materiales y Calidad</a></li>
-        </ul>
-        <a href="login.html" class="btn-header"><i class="fas fa-user"></i> Mi Cuenta</a>
+        <div class="logo">
+            <i class="fas fa-cubes"></i> Centro de Impresión 3D
+        </div>
+        <nav class="top-nav">
+            <a href="#proceso">¿Cómo es el proceso?</a>
+            <a href="#impresora">Nuestra Tecnología</a>
+            <a href="#materiales">Materiales y Calidad</a>
+        </nav>
+        <a href="login.html" id="btn-auth-main" class="btn-header">Iniciar Sesión</a>
     </header>
 
-    <div class="page-layout">
+    <section class="hero-section">
+        <h1>Materializamos tus ideas con precisión</h1>
+        <p>Bienvenido a nuestro servicio local de impresión 3D. Calidad profesional, tiempos de entrega rápidos y precios accesibles para tus proyectos, prototipos o figuras favoritas.</p>
         
-        <section class="content-section hero-text">
-            <h1>Haz realidad tus ideas en 3D</h1>
-            <p style="font-size: 18px; color: #555;">Busca entre miles de diseños listos para imprimir o explora nuestra galería. Calidad garantizada en cada capa.</p>
-            
-            <div class="search-container">
-                <input type="text" id="buscador-inicio" placeholder="Buscar diseños (ej. Pikachu, macetero)..." onkeypress="if(event.key === 'Enter') buscarOExplorar()">
-                <button onclick="buscarOExplorar()" class="btn-buscar"><i class="fas fa-search"></i> Buscar</button>
-            </div>
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="main-search-input" placeholder="Busca diseños en Thingiverse listos para imprimir..." onkeypress="if(event.key === 'Enter') transferirBusqueda()">
+            <button class="btn-search" onclick="transferirBusqueda()">Buscar</button>
+        </div>
 
-            <div class="features-grid" id="materiales">
-                <div class="feature-card">
-                    <i class="fas fa-layer-group fa-2x" style="color: var(--cura-blue); margin-bottom: 15px;"></i>
-                    <h4>Alta Resolución</h4>
-                    <p>Impresiones detalladas desde 0.12mm por capa.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-recycle fa-2x" style="color: var(--cura-blue); margin-bottom: 15px;"></i>
-                    <h4>Eco-Amigable</h4>
-                    <p>Utilizamos PLA, un plástico biodegradable de origen vegetal.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-truck-fast fa-2x" style="color: var(--cura-blue); margin-bottom: 15px;"></i>
-                    <h4>Envío Seguro</h4>
-                    <p>Tu pieza empaquetada con cuidado y lista para entregar.</p>
-                </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <h4>Sube tus modelos</h4>
+                <p>Aceptamos archivos .STL listos para procesar.</p>
             </div>
-        </section>
+            <div class="feature-card">
+                <h4>Búsqueda Integrada</h4>
+                <p>Encuentra miles de diseños directamente desde Thingiverse.</p>
+            </div>
+            <div class="feature-card">
+                <h4>Cotización Inmediata</h4>
+                <p>Calculamos el precio exacto basado en peso y tiempo.</p>
+            </div>
+        </div>
+    </section>
 
-        <section class="content-section" id="proceso">
-            <h2>¿Cómo es el proceso?</h2>
-            <div class="timeline">
-                <div class="step-card">
+    <section id="proceso" class="content-section">
+        <div class="section-inner">
+            <h2>¿Cómo es el proceso de tu pedido?</h2>
+            <div class="timeline-grid">
+                <div class="step-box">
                     <div class="step-number">1</div>
-                    <div>
-                        <h3>Elige o busca un modelo</h3>
-                        <p>Encuentra el diseño perfecto usando nuestro buscador conectado a Thingiverse.</p>
-                    </div>
+                    <h3>Elige o Sube tu Diseño</h3>
+                    <p>Inicia sesión y busca una figura en nuestra galería conectada a Thingiverse.com, o sube tu propio archivo 3D.</p>
                 </div>
-                <div class="step-card">
+                <div class="step-box">
                     <div class="step-number">2</div>
-                    <div>
-                        <h3>Solicita una cotización</h3>
-                        <p>Guarda el modelo en tu biblioteca y envíanos la solicitud. Te responderemos con el precio exacto.</p>
-                    </div>
+                    <h3>Cotización Automática</h3>
+                    <p>Nuestro sistema calculará los gramos de filamento y tiempo de máquina para darte un precio justo y transparente al instante.</p>
                 </div>
-                <div class="step-card">
+                <div class="step-box">
                     <div class="step-number">3</div>
-                    <div>
-                        <h3>¡Impresión y entrega!</h3>
-                        <p>Una vez aprobado, imprimimos tu pieza con la mejor calidad y te notificamos cuando esté lista.</p>
-                    </div>
+                    <h3>Confirmación del Pedido</h3>
+                    <p>Si todo te parece correcto, confirmas tu pedido y al instante nuestro experto recibirá una notificación con los datos que necesita para poner nuestra Creality Ender-3 S1 Pro a Trabajar.</p>
+                </div>
+                <div class="step-box">
+                    <div class="step-number">4</div>
+                    <h3>Entrega</h3>
+                    <p>Nuestro experto te hará saber cuando tu impresión ya esté lista para la entrega.</p>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="content-section" id="tecnologia">
-            <div class="header-con-video">
+    <section id="impresora" class="content-section">
+        <div class="section-inner">
+            <div class="tech-header-area">
                 <h2>Nuestra Tecnología</h2>
+                <a href="Ender-3_S1_Pro_VID.mp4" target="_blank" class="btn-video">
+                    <i class="fas fa-play"></i> Ver Trailer Oficial
+                </a>
             </div>
-            <p style="margin-top: 0;">Contamos con equipos de última generación para garantizar acabados perfectos y medidas precisas.</p>
             
-            <div class="printer-gallery-container">
-                <div class="printer-card-main">
-                    <div class="printer-info-side">
-                        <div class="printer-info-content">
-                            <h3>Creality Ender 3 V2</h3>
-                            <p><i class="fas fa-check-circle"></i> Volumen: 220x220x250mm</p>
-                            <p><i class="fas fa-check-circle"></i> Cama de cristal carborundo</p>
-                            <p><i class="fas fa-check-circle"></i> Placa base silenciosa de 32 bits</p>
-                            <p><i class="fas fa-check-circle"></i> Tensor de correa en eje XY</p>
-                        </div>
+            <div class="printer-showcase">
+                <div class="printer-spec-list">
+                    <h3>Creality Ender-3 S1 Pro</h3>
+                    
+                    <div class="spec-item">
+                        <strong>Filamento en Uso</strong>
+                        <span id="filamento-db"><i class="fas fa-spinner fa-spin" style="font-size:12px;"></i> Consultando base de datos...</span>
                     </div>
-                    <div class="image-wrapper">
-                        <img src="https://m.media-amazon.com/images/I/61NlB8Vz5iL._AC_SL1000_.jpg" class="printer-img" id="main-printer-img" alt="Impresora 3D Principal">
+                    <div class="spec-item">
+                        <strong>Volumen de Camilla</strong>
+                        <span>220 x 220 x 270mm</span>
+                    </div>
+                    <div class="spec-item">
+                        <strong>Dimensiones de la Impresora 3D</strong>
+                        <span>490 x 455 x 625mm</span>
                     </div>
                 </div>
-                
-                <div class="printer-thumbnails">
-                    <img src="https://m.media-amazon.com/images/I/61NlB8Vz5iL._AC_SL1000_.jpg" onclick="document.getElementById('main-printer-img').src=this.src" alt="Vista 1">
-                    <img src="https://m.media-amazon.com/images/I/71oD41d3V7L._AC_SL1500_.jpg" onclick="document.getElementById('main-printer-img').src=this.src" alt="Vista 2">
-                    <img src="https://m.media-amazon.com/images/I/71Y1q1YvE9L._AC_SL1500_.jpg" onclick="document.getElementById('main-printer-img').src=this.src" alt="Vista 3">
+
+                <div class="printer-gallery">
+                    <div class="main-image-box">
+                        <img src="Ender-3_S1_Pro-1.png" alt="Creality Ender-3 S1 Pro" id="img-principal">
+                    </div>
+                    <div class="thumb-row">
+                        <img src="Ender-3_S1_Pro-1.png" alt="Vista 1" onclick="cambiarImagen(this.src)">
+                        <img src="Ender-3_S1_Pro-2.png" alt="Vista 2" onclick="cambiarImagen(this.src)">
+                        <img src="Ender-3_S1_Pro-3.png" alt="Vista 3" onclick="cambiarImagen(this.src)">
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section class="cta-section">
-            <h2>¿Listo para empezar tu proyecto?</h2>
-            <p>Explora la galería y guarda los diseños que más te gusten en tu panel personal.</p>
-            <a href="ModelosThingiverse.html" class="btn-cura btn-large"><i class="fas fa-rocket"></i> Ver Galería 3D</a>
-        </section>
-    </div>
-
-    <div class="api-widgets-container">
-        <div class="api-card">
-            <i class="fas fa-cloud-sun weather-icon"></i>
-            <div class="api-info">
-                <span class="api-title">Clima Calama</span>
-                <span class="api-value" id="clima-valor">Cargando...</span>
+    <section id="materiales" class="content-section" style="padding-bottom: 60px;">
+        <div class="section-inner">
+            <h2>Materiales y Calidad</h2>
+            <div class="materials-layout">
+                <p>Actualmente trabajamos principalmente con <strong>PLA (Ácido Poliláctico)</strong>, un bioplástico amigable con el medio ambiente, ideal para figuras decorativas, prototipos visuales y piezas que no requieran soportar altas temperaturas.</p>
+                <p>Imprimimos con una resolución estándar de <strong>0.2mm por capa</strong>, logrando un equilibrio perfecto entre detalle y tiempo de entrega en nuestra Creality Ender-3 S1 Pro.</p>
             </div>
         </div>
+    </section>
 
-        <div class="api-card" title="Conversión de un costo base de impresión de $5.000 CLP">
-            <i class="fas fa-comment-dollar currency-icon"></i>
-            <div class="api-info">
-                <span class="api-title">Base: $5.000 CLP</span>
-                <span class="api-value" id="moneda-valor">Calculando...</span>
-            </div>
+    <section id="google-auth-section" class="content-section" style="padding-top: 20px; padding-bottom: 100px;">
+        <div class="cta-auth-box">
+            <h2>¿Estás listo para obtener tus impresiones 3D?</h2>
+            <p>Pues inicia sesión y empieza a descubrir.</p>
+            <button class="btn-google" onclick="loginConGoogle()">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+                Iniciar Sesión Ahora con Google
+            </button>
         </div>
-    </div>
+    </section>
 
     <script>
+        function cambiarImagen(rutaImagen) {
+            document.getElementById('img-principal').src = rutaImagen;
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
         // ==========================================
-        // 1. LÓGICA DEL BUSCADOR INTELIGENTE
+        // CONFIGURACIÓN DE SUPABASE Y APIS
         // ==========================================
-        function buscarOExplorar() {
-            const query = document.getElementById('buscador-inicio').value.trim();
-            if (query === "") {
-                // Si el campo está vacío, redirige a ver modelos aleatorios
-                window.location.href = "ModelosThingiverse.html";
-            } else {
-                // Si escribió algo, redirige pasando la búsqueda en la URL
-                window.location.href = `ModelosThingiverse.html?q=${encodeURIComponent(query)}`;
+        const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
+        
+        let dbCliente = null;
+
+        window.onload = async function() {
+            if (window.supabase) {
+                dbCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // 1. Cargar estado de sesión
+                const { data: { session } } = await dbCliente.auth.getSession();
+                evaluarEstadoSesion(session?.user);
+
+                // 2. NUEVO: Llamar a la base de datos para obtener el filamento actual
+                cargarInfoImpresora();
+            }
+        };
+
+        // --- NUEVA FUNCIÓN PARA OBTENER EL FILAMENTO DESDE SUPABASE ---
+        async function cargarInfoImpresora() {
+            try {
+                // Hacemos una consulta a la tabla que acabas de crear
+                const { data, error } = await dbCliente
+                    .from('configuracion_impresora')
+                    .select('filamento_en_uso')
+                    .eq('id', 1)
+                    .single();
+
+                if (error) throw error;
+
+                if (data && data.filamento_en_uso) {
+                    // Si encuentra el dato, actualiza el HTML automáticamente
+                    document.getElementById('filamento-db').innerText = data.filamento_en_uso;
+                }
+            } catch (err) {
+                console.error("Error al cargar la información de la impresora:", err.message);
+                // Si algo falla, ponemos un texto por defecto para que la página no se rompa
+                document.getElementById('filamento-db').innerText = "PLA Blanco (Por defecto)";
             }
         }
 
-        // ==========================================
-        // 2. EJECUCIÓN DE APIS PARA EL PROFESOR
-        // ==========================================
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarClima();
-            cargarMoneda();
-        });
-
-        // API DE CLIMA (Open-Meteo) - Coordenadas de Calama
-        async function cargarClima() {
-            try {
-                // Hacemos la petición a la API gratuita de Open-Meteo
-                const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=-22.45&longitude=-68.93&current_weather=true');
-                const data = await res.json();
-                
-                // Extraemos la temperatura y actualizamos el HTML
-                const temperatura = data.current_weather.temperature;
-                document.getElementById('clima-valor').textContent = `${temperatura}°C`;
-            } catch (error) {
-                document.getElementById('clima-valor').textContent = 'No disp.';
-                console.error("Error cargando el clima:", error);
+        function evaluarEstadoSesion(usuario) {
+            const btnAuth = document.getElementById('btn-auth-main');
+            const googleCard = document.getElementById('google-auth-section');
+            
+            if (usuario) {
+                btnAuth.href = "dashboard.html";
+                btnAuth.innerHTML = '<i class="fas fa-user-circle"></i> Mi Panel';
+                if (googleCard) googleCard.style.display = "none";
             }
         }
 
-        // API DE MONEDA (Mindicador.cl) - Convierte 5000 CLP a Dólares
-        async function cargarMoneda() {
+        function transferirBusqueda() {
+            const query = document.getElementById('main-search-input').value.trim();
+            if (query === "") return;
+            window.location.href = `ModelosThingiverse.html?search=${encodeURIComponent(query)}`;
+        }
+
+        async function loginConGoogle() {
+            if (!dbCliente) return;
             try {
-                // Hacemos la petición a la API chilena mindicador.cl
-                const res = await fetch('https://mindicador.cl/api');
-                const data = await res.json();
-                
-                // Obtenemos el valor del dólar hoy
-                const valorDolarHoy = data.dolar.valor;
-                
-                // Usamos un precio base ficticio de impresión
-                const precioBaseCLP = 5000;
-                
-                // Calculamos y dejamos a 2 decimales
-                const precioConvertidoUSD = (precioBaseCLP / valorDolarHoy).toFixed(2); 
-                
-                // Actualizamos el HTML
-                document.getElementById('moneda-valor').textContent = `~ $${precioConvertidoUSD} USD`;
-            } catch (error) {
-                document.getElementById('moneda-valor').textContent = 'Error api';
-                console.error("Error cargando la moneda:", error);
+                const { data, error } = await dbCliente.auth.signInWithOAuth({
+                    provider: 'google',
+                    options: {
+                        redirectTo: window.location.origin + '/dashboard.html'
+                    }
+                });
+                if (error) throw error;
+            } catch (err) {
+                console.error("Error en Google Auth:", err.message);
+                alert("No se pudo iniciar la autenticación con Google.");
             }
         }
     </script>
