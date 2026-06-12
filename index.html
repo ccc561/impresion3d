@@ -323,6 +323,43 @@
         .btn-google:hover { background: var(--bg-light); border-color: #9ca3af; }
         .btn-google img { width: 22px; height: 22px; }
 
+        /* --- WIDGET DE CLIMA --- */
+        .weather-widget {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 10px 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 1000;
+            display: none; /* Se oculta hasta que carguen los datos */
+        }
+        .weather-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .weather-temp {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--cura-dark);
+            line-height: 1.1;
+        }
+        .weather-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: capitalize;
+        }
+        .weather-icon {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+        }
+
         /* RESPONSIVO */
         @media (max-width: 1024px) {
             .timeline-grid { grid-template-columns: repeat(2, 1fr); }
@@ -335,6 +372,7 @@
         }
         @media (max-width: 600px) {
             .timeline-grid { grid-template-columns: 1fr; }
+            .weather-widget { bottom: 10px; left: 10px; padding: 8px 12px; } /* Ajuste en móviles */
         }
     </style>
 </head>
@@ -468,6 +506,14 @@
         </div>
     </section>
 
+    <div class="weather-widget" id="weather-widget">
+        <img src="" alt="Clima" id="weather-icon" class="weather-icon">
+        <div class="weather-info">
+            <span class="weather-temp" id="weather-temp">--°C</span>
+            <span class="weather-desc" id="weather-desc">Cargando...</span>
+        </div>
+    </div>
+
     <script>
         function cambiarImagen(rutaImagen) {
             document.getElementById('img-principal').src = rutaImagen;
@@ -482,9 +528,16 @@
         const SUPABASE_URL = "https://ddmcsgiaeewelpqfiwbi.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkbWNzZ2lhZWV3ZWxwcWZpd2JpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNzk5NjMsImV4cCI6MjA5Njc1NTk2M30.MUnFBkGLQG19s2HHbmW70TCcdBrpIqwb_Xpp2xuVuVM";
         
+        // Llave de la API del Clima
+        const WEATHER_API_KEY = "c741c34f7e954d4b938143331261106";
+        const CIUDAD = "Calama"; // Puedes cambiar la ciudad aquí
+        
         let dbCliente = null;
 
         window.onload = async function() {
+            // Cargar Widget del clima
+            cargarClima();
+
             if (window.supabase) {
                 dbCliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 
@@ -496,6 +549,27 @@
                 cargarInfoImpresora();
             }
         };
+
+        // --- FUNCIÓN PARA OBTENER EL CLIMA ---
+        async function cargarClima() {
+            try {
+                const url = `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${CIUDAD}&lang=es`;
+                const respuesta = await fetch(url);
+                if (!respuesta.ok) throw new Error("Error en la API del clima");
+                
+                const datos = await respuesta.json();
+                
+                // Actualizar los elementos del DOM
+                document.getElementById('weather-icon').src = "https:" + datos.current.condition.icon;
+                document.getElementById('weather-temp').innerText = Math.round(datos.current.temp_c) + "°C";
+                document.getElementById('weather-desc').innerText = datos.current.condition.text;
+                
+                // Mostrar el widget una vez que los datos están listos
+                document.getElementById('weather-widget').style.display = "flex";
+            } catch (error) {
+                console.error("No se pudo cargar el clima:", error);
+            }
+        }
 
         // --- FUNCIÓN PARA OBTENER EL FILAMENTO DESDE SUPABASE ---
         async function cargarInfoImpresora() {
