@@ -51,7 +51,6 @@
         .top-nav {
             display: flex;
             gap: 35px;
-            /* Solución para centrar perfectamente el menú */
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
@@ -148,7 +147,7 @@
         .feature-card h4 { font-size: 18px; margin: 0 0 12px 0; color: var(--cura-dark); }
         .feature-card p { font-size: 14px; margin: 0; color: var(--text-muted); }
 
-        /* --- CONTENEDORES DE SECCIÓN (ESPACIOSOS) --- */
+        /* --- CONTENEDORES DE SECCIÓN --- */
         .content-section {
             padding: 100px 20px;
         }
@@ -167,7 +166,7 @@
             position: relative;
         }
 
-        /* --- SECCIÓN PROCESO (TIMELINE MODERNO MEJORADO) --- */
+        /* --- SECCIÓN PROCESO --- */
         .timeline-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -244,7 +243,6 @@
         .spec-item strong { display: block; font-size: 13px; text-transform: uppercase; color: var(--text-muted); margin-bottom: 4px; }
         .spec-item span { font-size: 16px; font-weight: 600; color: var(--cura-dark); }
 
-        /* GALERÍA DE LA IMPRESORA */
         .printer-gallery {
             display: flex;
             flex-direction: column;
@@ -323,7 +321,7 @@
         .btn-google:hover { background: var(--bg-light); border-color: #9ca3af; }
         .btn-google img { width: 22px; height: 22px; }
 
-        /* --- WIDGET DE CLIMA --- */
+        /* --- WIDGET DE CLIMA INTERACTIVO --- */
         .weather-widget {
             position: fixed;
             bottom: 20px;
@@ -333,15 +331,28 @@
             border-radius: 12px;
             padding: 10px 16px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: none; /* Se oculta hasta que carguen los datos */
+            align-items: flex-start;
+            gap: 12px;
+            z-index: 1000;
+            cursor: pointer;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            max-height: 50px; /* Altura colapsada (aprox) */
+            overflow: hidden;
+        }
+        /* Clase añadida vía JS al hacer clic */
+        .weather-widget.expanded {
+            max-height: 120px; /* Altura expandida */
+        }
+        .weather-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            z-index: 1000;
-            display: none; /* Se oculta hasta que carguen los datos */
         }
         .weather-info {
             display: flex;
             flex-direction: column;
+            justify-content: center;
         }
         .weather-temp {
             font-size: 18px;
@@ -359,6 +370,18 @@
             height: 40px;
             object-fit: contain;
         }
+        .weather-source {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .weather-widget.expanded .weather-source {
+            opacity: 1;
+        }
 
         /* RESPONSIVO */
         @media (max-width: 1024px) {
@@ -372,7 +395,7 @@
         }
         @media (max-width: 600px) {
             .timeline-grid { grid-template-columns: 1fr; }
-            .weather-widget { bottom: 10px; left: 10px; padding: 8px 12px; } /* Ajuste en móviles */
+            .weather-widget { bottom: 10px; left: 10px; }
         }
     </style>
 </head>
@@ -506,11 +529,18 @@
         </div>
     </section>
 
-    <div class="weather-widget" id="weather-widget">
-        <img src="" alt="Clima" id="weather-icon" class="weather-icon">
-        <div class="weather-info">
-            <span class="weather-temp" id="weather-temp">--°C</span>
-            <span class="weather-desc" id="weather-desc">Cargando...</span>
+    <div class="weather-widget" id="weather-widget" onclick="this.classList.toggle('expanded')" title="Haz clic para más detalles">
+        <div style="display: flex; flex-direction: column; width: 100%;">
+            <div class="weather-header">
+                <img src="" alt="Clima" id="weather-icon" class="weather-icon">
+                <div class="weather-info">
+                    <span class="weather-temp" id="weather-temp">--°C</span>
+                    <span class="weather-desc" id="weather-desc">Cargando...</span>
+                </div>
+            </div>
+            <div class="weather-source" id="weather-source">
+                Ubicación: Cargando...
+            </div>
         </div>
     </div>
 
@@ -530,7 +560,7 @@
         
         // Llave de la API del Clima
         const WEATHER_API_KEY = "c741c34f7e954d4b938143331261106";
-        const CIUDAD = "Calama"; // Puedes cambiar la ciudad aquí
+        const CIUDAD = "Calama"; 
         
         let dbCliente = null;
 
@@ -564,6 +594,9 @@
                 document.getElementById('weather-temp').innerText = Math.round(datos.current.temp_c) + "°C";
                 document.getElementById('weather-desc').innerText = datos.current.condition.text;
                 
+                // Actualizar la fuente oculta
+                document.getElementById('weather-source').innerHTML = `<strong>Ubicación:</strong> ${datos.location.name}, ${datos.location.country}`;
+                
                 // Mostrar el widget una vez que los datos están listos
                 document.getElementById('weather-widget').style.display = "flex";
             } catch (error) {
@@ -574,7 +607,6 @@
         // --- FUNCIÓN PARA OBTENER EL FILAMENTO DESDE SUPABASE ---
         async function cargarInfoImpresora() {
             try {
-                // Hacemos una consulta a la tabla
                 const { data, error } = await dbCliente
                     .from('configuracion_impresora')
                     .select('filamento_en_uso')
@@ -584,12 +616,10 @@
                 if (error) throw error;
 
                 if (data && data.filamento_en_uso) {
-                    // Si encuentra el dato, actualiza el HTML automáticamente
                     document.getElementById('filamento-db').innerText = data.filamento_en_uso;
                 }
             } catch (err) {
                 console.error("Error al cargar la información de la impresora:", err.message);
-                // Si algo falla, ponemos un texto por defecto para que la página no se rompa
                 document.getElementById('filamento-db').innerText = "PLA Blanco (Por defecto)";
             }
         }
@@ -605,10 +635,8 @@
             }
         }
 
-        // --- MODIFICACIÓN DEL BUSCADOR ---
         function transferirBusqueda() {
             const query = document.getElementById('main-search-input').value.trim();
-            // Si está vacío, lleva a la página general. Si tiene texto, realiza la búsqueda.
             if (query === "") {
                 window.location.href = "ModelosThingiverse.html";
             } else {
